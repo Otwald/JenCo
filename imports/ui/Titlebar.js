@@ -1,12 +1,15 @@
 import React from 'react';
 
+import AccountsUI from './AccountsUI'
 export default class Titlebar extends React.Component{
     render(){
         return(
             <div className="Titlebar">
-                {this.props.label}
-            </div>
-            
+                <nav>
+                    {this.props.label}
+                    <AccountsUI />
+                </nav>
+            </div>           
         )
     }
 }
