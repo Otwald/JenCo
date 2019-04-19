@@ -14,15 +14,25 @@ export default class Account extends React.Component{
                 real_name : null,
                 age : null,
                 email : null,
-            }
+            },
+            date : {
+                day: null,
+                month: null,
+                year:null
+            },
         }
     }
 
     onInput=(e)=>{
-        console.log(e.target.value)
         var temp = this.state.account
         temp[e.target.name] = e.target.value
         this.setState({account : temp})
+    }
+
+    onDateInput=(e,data)=>{
+        var temp = this.state.date
+        temp[data.type] = data.value
+        this.setState({date:temp})
     }
 
     // timeCount=(min, max)=>{
@@ -41,15 +51,16 @@ export default class Account extends React.Component{
 
     timeCount=(min, max)=>{
         var out = [];
-        while(min <= max){
-            var item = {key : min , text : min, value : min}
+        while(max >= min){
+            var item = {key : max , text : max, value : max}
             out.push(item)
-            min++
+            max--
         }
         return out
     }
 
     render(){
+        console.log(this.state.date)
         const today = new Date()
         return(
             <div>
@@ -62,11 +73,17 @@ export default class Account extends React.Component{
                         <Dropdown
                         placeholder='Tage'
                         options={this.timeCount(1,31)}
+                        scrolling
+                        onChange={this.onDateInput}
+                        type='day'
                         
                         />
                         <Dropdown
                         placeholder='Monate'
                         options={this.timeCount(1,12)}
+                        scrolling
+                        onChange={this.onDateInput}
+                        type='month'
                         
                         />
 
@@ -74,6 +91,9 @@ export default class Account extends React.Component{
                         placeholder='Jahr'
                         search
                         options={this.timeCount(1900,today.getFullYear())}
+                        scrolling
+                        onChange={this.onDateInput}
+                        type='year'
                         />
                         {/* <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
