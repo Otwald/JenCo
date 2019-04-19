@@ -6,13 +6,28 @@ import './../../client/main';
 
 import Titlebar from './Titlebar';
 import Sidebar from './Sidebar';
+import MainContentContainer from './MainContentContainer';
 
 export default class App extends React.Component{
+    constructor(props){
+        super(props)
+
+        this.state = {
+            tab : null,
+        }
+    }
+        
+    onTabChange=(data)=>{
+        this.setState({tab : data})
+    }
+
     render(){
+        const { tab} = this.state
         return(
             <div>
                 <Titlebar label="JenCo Titlebar" />
-                <Sidebar />
+                <Sidebar tab={tab} onTabChange={this.onTabChange}/>
+                <MainContentContainer tab={tab}/>
             </div>
         )
     }
