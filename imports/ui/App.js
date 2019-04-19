@@ -22,9 +22,7 @@ export default class App extends React.Component{
     }
 
     render(){
-
         const { tab} = this.state
-        console.log(tab)
         return(
             <div>
                 <Titlebar label="JenCo Titlebar" />
