@@ -20,13 +20,29 @@ export default class Account extends React.Component{
                 month: null,
                 year:null
             },
+            validemail: null,
         }
     }
 
     onInput=(e)=>{
         var temp = this.state.account
-        temp[e.target.name] = e.target.value
+        var value = e.target.value
+        temp[e.target.name] = value
         this.setState({account : temp})
+        if(e.target.name === 'email'){
+            if(value.includes('@')){
+                var substr = value.split('@')
+                if(substr[1].includes('.')){
+                    this.setState({validemail :true})
+                }
+                else{
+                    this.setState({validemail :false})
+                }
+            }
+            else{
+                this.setState({validemail :false})
+            }
+        }
     }
 
     onDateInput=(e,data)=>{
@@ -60,16 +76,20 @@ export default class Account extends React.Component{
     }
 
     render(){
-        console.log(this.state.date)
+        var emaivalid = '';
         const today = new Date()
+        const {validemail} = this.state
+
+        if(validemail === false){
+            emaivalid = 'Email hat keine valide Form';
+        }
         return(
             <div>
                 <ul>
                     Account Content
                     <li>Profil Name<input type='text' name='profil' onChange={this.onInput}/></li>
                     <li>Real Name<input type='text' name='real_name' onChange={this.onInput}/></li>
-                    <li>
-
+                    <li>Alter = 
                         <Dropdown
                         placeholder='Tage'
                         options={this.timeCount(1,31)}
@@ -107,8 +127,9 @@ export default class Account extends React.Component{
                     {this.timeCount(1,31)}
                     </select>
                     </li> */}
+                    <li>Veranstaltungsinfo per E-Mail<input type='text' name='email'/></li>
 
-                    <li>Veranstaltungsinfo per Mail<input type='text' name='email' onChange={this.onInput}/></li>
+                    <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput}/>{emaivalid}</li>
                 </ul>
             </div>
         )
