@@ -5,7 +5,7 @@ import { render } from 'react-dom'
 import './../../client/main';
 
 import Titlebar from './Titlebar';
-import SidebarContainer from './SidebarContainer';
+import Sidebar from './Sidebar';
 import MainContentContainer from './MainContentContainer';
 
 export default class App extends React.Component {
@@ -13,7 +13,7 @@ export default class App extends React.Component {
         super(props)
 
         this.state = {
-            tab: 'welcome',
+            tab: 'round',
         }
     }
 
@@ -23,10 +23,11 @@ export default class App extends React.Component {
 
     render() {
         const { tab} = this.state
+        const {loginToken} = this.props
         return (
             <div>
                 <Titlebar label="JenCo Titlebar" />
-                <SidebarContainer onTabChange={this.onTabChange} />
+                <Sidebar onTabChange={this.onTabChange} loginToken={loginToken}/>
                 <MainContentContainer tab={tab} />
             </div>
         )
@@ -34,9 +35,6 @@ export default class App extends React.Component {
 }
 
 
-Meteor.startup(() => {
-    render(<App />, document.getElementById('app'));
-});
 
 
 

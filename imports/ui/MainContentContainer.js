@@ -7,11 +7,11 @@ import Round from './Round';
 export default class MainContentContainer extends React.Component {
 
     render() {
-        const { tab } = this.props
+        const { tab , loginToken} = this.props
         return (
             <div>
                 {tab === 'welcome' ? <Welcome /> : ''}
-                {tab === 'round' ? <Round /> : ''}
+                {tab === 'round' ? <Round loginToken={loginToken}/> : ''}
                 {tab === 'account' ? <Account /> : ''}
 
 

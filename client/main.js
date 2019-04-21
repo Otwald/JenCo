@@ -1,2 +1,2 @@
 import './main.html';
-import './../imports/ui/App';
+import './../imports/ui/AppContainer';

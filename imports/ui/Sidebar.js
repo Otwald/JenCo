@@ -10,7 +10,6 @@ export default class Sidebar extends React.Component {
     render() {
         var login = ''
         const {loginToken} = this.props
-        console.log(this.props)
         if (loginToken) {
             login = <li><button onClick={(e) => this.onClickButton('account')}>Account</button></li>
         }
