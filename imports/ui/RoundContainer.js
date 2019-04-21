@@ -9,6 +9,6 @@ export default RoundContainer = withTracker(()=>{
  
         Meteor.subscribe('Rounds');
     return {
-        rounds : Rounds.find().fetch(),
+        rounds_box : Rounds.find().fetch(),
     }
 })(Round)

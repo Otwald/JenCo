@@ -1,12 +1,54 @@
 import React from 'react';
+import { Rounds } from '../api/mongo_export';
 
 export default class Round extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            round_create : {
+                round_name : '',
+                setting : '',
+                ruleset : '',
+                round_gm : 'Nickname',
+                round_gm_id : this.props.loginToken,
+                round_curr_pl : 0,
+                round_max_pl : 0,
+                round_player : []
+            }
+        }
+    }
+
+    onInput = (e) => {
+        var temp = this.state.round_create
+        var value = e.target.value
+        temp[e.target.name] = value
+        this.setState({ round_create: temp })
+    }
+
+    onSave = ()=>{
+        const data = this.state.round_create
+        var check = true;
+        if(data.round_name.length === 0){
+            check = false;
+        }
+        if(data.round_max_pl === 0){
+            check = false;
+        }
+        if(data.setting.length === 0){
+            check = false;
+        }
+        if(check){
+            Rounds.insert(data)
+        }
+    }
 
     render() {
         var round = ''
-        const { rounds } = this.props
-        if (rounds.length !== 0) {
-            round = rounds.map((k, v) => {
+        var create = ''
+        const { rounds_box, loginToken } = this.props
+        console.log()
+        if (rounds_box.length !== 0) {
+            round = rounds_box.map((k, v) => {
                 return (
                     <div key={v}>
                         <ul>
@@ -21,8 +63,22 @@ export default class Round extends React.Component {
                 )
             })
         }
+        if (loginToken) {
+            create = <div>
+                <ul>
+                    <li>Runden Name<input type='text' name='round_name' onChange={this.onInput} /></li>
+                    <li>Setting<input type='text' name='setting' onChange={this.onInput} /></li>
+                    <li>Regelwerk <input type='text' name='ruleset' onChange={this.onInput} /></li>
+                    <li>Spieler Max <input type='text' name='round_max_pl' onChange={this.onInput} /></li>
+                    <li><button onClick={this.onSave} >Save</button></li>
+                </ul>
+            </div>
+        }
         return (
-            round
+            <div>
+                {round}
+                {create}
+            </div>
         )
     }
 }

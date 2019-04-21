@@ -29,20 +29,20 @@ export default class Account extends React.Component {
         var value = e.target.value
         temp[e.target.name] = value
         this.setState({ account: temp })
-        if (e.target.name === 'email') {
-            if (value.includes('@')) {
-                var substr = value.split('@')
-                if (substr[1].includes('.')) {
-                    this.setState({ validemail: true })
-                }
-                else {
-                    this.setState({ validemail: false })
-                }
-            }
-            else {
-                this.setState({ validemail: false })
-            }
-        }
+        // if (e.target.name === 'email') {
+        //     if (value.includes('@')) {
+        //         var substr = value.split('@')
+        //         if (substr[1].includes('.')) {
+        //             this.setState({ validemail: true })
+        //         }
+        //         else {
+        //             this.setState({ validemail: false })
+        //         }
+        //     }
+        //     else {
+        //         this.setState({ validemail: false })
+        //     }
+        // }
     }
 
     onDateInput = (e, data) => {
