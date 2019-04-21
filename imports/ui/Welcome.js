@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default class Welcome extends React.Component{
+export default class Welcome extends React.Component {
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 Main Content
             </div>
