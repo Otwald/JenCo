@@ -5,7 +5,7 @@ import { render } from 'react-dom'
 import './../../client/main';
 
 import Titlebar from './Titlebar';
-import Sidebar from './Sidebar';
+import SidebarContainer from './SidebarContainer';
 import MainContentContainer from './MainContentContainer';
 
 export default class App extends React.Component {
@@ -13,7 +13,7 @@ export default class App extends React.Component {
         super(props)
 
         this.state = {
-            tab: null,
+            tab: 'welcome',
         }
     }
 
@@ -22,11 +22,11 @@ export default class App extends React.Component {
     }
 
     render() {
-        const { tab } = this.state
+        const { tab} = this.state
         return (
             <div>
                 <Titlebar label="JenCo Titlebar" />
-                <Sidebar tab={tab} onTabChange={this.onTabChange} />
+                <SidebarContainer onTabChange={this.onTabChange} />
                 <MainContentContainer tab={tab} />
             </div>
         )

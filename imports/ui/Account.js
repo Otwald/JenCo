@@ -133,7 +133,7 @@ export default class Account extends React.Component {
                     </li> */}
                     <li>Veranstaltungsinfo per E-Mail<input type='text' name='email' /></li>
 
-                    <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput} />{emaivalid}</li>
+                    {/* <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput} />{emaivalid}</li> */}
                     <li><button onClick={this.onSave} >Save</button></li>
                 </ul>
             </div>
