@@ -5,9 +5,8 @@ import {withTracker} from 'meteor/react-meteor-data';
 import Sidebar from './Sidebar';
 
 export default SidebarContaiener = withTracker(()=>{
-    if(Meteor.userId()){
-        const loginToken = Meteor.userId()
-    }
+ 
+        const loginToken = Meteor.Meteor.userId()
     return {
         loginToken
     }
