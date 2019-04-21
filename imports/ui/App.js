@@ -23,12 +23,12 @@ export default class App extends React.Component {
 
     render() {
         const { tab } = this.state
-        const { loginToken } = this.props
+        const { loginToken ,user } = this.props
         return (
             <div>
                 <Titlebar label="JenCo Titlebar" />
                 <Sidebar onTabChange={this.onTabChange} loginToken={loginToken} />
-                <MainContentContainer tab={tab} loginToken={loginToken} />
+                <MainContentContainer tab={tab} user={user} loginToken={loginToken} />
             </div>
         )
     }

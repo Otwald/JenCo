@@ -10,6 +10,7 @@ if(Meteor.isServer){
         return Rounds.find();
     });
     Meteor.publish('users_account', ()=>{
-        return users_account.find();
+        console.log(this.userId)
+        return users_account.find({_id : this.userId});
     })
 }

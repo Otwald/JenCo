@@ -1,19 +1,23 @@
 import React from 'react';
-import  Meteor  from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom'
-import {withTracker} from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
+
+import {users_account} from './../api/mongo_export';
 
 import App from './App';
 
-export default AppContainer = withTracker(()=>{
- 
-        const loginToken = Meteor.Meteor.userId()
+export default AppContainer = withTracker(() => {
+
+    const loginToken = Meteor.userId()
+    Meteor.subscribe('users_account');
     return {
-        loginToken
+        loginToken,
+        user : users_account.findOne({_id : loginToken})
     }
 })(App)
 
 
-Meteor.Meteor.startup(() => {
+Meteor.startup(() => {
     render(<AppContainer />, document.getElementById('app'));
 });

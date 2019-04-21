@@ -1,5 +1,7 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 
+import {users_account} from './../api/mongo_export';
 import { Dropdown } from 'semantic-ui-react';
 
 import 'semantic-ui-css/semantic.min.css'
@@ -13,7 +15,8 @@ export default class Account extends React.Component {
                 profil: null,
                 real_name: null,
                 age: null,
-                email: null,
+                email: Meteor.user().emails[0].address,
+                _id: Meteor.userId()
             },
             date: {
                 day: null,
@@ -76,7 +79,17 @@ export default class Account extends React.Component {
     }
 
     onSave = () => {
-        console.log('speichern')
+        const data = this.state.account
+        var check = true;
+        if (data.profil.length === 0) {
+            check = false;
+        }
+        if (data.real_name.length === 0) {
+            check = false;
+        }
+        if (check) {
+            users_account.insert(data);
+        }
     }
 
     render() {

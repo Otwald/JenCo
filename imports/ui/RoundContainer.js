@@ -1,14 +1,13 @@
-import  {Meteor}  from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 
-import {withTracker} from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import Round from './Round';
 import { Rounds } from '../api/mongo_export';
 
-export default RoundContainer = withTracker(()=>{
- 
-        Meteor.subscribe('Rounds');
+export default RoundContainer = withTracker(() => {
+    Meteor.subscribe('Rounds');
     return {
-        rounds_box : Rounds.find().fetch(),
+        rounds_box: Rounds.find().fetch(),
     }
 })(Round)

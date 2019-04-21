@@ -9,7 +9,7 @@ export default class Round extends React.Component {
                 round_name : '',
                 setting : '',
                 ruleset : '',
-                round_gm : 'Nickname',
+                round_gm : 'Placeholder',
                 round_gm_id : this.props.loginToken,
                 round_curr_pl : 0,
                 round_max_pl : 0,
@@ -27,6 +27,7 @@ export default class Round extends React.Component {
 
     onSave = ()=>{
         const data = this.state.round_create
+        data.round_gm = this.props.user.profil
         var check = true;
         if(data.round_name.length === 0){
             check = false;
@@ -38,15 +39,22 @@ export default class Round extends React.Component {
             check = false;
         }
         if(check){
-            Rounds.insert(data)
+            if(data._id){
+                Rounds.update({_id: data._id}, data)
+            }else{
+                Rounds.insert(data)
+            }
         }
+    }
+
+    onEdit(data){
+        this.setState({round_create : data})
     }
 
     render() {
         var round = ''
         var create = ''
         const { rounds_box, loginToken } = this.props
-        console.log()
         if (rounds_box.length !== 0) {
             round = rounds_box.map((k, v) => {
                 return (
@@ -58,6 +66,7 @@ export default class Round extends React.Component {
                             <li>Spielleiter = {k.round_gm}</li>
                             <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
                             <li>Spieler Namen = {k.round_player}</li>
+                            {k.round_gm_id === loginToken ? <li><button onClick={()=>this.onEdit(k)} >Edit</button></li> : ''}
                         </ul>
                     </div>
                 )
@@ -66,10 +75,10 @@ export default class Round extends React.Component {
         if (loginToken) {
             create = <div>
                 <ul>
-                    <li>Runden Name<input type='text' name='round_name' onChange={this.onInput} /></li>
-                    <li>Setting<input type='text' name='setting' onChange={this.onInput} /></li>
-                    <li>Regelwerk <input type='text' name='ruleset' onChange={this.onInput} /></li>
-                    <li>Spieler Max <input type='text' name='round_max_pl' onChange={this.onInput} /></li>
+                    <li>Runden Name<input type='text' name='round_name' onChange={this.onInput} placeholder={this.state.round_create.round_name}/></li>
+                    <li>Setting<input type='text' name='setting' onChange={this.onInput} placeholder={this.state.round_create.setting}/></li>
+                    <li>Regelwerk <input type='text' name='ruleset' onChange={this.onInput} placeholder={this.state.round_create.ruleset}/></li>
+                    <li>Spieler Max <input type='text' name='round_max_pl' onChange={this.onInput} placeholder={this.state.round_create.round_max_pl}/></li>
                     <li><button onClick={this.onSave} >Save</button></li>
                 </ul>
             </div>
