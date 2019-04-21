@@ -2,19 +2,19 @@ import React from 'react';
 
 import Welcome from './Welcome';
 import Account from './Account';
-import Round from './Round';
+import RoundContainer from './RoundContainer';
 
-export default class MainContentContainer extends React.Component{
+export default class MainContentContainer extends React.Component {
 
-    render(){
-        const {tab} = this.props
-        return(
+    render() {
+        const { tab , loginToken, user} = this.props
+        return (
             <div>
                 {tab === 'welcome' ? <Welcome /> : ''}
-                {tab === 'round' ? <Round /> : ''}
+                {tab === 'round' ? <RoundContainer loginToken={loginToken} user={user}/> : ''}
                 {tab === 'account' ? <Account /> : ''}
 
-                
+
             </div>
         )
     }

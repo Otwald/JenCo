@@ -1,54 +1,57 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 
-import {Dropdown} from 'semantic-ui-react';
+import {users_account} from './../api/mongo_export';
+import { Dropdown } from 'semantic-ui-react';
 
 import 'semantic-ui-css/semantic.min.css'
 
-export default class Account extends React.Component{
-    constructor(props){
+export default class Account extends React.Component {
+    constructor(props) {
         super(props)
 
         this.state = {
-            account : {
-                profil:null,
-                real_name : null,
-                age : null,
-                email : null,
+            account: {
+                profil: null,
+                real_name: null,
+                age: null,
+                email: Meteor.user().emails[0].address,
+                _id: Meteor.userId()
             },
-            date : {
+            date: {
                 day: null,
                 month: null,
-                year:null
+                year: null
             },
             validemail: null,
         }
     }
 
-    onInput=(e)=>{
+    onInput = (e) => {
         var temp = this.state.account
         var value = e.target.value
         temp[e.target.name] = value
-        this.setState({account : temp})
-        if(e.target.name === 'email'){
-            if(value.includes('@')){
-                var substr = value.split('@')
-                if(substr[1].includes('.')){
-                    this.setState({validemail :true})
-                }
-                else{
-                    this.setState({validemail :false})
-                }
-            }
-            else{
-                this.setState({validemail :false})
-            }
-        }
+        this.setState({ account: temp })
+        // if (e.target.name === 'email') {
+        //     if (value.includes('@')) {
+        //         var substr = value.split('@')
+        //         if (substr[1].includes('.')) {
+        //             this.setState({ validemail: true })
+        //         }
+        //         else {
+        //             this.setState({ validemail: false })
+        //         }
+        //     }
+        //     else {
+        //         this.setState({ validemail: false })
+        //     }
+        // }
     }
 
-    onDateInput=(e,data)=>{
+    onDateInput = (e, data) => {
         var temp = this.state.date
         temp[data.type] = data.value
-        this.setState({date:temp})
+        this.setState({ date: temp })
     }
 
     // timeCount=(min, max)=>{
@@ -65,55 +68,69 @@ export default class Account extends React.Component{
     //     )
     // }
 
-    timeCount=(min, max)=>{
+    timeCount = (min, max) => {
         var out = [];
-        while(max >= min){
-            var item = {key : max , text : max, value : max}
+        while (max >= min) {
+            var item = { key: max, text: max, value: max }
             out.push(item)
             max--
         }
         return out
     }
 
-    render(){
+    onSave = () => {
+        const data = this.state.account
+        var check = true;
+        if (data.profil.length === 0) {
+            check = false;
+        }
+        if (data.real_name.length === 0) {
+            check = false;
+        }
+        if (check) {
+            users_account.insert(data);
+        }
+    }
+
+    render() {
         var emaivalid = '';
         const today = new Date()
-        const {validemail} = this.state
+        const { validemail } = this.state
 
-        if(validemail === false){
+        if (validemail === false) {
             emaivalid = 'Email hat keine valide Form';
         }
-        return(
+        return (
             <div>
                 <ul>
                     Account Content
-                    <li>Profil Name<input type='text' name='profil' onChange={this.onInput}/></li>
-                    <li>Real Name<input type='text' name='real_name' onChange={this.onInput}/></li>
-                    <li>Alter = 
+                    <li>Profil Name<input type='text' name='profil' onChange={this.onInput} /></li>
+                    <li>Real Name<input type='text' name='real_name' onChange={this.onInput} /></li>
+                    <li>Alter =
                         <Dropdown
-                        placeholder='Tage'
-                        options={this.timeCount(1,31)}
-                        scrolling
-                        onChange={this.onDateInput}
-                        type='day'
-                        
+                            placeholder='Tage'
+                            options={this.timeCount(1, 31)}
+                            scrolling
+                            onChange={this.onDateInput}
+                            type='day'
+
                         />
                         <Dropdown
-                        placeholder='Monate'
-                        options={this.timeCount(1,12)}
-                        scrolling
-                        onChange={this.onDateInput}
-                        type='month'
-                        
+                            placeholder='Monate'
+                            options={this.timeCount(1, 12)}
+                            scrolling
+                            onChange={this.onDateInput}
+                            type='month'
+
                         />
 
                         <Dropdown
-                        placeholder='Jahr'
-                        search
-                        options={this.timeCount(1900,today.getFullYear())}
-                        scrolling
-                        onChange={this.onDateInput}
-                        type='year'
+                            placeholder='Jahr'
+                            search
+                            options={this.timeCount(1900, today.getFullYear())}
+                            scrolling
+                            onChange={this.onDateInput}
+                            type='year'
                         />
                         {/* <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -127,9 +144,10 @@ export default class Account extends React.Component{
                     {this.timeCount(1,31)}
                     </select>
                     </li> */}
-                    <li>Veranstaltungsinfo per E-Mail<input type='text' name='email'/></li>
+                    <li>Veranstaltungsinfo per E-Mail<input type='text' name='email' /></li>
 
-                    <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput}/>{emaivalid}</li>
+                    {/* <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput} />{emaivalid}</li> */}
+                    <li><button onClick={this.onSave} >Save</button></li>
                 </ul>
             </div>
         )
