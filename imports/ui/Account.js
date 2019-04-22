@@ -4,8 +4,6 @@ import { Meteor } from 'meteor/meteor';
 import {users_account} from './../api/mongo_export';
 import { Dropdown } from 'semantic-ui-react';
 
-import 'semantic-ui-css/semantic.min.css'
-
 export default class Account extends React.Component {
     constructor(props) {
         super(props)

@@ -4,6 +4,7 @@ import Welcome from './Welcome';
 import Account from './Account';
 import RoundContainer from './RoundContainer';
 
+import 'semantic-ui-css/semantic.min.css'
 export default class MainContentContainer extends React.Component {
 
     render() {

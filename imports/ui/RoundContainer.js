@@ -10,7 +10,6 @@ export default RoundContainer = withTracker(() => {
     const loading = connection.ready();
     var rounds_box = Rounds.find().fetch()
 
-
     return {
         loading,
         rounds_box,

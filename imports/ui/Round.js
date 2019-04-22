@@ -3,11 +3,14 @@ import { Meteor } from 'meteor/meteor';
 
 import { Rounds } from '../api/mongo_export';
 
+
+const time_block = ['early', 'later']
 export default class Round extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             round_create: {
+                round_tb : '',
                 round_name: '',
                 setting: '',
                 ruleset: '',
@@ -54,31 +57,64 @@ export default class Round extends React.Component {
     }
 
     onJoin(data) {
-        data.round_player.push({ 'profil': this.props.user.profil })
-        this.setState({ round_create: data })
-        this.onSave()
+        data.round_player.push({ 'profil': this.props.user.profil, 'user_id': Meteor.userId() })
+        data.round_curr_pl++
+        Rounds.update({ _id: data._id }, data)
+    }
+
+    onLeave(data) {
+        var index = Object.keys(data.round_player).map((k) => {
+            if (data.round_player[k].user_id === Meteor.userId()) {
+                return k
+            }
+        })
+        if(index.length !== 0){
+            index.map((k,v)=>{
+                if(k){
+                    data.round_curr_pl--
+                    data.round_player.splice(k,1);
+                }
+            })
+        }
+        Rounds.update({ _id: data._id }, data)
     }
 
     onCheck(data) {
-        console.log(data)
+        if (data.length !== 0) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].user_id === Meteor.userId()) {
+                    return false;
+                }
+            }
+        }
         return true;
+    }
+
+    onPlayers(data) {
+        var out = '';
+        if (data) {
+            out = out.concat(Object.keys(data).map((k) => {
+                return data[k].profil
+            }))
+        }
+        return out
     }
 
     render() {
         var round = ''
         var create = ''
         const { rounds_box, loginToken } = this.props
-        console.log(this.props)
         if (rounds_box.length !== 0) {
             var out = '';
             round = rounds_box.map((k, v) => {
-
-                if (k.round_gm_id === loginToken) {
-                    out = <li><button onClick={() => this.onEdit(k)} >Edit</button></li>
-                } else if (this.onCheck(k.round_player)) {
-                    out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
-                } else {
-                    out = '';
+                if (Meteor.userId()) {
+                    if (k.round_gm_id === loginToken) {
+                        out = <li><button onClick={() => this.onEdit(k)} >Edit</button></li>
+                    } else if (this.onCheck(k.round_player)) {
+                        out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                    } else {
+                        out = <li><button onClick={() => this.onLeave(k)} >Leave</button></li>
+                    }
                 }
                 return (
                     <div key={v}>
@@ -88,7 +124,7 @@ export default class Round extends React.Component {
                             <li>Regelwerk = {k.ruleset}</li>
                             <li>Spielleiter = {k.round_gm}</li>
                             <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                            <li>Spieler Namen = {k.round_player}</li>
+                            <li>Spieler Namen = {this.onPlayers(k.round_player)}</li>
                             {out}
                         </ul>
                     </div>
@@ -108,7 +144,11 @@ export default class Round extends React.Component {
         }
         return (
             <div>
+                Early Block
                 {round}
+                Late Block
+                {round}
+                Hidden Block
                 {create}
             </div >
         )
