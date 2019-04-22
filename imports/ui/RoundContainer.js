@@ -6,8 +6,13 @@ import Round from './Round';
 import { Rounds } from '../api/mongo_export';
 
 export default RoundContainer = withTracker(() => {
-    Meteor.subscribe('Rounds');
+    const connection = Meteor.subscribe('rounds');
+    const loading = connection.ready();
+    var rounds_box = Rounds.find().fetch()
+
+
     return {
-        rounds_box: Rounds.find().fetch(),
+        loading,
+        rounds_box,
     }
 })(Round)

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+
 import { Rounds } from '../api/mongo_export';
 
 export default class Round extends React.Component {
@@ -66,7 +68,7 @@ export default class Round extends React.Component {
         var round = ''
         var create = ''
         const { rounds_box, loginToken } = this.props
-        console.log(this.state.round_create)
+        console.log(this.props)
         if (rounds_box.length !== 0) {
             var out = '';
             round = rounds_box.map((k, v) => {
@@ -75,7 +77,7 @@ export default class Round extends React.Component {
                     out = <li><button onClick={() => this.onEdit(k)} >Edit</button></li>
                 } else if (this.onCheck(k.round_player)) {
                     out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
-                }else{
+                } else {
                     out = '';
                 }
                 return (
