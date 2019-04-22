@@ -1,11 +1,9 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Dropdown } from 'semantic-ui-react';
 
 import { Rounds } from '../api/mongo_export';
+import RoundCreate from './RoundCreate';
 
-
-const time_block = [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }]
 export default class Round extends React.Component {
     constructor(props) {
         super(props)
@@ -20,8 +18,16 @@ export default class Round extends React.Component {
                 round_curr_pl: 0,
                 round_max_pl: 0,
                 round_player: []
-            }
+            },
+            time_block: [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }]
         }
+    }
+
+    componentDidUpdate = (lastprops) => {
+        if (this.props.rounds_box !== lastprops.rounds_box) {
+            this.timeOptions([{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }])
+        }
+
     }
 
     onInput = (e) => {
@@ -59,8 +65,12 @@ export default class Round extends React.Component {
         }
     }
 
-    onEdit(data) {
+    onEdit = (data) => {
         this.setState({ round_create: data })
+    }
+
+    onDestroy = (data) => {
+        Rounds.remove({ _id: data._id })
     }
 
     onJoin(data) {
@@ -113,21 +123,24 @@ export default class Round extends React.Component {
                 return k.round_tb
             }
         })
-        var index = time_block.map((k, v) => {
+        console.log(block)
+        var index = block.map((k, v) => {
             if (query.includes(k.value)) {
                 return v
             }
         })
+        console.log(index)
         if (index.length !== 0) {
-            for(var i = 0 ; i< block.length ; i++){
-                if(index[i] !== undefined){
+            for (var i = 0; i < block.length; i++) {
+                if (index[i] !== undefined) {
                     block.splice(i, 1);
                     index.splice(i, 1);
                     i--;
+                    console.log('splice')
                 }
             }
         }
-        return block
+        this.setState({ time_block: block })
     }
 
     timeBlockCreate = (time) => {
@@ -139,7 +152,8 @@ export default class Round extends React.Component {
                 if (k.round_tb === time) {
                     if (Meteor.userId()) {
                         if (k.round_gm_id === this.props.loginToken) {
-                            out = <li><button onClick={() => this.onEdit(k)} >Edit</button></li>
+                            out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k)} >Destroy</button></li>
+
                         } else if (this.onCheck(k.round_player)) {
                             out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
                         } else {
@@ -167,27 +181,8 @@ export default class Round extends React.Component {
 
     render() {
         var create = ''
+        const { time_block, round_create } = this.state
         const { rounds_box, loginToken } = this.props
-        if (loginToken) {
-            create = <div>
-                <ul>
-                    <li>
-                        ZeitBlock<Dropdown
-                            placeholder='Block'
-                            options={this.timeOptions(time_block)}
-                            scrolling
-                            onChange={this.onInputBlock}
-                            type='round_tb'
-                        />
-                    </li>
-                    <li>Runden Name<input type='text' name='round_name' onChange={this.onInput} placeholder={this.state.round_create.round_name} /></li>
-                    <li>Setting<input type='text' name='setting' onChange={this.onInput} placeholder={this.state.round_create.setting} /></li>
-                    <li>Regelwerk <input type='text' name='ruleset' onChange={this.onInput} placeholder={this.state.round_create.ruleset} /></li>
-                    <li>Spieler Max <input type='text' name='round_max_pl' onChange={this.onInput} placeholder={this.state.round_create.round_max_pl} /></li>
-                    <li><button onClick={this.onSave} >Save</button></li>
-                </ul>
-            </div>
-        }
         return (
             <div>
                 Early Block
@@ -195,7 +190,7 @@ export default class Round extends React.Component {
                 Late Block
                 {this.timeBlockCreate('later')}
                 Hidden Block
-                {create}
+                <RoundCreate loginToken={loginToken} round_create={round_create} time_block={time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
             </div >
         )
     }
