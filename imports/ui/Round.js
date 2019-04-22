@@ -77,7 +77,7 @@ export default class Round extends React.Component {
         })
         if (index.length !== 0) {
             index.map((k, v) => {
-                if (k) {
+                if (k !== undefined) {
                     data.round_curr_pl--
                     data.round_player.splice(k, 1);
                 }
@@ -105,6 +105,29 @@ export default class Round extends React.Component {
             }))
         }
         return out
+    }
+
+    timeOptions = (block) => {
+        var query = this.props.rounds_box.map((k, v) => {
+            if (k.round_gm_id === this.props.loginToken) {
+                return k.round_tb
+            }
+        })
+        var index = time_block.map((k, v) => {
+            if (query.includes(k.value)) {
+                return v
+            }
+        })
+        if (index.length !== 0) {
+            for(var i = 0 ; i< block.length ; i++){
+                if(index[i] !== undefined){
+                    block.splice(i, 1);
+                    index.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+        return block
     }
 
     timeBlockCreate = (time) => {
@@ -143,43 +166,15 @@ export default class Round extends React.Component {
     }
 
     render() {
-        var round = ''
         var create = ''
         const { rounds_box, loginToken } = this.props
-        if (rounds_box.length !== 0) {
-            var out = '';
-            round = rounds_box.map((k, v) => {
-                if (Meteor.userId()) {
-                    if (k.round_gm_id === loginToken) {
-                        out = <li><button onClick={() => this.onEdit(k)} >Edit</button></li>
-                    } else if (this.onCheck(k.round_player)) {
-                        out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
-                    } else {
-                        out = <li><button onClick={() => this.onLeave(k)} >Leave</button></li>
-                    }
-                }
-                return (
-                    <div key={v}>
-                        <ul>
-                            <li>Name = {k.round_name}</li>
-                            <li>Setting = {k.setting}</li>
-                            <li>Regelwerk = {k.ruleset}</li>
-                            <li>Spielleiter = {k.round_gm}</li>
-                            <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                            <li>Spieler Namen = {this.onPlayers(k.round_player)}</li>
-                            {out}
-                        </ul>
-                    </div>
-                )
-            })
-        }
         if (loginToken) {
             create = <div>
                 <ul>
                     <li>
                         ZeitBlock<Dropdown
                             placeholder='Block'
-                            options={time_block}
+                            options={this.timeOptions(time_block)}
                             scrolling
                             onChange={this.onInputBlock}
                             type='round_tb'
