@@ -15,14 +15,14 @@ export default class Round extends React.Component {
             // max 3 plätze online
             round_create: {
                 round_tb: '',
-                round_name: '',
-                setting: '',
-                ruleset: '',
+                round_name: 'Round Name',
+                setting: 'Setting',
+                ruleset: 'Rules',
                 own_char: true,
                 round_gm: 'Placeholder',
                 round_gm_id: this.props.loginToken,
                 round_curr_pl: 0,
-                round_max_pl: 0,
+                round_max_pl: 5,
                 round_player: []
             },
             time_block: [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }],
@@ -173,7 +173,7 @@ export default class Round extends React.Component {
                     return (
                         <div key={v}>
                             <ul>
-                                <li>Name = {k.round_name}</li>
+                                <li>Runden Name = {k.round_name}</li>
                                 <li>Setting = {k.setting}</li>
                                 <li>Regelwerk = {k.ruleset}</li>
                                 <li>Spielleiter = {k.round_gm}</li>

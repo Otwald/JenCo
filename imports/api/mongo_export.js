@@ -5,6 +5,8 @@ export const Rounds = new Mongo.Collection('Rounds');
 
 export const users_account = new Mongo.Collection('users_account');
 
+export const event_settings = new Mongo.Collection('Event_Settings');
+
 
 if (Meteor.isServer) {
     Meteor.publish('rounds', function () {
