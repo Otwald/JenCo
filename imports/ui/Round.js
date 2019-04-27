@@ -27,13 +27,17 @@ export default class Round extends React.Component {
                 round_max_pl: 0,
                 round_player: []
             },
-            time_block: [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }]
+            time_block: [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }],
+            in_round : [],
         }
     }
 
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
             this.timeOptions(Object.create(this.props.origin_tb))
+        }
+        if(this.props.in_round !== lastprops.in_round){
+            this.setState({in_round : this.props.in_round});
         }
 
     }
@@ -58,7 +62,6 @@ export default class Round extends React.Component {
         if (data.round_name.length === 0) {
             check = false;
         }
-        console.log(data.round_max_pl)
         if (data.round_max_pl < 5) {
             check = false;
         }
@@ -105,10 +108,11 @@ export default class Round extends React.Component {
         Rounds.update({ _id: data._id }, data)
     }
 
-    onCheck(data) {
+    onCheck(data, time) {
         if (data.length !== 0) {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].user_id === Meteor.userId()) {
+                    this.props.onCallback({ key: time, value: false });
                     return false;
                 }
             }
@@ -127,8 +131,10 @@ export default class Round extends React.Component {
     }
 
     timeOptions = (block) => {
+        console.log(block);
+        console.log(this.state.in_round);
         var query = this.props.rounds_box.map((k, v) => {
-            if (k.round_gm_id === this.props.loginToken) {
+            if (k.round_gm_id === Meteor.userId()) {
                 return k.round_tb
             }
         })
@@ -149,7 +155,6 @@ export default class Round extends React.Component {
         }
         this.setState({ time_block: block })
     }
-
     timeBlockCreate = (time) => {
         const rounds_box = this.props.rounds_box
         var round = ''
@@ -158,18 +163,16 @@ export default class Round extends React.Component {
             round = rounds_box.map((k, v) => {
                 if (k.round_tb === time) {
                     if (Meteor.userId()) {
-                        if (k.round_gm_id === this.props.loginToken) {
+                        if (k.round_gm_id === Meteor.userId()) {
+                            this.props.onCallback({ key: time, value: false });
                             out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k)} >Destroy</button></li>
-
-                        } else if (this.onCheck(k.round_player)) {
-                            if (in_round) {
-
-                            } else {
+                        } else if (this.state.in_round[time] !== false) {
+                            if (this.onCheck(k.round_player, time)) {
                                 out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                            } else {
+                                out = <li><button onClick={() => this.onLeave(k)} >Leave</button></li>
                             }
-                        } else {
-                            out = <li><button onClick={() => this.onLeave(k)} >Leave</button></li>
-                        }
+                        } 
                     }
                     return (
                         <div key={v}>
