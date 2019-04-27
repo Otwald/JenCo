@@ -13,7 +13,7 @@ export default class App extends React.Component {
         super(props)
 
         this.state = {
-            tab: 'welcome',
+            tab: 'round',
         }
     }
 
@@ -26,7 +26,7 @@ export default class App extends React.Component {
         const { loginToken ,user } = this.props
         return (
             <div>
-                <Titlebar label="JenCo Titlebar" />
+                <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" />
                 <Sidebar onTabChange={this.onTabChange} loginToken={loginToken} />
                 <MainContentContainer tab={tab} user={user} loginToken={loginToken} />
             </div>
