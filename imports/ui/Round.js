@@ -20,6 +20,7 @@ export default class Round extends React.Component {
                 round_name: '',
                 setting: '',
                 ruleset: '',
+                own_char: true,
                 round_gm: 'Placeholder',
                 round_gm_id: this.props.loginToken,
                 round_curr_pl: 0,
@@ -32,7 +33,7 @@ export default class Round extends React.Component {
 
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
-            this.timeOptions([{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }])
+            this.timeOptions(Object.create(this.props.origin_tb))
         }
 
     }
@@ -57,7 +58,8 @@ export default class Round extends React.Component {
         if (data.round_name.length === 0) {
             check = false;
         }
-        if (data.round_max_pl === 0) {
+        console.log(data.round_max_pl)
+        if (data.round_max_pl < 5) {
             check = false;
         }
         if (data.setting.length === 0) {
@@ -130,13 +132,11 @@ export default class Round extends React.Component {
                 return k.round_tb
             }
         })
-        console.log(block)
         var index = block.map((k, v) => {
             if (query.includes(k.value)) {
                 return v
             }
         })
-        console.log(index)
         if (index.length !== 0) {
             for (var i = 0; i < block.length; i++) {
                 if (index[i] !== undefined) {
@@ -162,7 +162,11 @@ export default class Round extends React.Component {
                             out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k)} >Destroy</button></li>
 
                         } else if (this.onCheck(k.round_player)) {
-                            out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                            if (in_round) {
+
+                            } else {
+                                out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                            }
                         } else {
                             out = <li><button onClick={() => this.onLeave(k)} >Leave</button></li>
                         }
@@ -187,15 +191,19 @@ export default class Round extends React.Component {
     }
 
     render() {
-        var create = ''
         const { time_block, round_create } = this.state
-        const { rounds_box, loginToken } = this.props
+        const { rounds_box, loginToken, origin_tb } = this.props
+        var tb = Object.values(origin_tb).map((k) => {
+            return (
+                <div key={k.value}>
+                    {k.text}
+                    {this.timeBlockCreate(k.value)}
+                </div>
+            )
+        })
         return (
             <div>
-                Early Block
-                {this.timeBlockCreate('early')}
-                Late Block
-                {this.timeBlockCreate('later')}
+                {tb}
                 Hidden Block
                 <RoundCreate loginToken={loginToken} round_create={round_create} time_block={time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
             </div >

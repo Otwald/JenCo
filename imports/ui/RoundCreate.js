@@ -12,7 +12,7 @@ export default class RoundCreate extends React.Component {
                     <li>
                         ZeitBlock<Dropdown
                             placeholder='Block'
-                            options={time_block}
+                            options={Array.from(time_block)}
                             scrolling
                             onChange={onInputBlock}
                             type='round_tb'

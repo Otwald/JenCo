@@ -9,9 +9,10 @@ export default RoundContainer = withTracker(() => {
     const connection = Meteor.subscribe('rounds');
     const loading = connection.ready();
     var rounds_box = Rounds.find().fetch()
-
+    const origin_tb = [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }]
     return {
         loading,
         rounds_box,
+        origin_tb
     }
 })(Round)
