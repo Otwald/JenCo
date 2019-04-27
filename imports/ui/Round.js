@@ -164,7 +164,9 @@ export default class Round extends React.Component {
                             out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k, time)} >Destroy</button></li>
                         } else if (this.state.in_round[time] !== false) {
                             if (this.onCheck(k.round_player, time)) {
-                                out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                                if (k.round_curr_pl < k.round_max_pl) {
+                                    out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                                }
                             } else {
                                 out = <li><button onClick={() => this.onLeave(k, time)} >Leave</button></li>
                             }
