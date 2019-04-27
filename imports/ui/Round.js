@@ -8,6 +8,13 @@ export default class Round extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            // beschreibungsfeld 
+            //5 blöcke
+            //Vorgefertigten Charaktere
+            // nur einmal spieler pro block
+            // tisch 5
+            // min anbieten 5 plätze
+            // max 3 plätze online
             round_create: {
                 round_tb: '',
                 round_name: '',
