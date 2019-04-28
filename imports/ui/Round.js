@@ -32,7 +32,9 @@ export default class Round extends React.Component {
 
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
-            this.timeOptions(Object.create(this.props.origin_tb))
+            if (this.props.event) {
+                this.timeOptions(Object.create(this.props.event.tb))
+            }
         }
         if (this.props.in_round !== lastprops.in_round) {
             this.setState({ in_round: this.props.in_round });
@@ -197,16 +199,18 @@ export default class Round extends React.Component {
 
     render() {
         const { time_block, round_create } = this.state
-        const { rounds_box, origin_tb } = this.props
-        console.log(this.props.in_round);
-        var tb = Object.values(origin_tb).map((k) => {
-            return (
-                <div key={k.value}>
-                    {k.text}
-                    {this.timeBlockCreate(k.value)}
-                </div>
-            )
-        })
+        const { event } = this.props
+        var tb = ''
+        if (event) {
+            tb = Object.values(event.tb).map((k) => {
+                return (
+                    <div key={k.value}>
+                        {k.text}
+                        {this.timeBlockCreate(k.value)}
+                    </div>
+                )
+            })
+        }
         return (
             <div>
                 {tb}

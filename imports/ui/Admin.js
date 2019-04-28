@@ -17,17 +17,20 @@ export default class Admin extends React.Component {
                 tb: [],
                 table: null,
                 price: null,
+            },
+            block_create: null
+        }
+    }
+
+    componentWillReceiveProps = (nextprops) => {
+        if (nextprops.event) {
+            if (this.state.settings !== nextprops.event) {
+                this.setState({ settings: nextprops.event})
             }
         }
-        console.log(props)
     }
 
-    componentDidUpdate = (lastprops) => {
-        if (this.props.event !== lastprops.event) {
-            this.setState({ settings: this.props.event })
-        }
-    }
-
+    // for state update with event infos
     onInput = (e) => {
         var temp = this.state.settings
         var value = e.target.value
@@ -35,13 +38,53 @@ export default class Admin extends React.Component {
         this.setState({ settings: temp })
     }
 
+    //creates timeblock for rounds
+    onBlockCreate = (e) => {
+        this.setState({ block_create: e.target.value })
+    }
+
+    //saves state.setting to mongo
     onSave = () => {
-        event_settings.update(this.state.settings)
+        event_settings.update({ _id: this.state.settings._id }, this.state.settings)
+    }
+
+    //saves timeblock into state and updates mongo
+    onBlockSave = () => {
+        var temp = this.state.settings;
+        temp.tb.push({ text: this.state.block_create, value: temp.tb.length })
+        this.setState({ settings: temp });
+        this.onSave()
+    }
+
+    //deletes timebock from state and updates mongo
+    onBlockDelete = (v) => {
+        var temp = this.state.settings;
+        var a_slice = []
+        temp.tb.splice(v, 1);
+        temp.tb.map((k,v)=>{
+            a_slice.push({text:k.text , value: v})
+        })
+        temp.tb = a_slice
+        this.setState({ settings: temp });
+        this.onSave()
     }
 
     render() {
-        console.log(this.state)
+        var blocks = ''
         const { settings } = this.state
+        const { event } = this.props
+        if (event) {
+
+            if (settings.tb.length > 0) {
+                blocks = settings.tb.map((k, v) => {
+                    return (
+                        <div key={v}>
+                            <li>{k.text}<button onClick={() => this.onBlockDelete(v)} >Destroy</button> </li>
+                        </div>
+                    )
+                })
+            }
+        }
         return (
             <div>
                 <ul>
@@ -53,11 +96,9 @@ export default class Admin extends React.Component {
                     <li>Table<input type='text' name='table' onChange={this.onInput} placeholder={settings.table} /></li>
                     <li>Timeblocks:</li>
                     <ul>
-                        <li>Block 1 Edit <br />
-                            Destroy
-                        </li>
+                        {blocks}
                         <li>
-                            <input type='text' name='table' onChange={this.onBlockCreate} /><button onClick={this.onBlockSave} >Add</button><br />
+                            <input type='text' name='block_create' onChange={this.onBlockCreate} /><button onClick={this.onBlockSave} >Add</button><br />
                         </li>
                     </ul>
                     <li><button onClick={this.onSave} >Save</button></li>
