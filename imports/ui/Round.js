@@ -169,7 +169,7 @@ export default class Round extends React.Component {
                                 }
                             }
                         } else {
-                            if (! this.onCheck(k.round_player, time)) {
+                            if (!this.onCheck(k.round_player, time)) {
                                 out = <li><button onClick={() => this.onLeave(k, time)} >Leave</button></li>
                             }
                         }
@@ -197,7 +197,7 @@ export default class Round extends React.Component {
 
     render() {
         const { time_block, round_create } = this.state
-        const { rounds_box, loginToken, origin_tb } = this.props
+        const { rounds_box, origin_tb } = this.props
         console.log(this.props.in_round);
         var tb = Object.values(origin_tb).map((k) => {
             return (
@@ -211,7 +211,7 @@ export default class Round extends React.Component {
             <div>
                 {tb}
                 Hidden Block
-                <RoundCreate loginToken={loginToken} round_create={round_create} time_block={time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
+                <RoundCreate round_create={round_create} time_block={time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
             </div >
         )
     }

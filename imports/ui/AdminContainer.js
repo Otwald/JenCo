@@ -4,6 +4,10 @@ import { withTracker } from 'meteor/react-meteor-data';
 
 import Admin from './Admin';
 
-export default RoundContainer = withTracker(() => {
-    return
+export default AdminContainer = withTracker(() => {
+
+    Meteor.subscribe('user_account_admin')
+    return {
+
+    }
 })(Admin);

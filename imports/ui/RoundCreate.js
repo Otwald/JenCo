@@ -5,7 +5,7 @@ import { Dropdown } from 'semantic-ui-react';
 
 export default class RoundCreate extends React.Component {
     render() {
-        const { loginToken, time_block, round_create, onSave, onInput, onInputBlock } = this.props
+        const { time_block, round_create, onSave, onInput, onInputBlock } = this.props
         var create = '';
         if (Meteor.userId()) {
             create = <div>

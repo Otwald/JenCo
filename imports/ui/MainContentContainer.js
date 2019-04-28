@@ -3,9 +3,9 @@ import React from 'react';
 import Welcome from './Welcome';
 import Account from './Account';
 import RoundContainer from './RoundContainer';
+import AdminContainer from './AdminContainer';
 
 import 'semantic-ui-css/semantic.min.css'
-import AdminContainer from './AdminContainer';
 export default class MainContentContainer extends React.Component {
     constructor(props) {
         super(props)
@@ -19,12 +19,12 @@ export default class MainContentContainer extends React.Component {
         this.setState({ in_round: temp });
     }
     render() {
-        const { tab, loginToken, user } = this.props
+        const { tab, user } = this.props
         const { in_round } = this.state
         return (
             <div>
                 {tab === 'welcome' ? <Welcome /> : ''}
-                {tab === 'round' ? <RoundContainer loginToken={loginToken} user={user} in_round={in_round} onCallback={this.onCallback} /> : ''}
+                {tab === 'round' ? <RoundContainer user={user} in_round={in_round} onCallback={this.onCallback} /> : ''}
                 {tab === 'account' ? <Account /> : ''}
                 {tab === 'admin' ? <AdminContainer /> : ''}
             </div>
