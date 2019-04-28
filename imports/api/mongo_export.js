@@ -23,6 +23,12 @@ if (Meteor.isServer) {
         }
         return users_account.find({});
     })
+    Meteor.publish('event_settings_admin', function(id){
+        if(!this.userId){
+            return this.ready();
+        }
+        return event_settings.find({});
+    })
 }
 
 // if (Meteor.isClient) {
