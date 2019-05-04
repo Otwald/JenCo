@@ -1,8 +1,7 @@
 import React from 'react';
-import { users_account, event_settings } from '../api/mongo_export';
+import { users_account, event_settings , users_archive} from '../api/mongo_export';
 
 export default class Admin extends React.Component {
-    // nutzer verwalten , nutzer aufrufen als liste, admin sehen realnamen, option paycheck false :true
     // capache abfragen für anmeldung
 
     // mail mit konto info beim account erstellen,
@@ -66,6 +65,7 @@ export default class Admin extends React.Component {
         this.onSave()
     }
 
+    // just translats booleans to words
     outPay(data) {
         if (data) {
             return 'hat bezahlt'
@@ -74,15 +74,25 @@ export default class Admin extends React.Component {
         }
 
     }
-    onClickButton(data) {
+
+    //switchey paystatus
+    onClickUserSwith(data) {
         data.bill = !data.bill
         users_account.update({ _id: data._id },data)
     }
 
+    //archives and destroys user accounts(!loginaccount)
+    onClickUserDestroy(data){
+        users_archive.insert(data)
+        users_account.remove({_id: data._id});
+    }
+
+    //for user table
     mouseIn = (e) => {
         this.setState({ activeUser: e.target.value })
     }
 
+    //for user table
     mouseOut = (e) => {
         this.setState({ activeUser: null })
     }
@@ -117,7 +127,8 @@ export default class Admin extends React.Component {
                                 <li>{key.profil}</li>
                                 <li>{key.age}</li>
                                 <li>{key.email}</li>
-                                <li><button onClick={(e) => this.onClickButton(key)} >Switch Pay</button></li>
+                                <li><button onClick={(e) => this.onClickUserSwith(key)} >Switch Pay</button></li>
+                                <li><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
                             </ul>
                             : ""}
                     </li>
