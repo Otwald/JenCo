@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
-import {users_account} from './../api/mongo_export';
+import { users_account } from './../api/mongo_export';
 import { Dropdown } from 'semantic-ui-react';
 
 export default class Account extends React.Component {
@@ -11,7 +11,8 @@ export default class Account extends React.Component {
         this.state = {
             account: {
                 profil: null,
-                real_name: null,
+                first: null,
+                last: null,
                 age: null,
                 email: Meteor.user().emails[0].address,
                 _id: Meteor.userId()
@@ -82,11 +83,19 @@ export default class Account extends React.Component {
         if (data.profil.length === 0) {
             check = false;
         }
-        if (data.real_name.length === 0) {
+        if (data.first.length === 0) {
+            check = false;
+        }
+        if (data.last.length === 0) {
             check = false;
         }
         if (check) {
-            users_account.insert(data);
+            if (this.props.user) {
+                data['_id'] = this.props.user._id
+                users_account.update({ _id: data._id }, data)
+            } else {
+                users_account.insert(data);
+            }
         }
     }
 
@@ -103,7 +112,8 @@ export default class Account extends React.Component {
                 <ul>
                     Account Content
                     <li>Profil Name<input type='text' name='profil' onChange={this.onInput} /></li>
-                    <li>Real Name<input type='text' name='real_name' onChange={this.onInput} /></li>
+                    <li>Vorname<input type='text' name='first' onChange={this.onInput} /></li>
+                    <li>Nachname<input type='text' name='last' onChange={this.onInput} /></li>
                     <li>Alter =
                         <Dropdown
                             placeholder='Tage'

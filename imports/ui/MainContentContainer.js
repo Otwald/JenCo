@@ -25,7 +25,7 @@ export default class MainContentContainer extends React.Component {
             <div>
                 {tab === 'welcome' ? <Welcome /> : ''}
                 {tab === 'round' ? <RoundContainer user={user} in_round={in_round} onCallback={this.onCallback} /> : ''}
-                {tab === 'account' ? <Account /> : ''}
+                {tab === 'account' ? <Account user={user}/> : ''}
                 {tab === 'admin' ? <AdminContainer /> : ''}
             </div>
         )
