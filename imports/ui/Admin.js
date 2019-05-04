@@ -3,29 +3,26 @@ import { users_account, event_settings } from '../api/mongo_export';
 
 export default class Admin extends React.Component {
     // nutzer verwalten , nutzer aufrufen als liste, admin sehen realnamen, option paycheck false :true
+    // capache abfragen für anmeldung
+
     // mail mit konto info beim account erstellen,
     // zweite mail sobald bestätigt
-
-    // capache abfragen für anmeldung
-    constructor(props) {
-        super(props)
-        this.state = {
-            settings: {
-                e_start: null,
-                e_end: null,
-                e_loc: null,
-                tb: [],
-                table: null,
-                price: null,
-            },
-            block_create: null
-        }
+    state = {
+        settings: {
+            e_start: null,
+            e_end: null,
+            e_loc: null,
+            tb: [],
+            table: null,
+            price: null,
+        },
+        block_create: null,
+        activeUser: null,
     }
-
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
             if (this.state.settings !== nextprops.event) {
-                this.setState({ settings: nextprops.event})
+                this.setState({ settings: nextprops.event })
             }
         }
     }
@@ -61,20 +58,41 @@ export default class Admin extends React.Component {
         var temp = this.state.settings;
         var a_slice = []
         temp.tb.splice(v, 1);
-        temp.tb.map((k,v)=>{
-            a_slice.push({text:k.text , value: v})
+        temp.tb.map((k, v) => {
+            a_slice.push({ text: k.text, value: v })
         })
         temp.tb = a_slice
         this.setState({ settings: temp });
         this.onSave()
     }
 
-    render() {
-        var blocks = ''
-        const { settings } = this.state
-        const { event } = this.props
-        if (event) {
+    outPay(data) {
+        if (data) {
+            return 'hat bezahlt'
+        } else {
+            return 'nicht bezahlt'
+        }
 
+    }
+    onClickButton(data) {
+        data.bill = !data.bill
+        users_account.update({ _id: data._id },data)
+    }
+
+    mouseIn = (e) => {
+        this.setState({ activeUser: e.target.value })
+    }
+
+    mouseOut = (e) => {
+        this.setState({ activeUser: null })
+    }
+
+    render() {
+        var blocks = '';
+        var user_block = '';
+        const { settings, activeUser } = this.state
+        const { event, users } = this.props
+        if (event) {
             if (settings.tb.length > 0) {
                 blocks = settings.tb.map((k, v) => {
                     return (
@@ -85,8 +103,33 @@ export default class Admin extends React.Component {
                 })
             }
         }
+
+        if (users.length > 0) {
+            users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
+            user_block = users.map((key, value) => {
+                return (
+                    <li onMouseEnter={this.mouseIn} onMouseLeave={this.mouseOut} key={'User' + value} value={value}>
+                        {key.last} {this.outPay(key.bill)}
+                        {value === activeUser ?
+                            <ul>
+                                <li>{key.first}</li>
+                                <li>{key.last}</li>
+                                <li>{key.profil}</li>
+                                <li>{key.age}</li>
+                                <li>{key.email}</li>
+                                <li><button onClick={(e) => this.onClickButton(key)} >Switch Pay</button></li>
+                            </ul>
+                            : ""}
+                    </li>
+
+                )
+            })
+        }
         return (
             <div>
+                <ul>
+                    {user_block}
+                </ul>
                 <ul>
                     <li>Event Start<input type='text' name='e_start' onChange={this.onInput} placeholder={settings.e_start} /></li>
                     <li>Event End<input type='text' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
