@@ -1,11 +1,10 @@
 import React from 'react';
-import { users_account, event_settings , users_archive} from '../api/mongo_export';
+import { users_account, event_settings, users_archive } from '../api/mongo_export';
 
 export default class Admin extends React.Component {
     // capache abfragen für anmeldung
 
     // mail mit konto info beim account erstellen,
-    // zweite mail sobald bestätigt
     state = {
         settings: {
             e_start: null,
@@ -78,13 +77,24 @@ export default class Admin extends React.Component {
     //switchey paystatus
     onClickUserSwith(data) {
         data.bill = !data.bill
-        users_account.update({ _id: data._id },data)
+        users_account.update({ _id: data._id }, data)
     }
 
     //archives and destroys user accounts(!loginaccount)
-    onClickUserDestroy(data){
+    onClickUserDestroy(data) {
         users_archive.insert(data)
-        users_account.remove({_id: data._id});
+        users_account.remove({ _id: data._id });
+    }
+
+    onClickUserConfirm(data) {
+        // Client: Asynchronously send an email.
+        data.email= 'handkrampf@mytrashmailer.com'
+        Meteor.call(
+            'sendEmail',
+            data.email,(err, res)=>{
+                console.log(res);
+            }
+        );
     }
 
     //for user table
@@ -128,7 +138,7 @@ export default class Admin extends React.Component {
                                 <li>{key.age}</li>
                                 <li>{key.email}</li>
                                 <li><button onClick={(e) => this.onClickUserSwith(key)} >Switch Pay</button></li>
-                                <li><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
+                                <li><button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</button><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
                             </ul>
                             : ""}
                     </li>

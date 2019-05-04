@@ -16,7 +16,7 @@ if (Meteor.isServer) {
         if (!this.userId) {
             return this.ready();
         }
-        return users_account.find({ _id: id });
+        return users_account.find({ _id: this.userId });
     })
     Meteor.publish('user_account_admin', function (id) {
         if (!this.userId) {

@@ -160,23 +160,23 @@ export default class Round extends React.Component {
             var out = '';
             round = rounds_box.map((k, v) => {
                 if (k.round_tb === time) {
-                    if (Meteor.userId()) {
-                        if (k.round_gm_id === Meteor.userId()) {
-                            this.props.onCallback({ key: time, value: false });
-                            out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k, time)} >Destroy</button></li>
-                        } else if (this.props.in_round[time] !== false) {
-                            if (this.onCheck(k.round_player, time)) {
-                                if (k.round_curr_pl < k.round_max_pl) {
-                                    out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                    if (Meteor.userId() && this.props.user) {
+                        if (this.props.user.bill) {
+                            if (k.round_gm_id === Meteor.userId()) {
+                                this.props.onCallback({ key: time, value: false });
+                                out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k, time)} >Destroy</button></li>
+                            } else if (this.props.in_round[time] !== false) {
+                                if (this.onCheck(k.round_player, time)) {
+                                    if (k.round_curr_pl < k.round_max_pl) {
+                                        out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                                    }
+                                }
+                            } else {
+                                if (!this.onCheck(k.round_player, time)) {
+                                    out = <li><button onClick={() => this.onLeave(k, time)} >Leave</button></li>
                                 }
                             }
-                        } else {
-                            if (!this.onCheck(k.round_player, time)) {
-                                out = <li><button onClick={() => this.onLeave(k, time)} >Leave</button></li>
-                            }
                         }
-
-
                     }
                     return (
                         <div key={v}>
