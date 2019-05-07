@@ -88,10 +88,10 @@ export default class Admin extends React.Component {
 
     onClickUserConfirm(data) {
         // Client: Asynchronously send an email.
-        data.email= 'handkrampf@mytrashmailer.com'
+        data.email = 'handkrampf@mytrashmailer.com'
         Meteor.call(
             'sendEmail',
-            data.email,(err, res)=>{
+            data.email, (err, res) => {
                 console.log(res);
             }
         );
@@ -148,25 +148,30 @@ export default class Admin extends React.Component {
         }
         return (
             <div>
-                <ul>
-                    {user_block}
-                </ul>
-                <ul>
-                    <li>Event Start<input type='text' name='e_start' onChange={this.onInput} placeholder={settings.e_start} /></li>
-                    <li>Event End<input type='text' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
-                    <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
-                    <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
-                    <li>Min Spielerzahl pro Tisch</li>
-                    <li>Table<input type='text' name='table' onChange={this.onInput} placeholder={settings.table} /></li>
-                    <li>Timeblocks:</li>
+                <div className="row">
                     <ul>
-                        {blocks}
-                        <li>
-                            <input type='text' name='block_create' onChange={this.onBlockCreate} /><button onClick={this.onBlockSave} >Add</button><br />
-                        </li>
+                        {user_block}
                     </ul>
-                    <li><button onClick={this.onSave} >Save</button></li>
-                </ul>
+
+                </div>
+                <div className="row">
+                    <ul>
+                        <li>Event Start<input type='text' name='e_start' onChange={this.onInput} placeholder={settings.e_start} /></li>
+                        <li>Event End<input type='text' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
+                        <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
+                        <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
+                        <li>Min Spielerzahl pro Tisch</li>
+                        <li>Table<input type='text' name='table' onChange={this.onInput} placeholder={settings.table} /></li>
+                        <li>Timeblocks:</li>
+                        <ul>
+                            {blocks}
+                            <li>
+                                <input type='text' name='block_create' onChange={this.onBlockCreate} /><button onClick={this.onBlockSave} >Add</button><br />
+                            </li>
+                        </ul>
+                        <li><button onClick={this.onSave} >Save</button></li>
+                    </ul>
+                </div>
             </div>
         )
     }

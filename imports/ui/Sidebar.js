@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
+import AccountsUI from './AccountsUI'
 
 export default class Sidebar extends React.Component {
     onClickButton = (data) => {
@@ -12,19 +13,19 @@ export default class Sidebar extends React.Component {
         var login = ''
         var admin = ''
         if (Meteor.userId()) {
-            login = <li><button onClick={(e) => this.onClickButton('account')}>Account</button></li>
-            admin = <li><button onClick={(e) => this.onClickButton('admin')}>Admin</button> </li>
+            login = <div className="col-sm"><button onClick={(e) => this.onClickButton('account')}>Account</button></div>
+            admin = <div className="col-sm"><button onClick={(e) => this.onClickButton('admin')}>Admin</button> </div>
         }
 
         return (
-            <div className="Sidebar">
-                <ul>
-                    <li>Sidebar</li>
-                    <li><button onClick={(e) => this.onClickButton('welcome')} >Willkommen</button></li>
-                    <li><button onClick={(e) => this.onClickButton('round')} >Spielerunde</button></li>
+            <div className="row">
+                    <div className="col-sm"><button onClick={(e) => this.onClickButton('welcome')} >Willkommen</button></div>
+                    <div className="col-sm"><button onClick={(e) => this.onClickButton('round')} >Spielerunde</button></div>
                     {login}
                     {admin}
-                </ul>
+                    <div className="col-sm">
+                        <AccountsUI />
+                    </div>
             </div>
         )
     }

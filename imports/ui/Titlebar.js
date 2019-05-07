@@ -1,6 +1,5 @@
 import React from 'react';
 
-import AccountsUI from './AccountsUI'
 export default class Titlebar extends React.Component {
     render() {
         return (
@@ -9,9 +8,6 @@ export default class Titlebar extends React.Component {
                     <ul className="navbar-nav">
                         <li className="nav_item">
                             {this.props.label}
-                        </li>
-                        <li className="nav_item">
-                            <AccountsUI />
                         </li>
                     </ul>
                 </nav>

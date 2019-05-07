@@ -103,7 +103,15 @@ export default class Account extends React.Component {
         var emaivalid = '';
         const today = new Date()
         const { validemail } = this.state
-
+        const { user } = this.props
+        var p_profile = ''
+        var p_first = ''
+        var p_last = ''
+        if (user) {
+            p_profile = user.profil
+            p_first = user.first
+            p_last = user.last
+        }
         if (validemail === false) {
             emaivalid = 'Email hat keine valide Form';
         }
@@ -111,9 +119,9 @@ export default class Account extends React.Component {
             <div>
                 <ul>
                     Account Content
-                    <li>Profil Name<input type='text' name='profil' onChange={this.onInput} /></li>
-                    <li>Vorname<input type='text' name='first' onChange={this.onInput} /></li>
-                    <li>Nachname<input type='text' name='last' onChange={this.onInput} /></li>
+                    <li>Profil Name<input type='text' name='profil' onChange={this.onInput} placeholder={p_profile} /></li>
+                    <li>Vorname<input type='text' name='first' onChange={this.onInput} placeholder={p_first} /></li>
+                    <li>Nachname<input type='text' name='last' onChange={this.onInput} placeholder={p_last} /></li>
                     <li>Alter =
                         <Dropdown
                             placeholder='Tage'

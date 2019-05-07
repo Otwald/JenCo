@@ -20,7 +20,7 @@ export default class Round extends React.Component {
                 ruleset: 'Rules',
                 own_char: true,
                 round_gm: 'Placeholder',
-                round_gm_id: this.props.loginToken,
+                round_gm_id: Meteor.userId(),
                 round_curr_pl: 0,
                 round_max_pl: 5,
                 round_player: []
@@ -179,16 +179,18 @@ export default class Round extends React.Component {
                         }
                     }
                     return (
-                        <div key={v}>
-                            <ul>
-                                <li>Runden Name = {k.round_name}</li>
-                                <li>Setting = {k.setting}</li>
-                                <li>Regelwerk = {k.ruleset}</li>
-                                <li>Spielleiter = {k.round_gm}</li>
-                                <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                                <li>Spieler Namen = {this.onPlayers(k.round_player)}</li>
-                                {out}
-                            </ul>
+                        <div className="col-sm-6" key={v}>
+                            <div className="text-center">
+                                <ul className="list-unstyled">
+                                    <li>Runden Name = {k.round_name}</li>
+                                    <li>Setting = {k.setting}</li>
+                                    <li>Regelwerk = {k.ruleset}</li>
+                                    <li>Spielleiter = {k.round_gm}</li>
+                                    <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
+                                    <li>Spieler Namen = {this.onPlayers(k.round_player)}</li>
+                                    {out}
+                                </ul>
+                            </div>
                         </div>
                     )
                 }
@@ -204,9 +206,11 @@ export default class Round extends React.Component {
         if (event) {
             tb = Object.values(event.tb).map((k) => {
                 return (
-                    <div key={k.value}>
-                        {k.text}
-                        {this.timeBlockCreate(k.value)}
+                    <div className="row" key={k.value}>
+                        <div className="col-sm">
+                            <div className="text-center"><h4>{k.text}</h4></div>
+                            <div className="row">{this.timeBlockCreate(k.value)}</div>
+                        </div>
                     </div>
                 )
             })
