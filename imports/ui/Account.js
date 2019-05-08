@@ -116,55 +116,59 @@ export default class Account extends React.Component {
             emaivalid = 'Email hat keine valide Form';
         }
         return (
-            <div>
-                <ul>
-                    Account Content
+            <div className="text-center">
+                <div className="row">
+                    <div className="col-sm-12">
+                        <ul className="list-unstyled">
+                            Account Content
                     <li>Profil Name<input type='text' name='profil' onChange={this.onInput} placeholder={p_profile} /></li>
-                    <li>Vorname<input type='text' name='first' onChange={this.onInput} placeholder={p_first} /></li>
-                    <li>Nachname<input type='text' name='last' onChange={this.onInput} placeholder={p_last} /></li>
-                    <li>Alter =
+                            <li>Vorname<input type='text' name='first' onChange={this.onInput} placeholder={p_first} /></li>
+                            <li>Nachname<input type='text' name='last' onChange={this.onInput} placeholder={p_last} /></li>
+                            <li>Alter =
                         <Dropdown
-                            placeholder='Tage'
-                            options={this.timeCount(1, 31)}
-                            scrolling
-                            onChange={this.onDateInput}
-                            type='day'
+                                    placeholder='Tage'
+                                    options={this.timeCount(1, 31)}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='day'
 
-                        />
-                        <Dropdown
-                            placeholder='Monate'
-                            options={this.timeCount(1, 12)}
-                            scrolling
-                            onChange={this.onDateInput}
-                            type='month'
+                                />
+                                <Dropdown
+                                    placeholder='Monate'
+                                    options={this.timeCount(1, 12)}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='month'
 
-                        />
+                                />
 
-                        <Dropdown
-                            placeholder='Jahr'
-                            search
-                            options={this.timeCount(1900, today.getFullYear())}
-                            scrolling
-                            onChange={this.onDateInput}
-                            type='year'
-                        />
-                        {/* <div className="dropdown">
+                                <Dropdown
+                                    placeholder='Jahr'
+                                    search
+                                    options={this.timeCount(1900, today.getFullYear())}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='year'
+                                />
+                                {/* <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Days
+                        Days
                         </button>
                         {this.timeCount(1,31)}
                     </div> */}
-                    </li>
-                    {/* <li>Alter<select name='days' multiple value={[0,1]} onChange={this.onInput}/></li>
+                            </li>
+                            {/* <li>Alter<select name='days' multiple value={[0,1]} onChange={this.onInput}/></li>
                     <li>Alter<select id='simple' name='days' multiple onChange={this.onInput}>
                     {this.timeCount(1,31)}
                     </select>
-                    </li> */}
-                    <li>Veranstaltungsinfo per E-Mail<input type='text' name='email' /></li>
+                </li> */}
+                            <li>Veranstaltungsinfo per E-Mail<input type='text' name='email' /></li>
 
-                    {/* <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput} />{emaivalid}</li> */}
-                    <li><button onClick={this.onSave} >Save</button></li>
-                </ul>
+                            {/* <li>E-Mail ändern<input type='text' name='email' onChange={this.onInput} />{emaivalid}</li> */}
+                            <li><button onClick={this.onSave} >Save</button></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         )
     }
