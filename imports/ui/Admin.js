@@ -1,6 +1,10 @@
 import React from 'react';
-import { users_account, event_settings, users_archive } from '../api/mongo_export';
+import { Dropdown } from 'semantic-ui-react';
 
+import { users_account, event_settings, users_archive } from '../api/mongo_export';
+import Account from './Account';
+
+const tbdays = [{ text: 'Freitag', value: 0 }, { text: 'Samstag', value: 1 }, { text: 'Sonntag', value: 2 }]
 export default class Admin extends React.Component {
     // capache abfragen für anmeldung
 
@@ -16,6 +20,11 @@ export default class Admin extends React.Component {
         },
         block_create: null,
         activeUser: null,
+        activeTab: {
+            user: false,
+            event: false,
+            tb: false
+        },
     }
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
@@ -107,10 +116,40 @@ export default class Admin extends React.Component {
         this.setState({ activeUser: null })
     }
 
+    onTabChange = (e) => {
+        var temp = this.state.activeTab;
+        temp[e] = !temp[e];
+        this.setState({ activeTab: temp })
+    }
+
+    timeCount = (min, max) => {
+        const account = new Account
+        var out = account.timeCount(min, max);
+        out.map((value, key) => {
+            if (String(value.text).length < 2) {
+                value.text = '0' + value.text;
+                value.value = '0' + value.value;
+                return value
+            }
+        })
+        return out
+    }
+
+    onDateInput = (e, data) => {
+        console.log(data);
+    }
+
+    timeCountYear() {
+        const account = new Account;
+        const date = new Date();
+        var today = date.getFullYear()
+        return account.timeCount(today, today + 1);
+    }
+
     render() {
         var blocks = '';
         var user_block = '';
-        const { settings, activeUser } = this.state
+        const { settings, activeUser, activeTab } = this.state
         const { event, users } = this.props
         if (event) {
             if (settings.tb.length > 0) {
@@ -149,28 +188,87 @@ export default class Admin extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <ul>
+                    <div onClick={(e) => this.onTabChange('user')}>Nutzerverwaltung</div>
+                    {activeTab.user ? <ul>
                         {user_block}
-                    </ul>
-
+                    </ul> : ''}
                 </div>
                 <div className="row">
-                    <ul>
-                        <li>Event Start<input type='text' name='e_start' onChange={this.onInput} placeholder={settings.e_start} /></li>
+                    <div onClick={(e) => this.onTabChange('event')}>Eventdaten</div>
+                    {activeTab.event ? <ul>
+                        <li>Event Start
+                            <Dropdown
+                                placeholder='Tag'
+                                search
+                                options={this.timeCount(1, 31)}
+                                scrolling
+                                onChange={this.onDateInput}
+                                type='day'
+                            />
+                            <Dropdown
+                                placeholder='Monat'
+                                search
+                                options={this.timeCount(1, 12)}
+                                scrolling
+                                onChange={this.onDateInput}
+                                type='month'
+                            />
+                            <Dropdown
+                                placeholder='Jahr'
+                                search
+                                options={this.timeCountYear()}
+                                scrolling
+                                onChange={this.onDateInput}
+                                type='year'
+                            />
+                        </li>
                         <li>Event End<input type='text' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
                         <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
                         <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
                         <li>Min Spielerzahl pro Tisch</li>
                         <li>Table<input type='text' name='table' onChange={this.onInput} placeholder={settings.table} /></li>
-                        <li>Timeblocks:</li>
+                        <li><button onClick={this.onSave} >Save</button></li>
+                    </ul> : ''}
+                </div>
+                <div className="row">
+                    <div onClick={(e) => this.onTabChange('tb')}>ZeitBlock Einstellungen</div>
+                    {activeTab.tb ?
                         <ul>
                             {blocks}
-                            <li>
-                                <input type='text' name='block_create' onChange={this.onBlockCreate} /><button onClick={this.onBlockSave} >Add</button><br />
+                            <li>Name <input type='text' name='block_create' onChange={this.onBlockCreate} placeholder='Hier Namen einfügen' /></li>
+                            <li>Zeit Start
+                                <Dropdown
+                                    placeholder='Tag'
+                                    search
+                                    options={tbdays}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='year'
+                                />
+                                <Dropdown
+                                    placeholder='Stunde'
+                                    search
+                                    options={this.timeCount(0, 23)}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='hours'
+                                />
+                                <Dropdown
+                                    placeholder='Minuten'
+                                    search
+                                    options={this.timeCount(0, 59)}
+                                    scrolling
+                                    onChange={this.onDateInput}
+                                    type='minutes'
+                                />
                             </li>
+                            <li>
+                                Zeit Länge
+                            </li>
+                            <li>Spielblock <input type='text' name='block_create' onChange={this.onBlockCreate} placeholder='Ja/Nein' /></li>
+                            <li><button onClick={this.onBlockSave} >Add</button><br /></li>
                         </ul>
-                        <li><button onClick={this.onSave} >Save</button></li>
-                    </ul>
+                        : ''}
                 </div>
             </div>
         )

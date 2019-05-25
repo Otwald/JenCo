@@ -2,9 +2,22 @@ import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
+import { event_settings } from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
-  // code to run on server at startup
+  console.log('Restart');
+  // for initial Setup Creating one Empty Event Entry
+  const cursor = event_settings.findOne();
+  if(!cursor){
+    event_settings.insert({
+      e_start: null,
+      e_end: null,
+      e_loc: null,
+      tb: [],
+      table: null,
+      price: null,
+  });
+  }
 });
 
 

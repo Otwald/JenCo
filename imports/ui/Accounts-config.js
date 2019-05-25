@@ -1,6 +1,6 @@
-import { Accounts } from 'meteor/useraccounts:bootstrap';
+// import { Accounts } from 'meteor/useraccounts:bootstrap';
 
 
-AccountsTemplates.configure({
-    showReCaptcha: true
-});
+// AccountsTemplates.configure({
+//     showReCaptcha: false
+// });

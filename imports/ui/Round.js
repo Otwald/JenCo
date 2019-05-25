@@ -9,7 +9,6 @@ export default class Round extends React.Component {
         super(props)
         this.state = {
             // beschreibungsfeld 
-            //5 blöcke
             //Vorgefertigten Charaktere
             // tisch 5
             // max 3 plätze online
@@ -25,7 +24,7 @@ export default class Round extends React.Component {
                 round_max_pl: 5,
                 round_player: []
             },
-            time_block: [{ text: 'Früh', value: 'early' }, { text: 'Spät', value: 'later' }],
+            time_block: [],
             in_round: [],
         }
     }
