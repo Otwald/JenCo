@@ -8,13 +8,13 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.5",
+    "@babel/runtime": "^7.4.4",
     "bcrypt": "^3.0.6",
     "boostrap": "^2.0.0",
     "bootstrap": "^4.3.1",
     "meteor-node-stubs": "^0.4.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.86.0"
   },
