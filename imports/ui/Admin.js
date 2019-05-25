@@ -11,8 +11,8 @@ export default class Admin extends React.Component {
     // mail mit konto info beim account erstellen,
     state = {
         settings: {
-            e_start: null,
-            e_end: null,
+            e_start: new Date(),
+            e_end: new Date(),
             e_loc: null,
             tb: [],
             table: null,
@@ -25,6 +25,10 @@ export default class Admin extends React.Component {
             event: false,
             tb: false
         },
+        date:{
+            begin: '0000-00-00',
+            end: '0000-00-00',
+        }
     }
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
@@ -37,8 +41,7 @@ export default class Admin extends React.Component {
     // for state update with event infos
     onInput = (e) => {
         var temp = this.state.settings
-        var value = e.target.value
-        temp[e.target.name] = value
+        temp[e.target.name] = e.target.value
         this.setState({ settings: temp })
     }
 
@@ -136,7 +139,32 @@ export default class Admin extends React.Component {
     }
 
     onDateInput = (e, data) => {
-        console.log(data);
+        // data = data.type.split('-');
+        // var temp = this.state.date
+        // temp = temp[data[0]].split('-');
+        // switch(data[1]){
+        //     case 'day':
+        //         temp[2] = data[1];
+        //         break
+        //     case 'month':
+        //         temp[1] = data[1];
+        //         break;
+        //     case 'year':
+        //         temp[0] = data[1];
+        //         break;
+        // }
+        // console.log(temp);
+    }
+
+    inBetweenTime = (start, end) =>{
+        start = new Date(start);
+        end = new Date(end);
+        // start =start.getDay();
+        // end = end.getDay();
+        for(var i = start; i <= end; i++){
+            console.log(i);
+        }
+        return [{ text: 'Freitag', value: 0 }, { text: 'Samstag', value: 1 }, { text: 'Sonntag', value: 2 }]
     }
 
     timeCountYear() {
@@ -196,33 +224,8 @@ export default class Admin extends React.Component {
                 <div className="row">
                     <div onClick={(e) => this.onTabChange('event')}>Eventdaten</div>
                     {activeTab.event ? <ul>
-                        <li>Event Start
-                            <Dropdown
-                                placeholder='Tag'
-                                search
-                                options={this.timeCount(1, 31)}
-                                scrolling
-                                onChange={this.onDateInput}
-                                type='day'
-                            />
-                            <Dropdown
-                                placeholder='Monat'
-                                search
-                                options={this.timeCount(1, 12)}
-                                scrolling
-                                onChange={this.onDateInput}
-                                type='month'
-                            />
-                            <Dropdown
-                                placeholder='Jahr'
-                                search
-                                options={this.timeCountYear()}
-                                scrolling
-                                onChange={this.onDateInput}
-                                type='year'
-                            />
-                        </li>
-                        <li>Event End<input type='text' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
+                        <li>Event Start<input type='date' name='e_start' onChange={this.onInput} placeholder={new Date(settings.e_start)} /> </li>
+                        <li>Event End<input type='date' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
                         <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
                         <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
                         <li>Min Spielerzahl pro Tisch</li>
@@ -231,6 +234,7 @@ export default class Admin extends React.Component {
                     </ul> : ''}
                 </div>
                 <div className="row">
+                    {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
                     <div onClick={(e) => this.onTabChange('tb')}>ZeitBlock Einstellungen</div>
                     {activeTab.tb ?
                         <ul>
@@ -240,32 +244,17 @@ export default class Admin extends React.Component {
                                 <Dropdown
                                     placeholder='Tag'
                                     search
-                                    options={tbdays}
+                                    options={this.inBetweenTime(event.e_start, event.e_end)}
                                     scrolling
                                     onChange={this.onDateInput}
                                     type='year'
                                 />
-                                <Dropdown
-                                    placeholder='Stunde'
-                                    search
-                                    options={this.timeCount(0, 23)}
-                                    scrolling
-                                    onChange={this.onDateInput}
-                                    type='hours'
-                                />
-                                <Dropdown
-                                    placeholder='Minuten'
-                                    search
-                                    options={this.timeCount(0, 59)}
-                                    scrolling
-                                    onChange={this.onDateInput}
-                                    type='minutes'
-                                />
+                               <input type='time' name='block_start' />
                             </li>
                             <li>
                                 Zeit Länge
                             </li>
-                            <li>Spielblock <input type='text' name='block_create' onChange={this.onBlockCreate} placeholder='Ja/Nein' /></li>
+                            <li>Spielblock <input type='checkbox' name='block_create' onChange={this.onBlockCreate} placeholder='Ja/Nein' /></li>
                             <li><button onClick={this.onBlockSave} >Add</button><br /></li>
                         </ul>
                         : ''}
