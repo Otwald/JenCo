@@ -45,4 +45,10 @@ if (Meteor.isServer) {
             }
         })
     })
+    Meteor.publish('timeblock', function(){
+        if(!this.userId){
+            return this.ready()
+        }
+        return timeblock.find({});
+    })
 }

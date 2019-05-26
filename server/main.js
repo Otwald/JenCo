@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
-import { event_settings, timeblock } from './../imports/api/mongo_export';
+import { event_settings, timeblock , Rounds} from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
   console.log('Restart');
@@ -48,5 +48,9 @@ Meteor.methods({
   },
   BlockUpdate(data) {
     timeblock.update({ _id: data._id }, data)
-  }
+  },
+  RoundUpdate(data){
+    Rounds.update({ _id: data._id }, data)
+  },
+  
 });

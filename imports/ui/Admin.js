@@ -118,7 +118,7 @@ export default class Admin extends React.Component {
     render() {
         var user_block = '';
         const { settings, activeUser, activeTab } = this.state
-        const { event, users } = this.props
+        const { event, users, timeblock} = this.props
         if (users.length > 0) {
             users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
             user_block = users.map((key, value) => {
@@ -141,6 +141,7 @@ export default class Admin extends React.Component {
                 )
             })
         }
+        console.log(timeblock)
         return (
             <div>
                 <div className="row">
@@ -165,7 +166,7 @@ export default class Admin extends React.Component {
                     {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
                     <div onClick={(e) => this.onTabChange('tb')}>ZeitBlock Einstellungen</div>
                     {activeTab.tb ?
-                        <AdminBlock event={event} />
+                        <AdminBlock event={event} timeblock={timeblock} />
                         : ''}
                 </div>
             </div>

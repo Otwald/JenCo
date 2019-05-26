@@ -30,7 +30,6 @@ export default class AdminBlock extends React.Component {
             e.target.value = !temp[e.target.name];
         }
         temp[e.target.name] = e.target.value
-        console.log(temp);
         this.setState({ block_create: temp })
     }
 
@@ -55,9 +54,6 @@ export default class AdminBlock extends React.Component {
             return
         }
         Meteor.call('BlockCreate', temp)
-        // temp.tb.push({ text: this.state.block_create, value: temp.tb.length })
-        // this.setState({ settings: temp });
-        // this.onSave()
     }
 
     //deletes timebock from state and updates mongo
@@ -120,18 +116,17 @@ export default class AdminBlock extends React.Component {
 
     render() {
         var blocks = '';
-        const { event } = this.props
-        if (event) {
-            if (event.tb.length > 0) {
-                blocks = event.tb.map((k, v) => {
-                    return (
-                        <div key={v}>
-                            <li>{k.text}<button onClick={() => this.onBlockDelete(v)} >Destroy</button> </li>
-                        </div>
-                    )
-                })
-            }
+        const { event, timeblock } = this.props
+        if (timeblock.length > 0) {
+            blocks = timeblock.map((k, v) => {
+                return (
+                    <div key={v}>
+                        <li>{k.block_name}<button onClick={() => this.onBlockDelete(v)} >Destroy</button> </li>
+                    </div>
+                )
+            })
         }
+
         return (
             <ul>
                 {blocks}

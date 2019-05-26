@@ -70,7 +70,7 @@ export default class Round extends React.Component {
         }
         if (check) {
             if (data._id) {
-                Rounds.update({ _id: data._id }, data)
+                Meteor.call('RoundUpdate', data)
             } else {
                 Rounds.insert(data)
             }
@@ -92,7 +92,7 @@ export default class Round extends React.Component {
     onJoin(data) {
         data.round_player.push({ 'profil': this.props.user.profil, 'user_id': Meteor.userId() })
         data.round_curr_pl++
-        Rounds.update({ _id: data._id }, data)
+        Meteor.call('RoundUpdate', data)
     }
 
     //leaves a round
@@ -111,7 +111,7 @@ export default class Round extends React.Component {
             })
         }
         this.props.onCallback({ key: time, value: true });
-        Rounds.update({ _id: data._id }, data)
+        Meteor.call('RoundUpdate', data)
     }
 
     //checks if user is player in round
