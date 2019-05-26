@@ -18,17 +18,22 @@ export default class Admin extends React.Component {
             table: null,
             price: null,
         },
-        block_create: null,
+        block_create: {
+            block_name: 'null',
+            block_pnp: false,
+            block_start: null,
+            block_length: null
+        },
         activeUser: null,
         activeTab: {
             user: false,
             event: false,
             tb: false
         },
-        date: {
-            begin: '0000-00-00',
-            end: '0000-00-00',
-        }
+
+        date: 28800000,
+        time: 1558656000000,
+
     }
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
@@ -48,7 +53,13 @@ export default class Admin extends React.Component {
 
     //creates timeblock for rounds
     onBlockCreate = (e) => {
-        this.setState({ block_create: e.target.value })
+        var temp = this.state.block_create;
+        if (e.target.name === 'block_pnp') {
+            e.target.value = !temp[e.target.name];
+        }
+        temp[e.target.name] = e.target.value
+        console.log(temp);
+        this.setState({ block_create: temp })
     }
 
     //saves state.setting to mongo
@@ -58,10 +69,20 @@ export default class Admin extends React.Component {
 
     //saves timeblock into state and updates mongo
     onBlockSave = () => {
-        var temp = this.state.settings;
-        temp.tb.push({ text: this.state.block_create, value: temp.tb.length })
-        this.setState({ settings: temp });
-        this.onSave()
+        var temp = this.state.block_create;
+        if (temp.block_name.length === 0) {
+            return
+        }
+        if (this.state.date === null) {
+            return
+        }
+        if (this.state.time === null) {
+            return
+        }
+        temp.block_start = this.state.date + this.state.time;
+        // temp.tb.push({ text: this.state.block_create, value: temp.tb.length })
+        // this.setState({ settings: temp });
+        // this.onSave()
     }
 
     //deletes timebock from state and updates mongo
@@ -140,36 +161,30 @@ export default class Admin extends React.Component {
     }
 
     onDateInput = (e, data) => {
-        console.log(data);
-        console.log(e.target.value);
-        // data = data.type.split('-');
-        // var temp = this.state.date
-        // temp = temp[data[0]].split('-');
-        // switch(data[1]){
-        //     case 'day':
-        //         temp[2] = data[1];
-        //         break
-        //     case 'month':
-        //         temp[1] = data[1];
-        //         break;
-        //     case 'year':
-        //         temp[0] = data[1];
-        //         break;
+        // console.log(data);
+        // if (data) {
+        //     var temp = data.value - 1000 * 60 * 60 * 2
         // }
-        // console.log(temp);
+        this.setState({ date: data.value });
     }
 
+    onTimeInput = (e) => {
+        var time = '1970-01-01T' + e.target.value + 'Z'
+        this.setState({ time: new Date(time).getTime() - 1000 * 60 * 60 * 2 });
+    }
+
+    // Builds an Array of valid Dates from the Event, to Build the Event Timetable
     inBetweenTime = (start, end) => {
         const week = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
         start = new Date(start).getTime();
         end = new Date(end).getTime();
         var out = []
         var temp = new Date();
-        for(var i = start; i <= end;){
+        for (var i = start; i <= end;) {
             temp = new Date(i);
-            var text = week[temp.getDay()] + ' '+ temp.getDate() + '.'+ (temp.getMonth() + 1)
-            out.push({value : i , text : text})
-            i =  i + 60*60 *24 * 1000;
+            var text = week[temp.getDay()] + ' ' + temp.getDate() + '.' + (temp.getMonth() + 1)
+            out.push({ value: i, text: text })
+            i = i + 60 * 60 * 24 * 1000;
         }
         return out;
     }
@@ -246,22 +261,22 @@ export default class Admin extends React.Component {
                     {activeTab.tb ?
                         <ul>
                             {blocks}
-                            <li>Name <input type='text' name='block_create' onChange={this.onBlockCreate} placeholder='Hier Namen einfügen' /></li>
+                            <li>Name <input type='text' name='block_name' onChange={this.onBlockCreate} placeholder='Hier Namen einfügen' /></li>
                             <li>Zeit Start
                                 <Dropdown
                                     placeholder='Tag'
                                     search
-                                    options={this.inBetweenTime(event.e_start, event.e_end)}
+                                    options={this.inBetweenTime(settings.e_start, settings.e_end)}
                                     scrolling
                                     onChange={this.onDateInput}
                                     type='year'
                                 />
-                                <input type='time' name='block_start' onChange={this.onDateInput} />
+                                <input type='time' name='block_start' onChange={this.onTimeInput} />
                             </li>
                             <li>
                                 Zeit Länge
                             </li>
-                            <li>Spielblock <input type='checkbox' name='block_create' onChange={this.onBlockCreate} placeholder='Ja/Nein' /></li>
+                            <li>Spielblock <input type='checkbox' name='block_pnp' onChange={this.onBlockCreate} /></li>
                             <li><button onClick={this.onBlockSave} >Add</button><br /></li>
                         </ul>
                         : ''}

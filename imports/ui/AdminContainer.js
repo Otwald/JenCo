@@ -11,7 +11,6 @@ export default AdminContainer = withTracker(() => {
     Meteor.subscribe('user_account_admin', Meteor.userId());
     Meteor.subscribe('event_settings_admin', Meteor.userId());
     Meteor.subscribe('users_archive', Meteor.userId());
-
     return {
         users : users_account.find().fetch(),
         event : event_settings.findOne(),
