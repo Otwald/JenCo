@@ -5,6 +5,7 @@ export const Rounds = new Mongo.Collection('rounds');
 export const users_account = new Mongo.Collection('users_account');
 export const users_archive = new Mongo.Collection('users_archive');
 export const event_settings = new Mongo.Collection('event_settings');
+export const timeblock = new Mongo.Collection('timeblock');
 
 if (Meteor.isServer) {
     export const Admin = new Mongo.Collection('admin');
