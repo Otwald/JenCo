@@ -11,8 +11,8 @@ export default class Admin extends React.Component {
     // mail mit konto info beim account erstellen,
     state = {
         settings: {
-            e_start: new Date(),
-            e_end: new Date(),
+            e_start: null,
+            e_end: null,
             e_loc: null,
             tb: [],
             table: null,
@@ -25,7 +25,7 @@ export default class Admin extends React.Component {
             event: false,
             tb: false
         },
-        date:{
+        date: {
             begin: '0000-00-00',
             end: '0000-00-00',
         }
@@ -33,6 +33,7 @@ export default class Admin extends React.Component {
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
             if (this.state.settings !== nextprops.event) {
+                // var temp = Object.create()
                 this.setState({ settings: nextprops.event })
             }
         }
@@ -139,6 +140,8 @@ export default class Admin extends React.Component {
     }
 
     onDateInput = (e, data) => {
+        console.log(data);
+        console.log(e.target.value);
         // data = data.type.split('-');
         // var temp = this.state.date
         // temp = temp[data[0]].split('-');
@@ -156,15 +159,19 @@ export default class Admin extends React.Component {
         // console.log(temp);
     }
 
-    inBetweenTime = (start, end) =>{
-        start = new Date(start);
-        end = new Date(end);
-        // start =start.getDay();
-        // end = end.getDay();
-        for(var i = start; i <= end; i++){
-            console.log(i);
+    inBetweenTime = (start, end) => {
+        const week = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+        start = new Date(start).getTime();
+        end = new Date(end).getTime();
+        var out = []
+        var temp = new Date();
+        for(var i = start; i <= end;){
+            temp = new Date(i);
+            var text = week[temp.getDay()] + ' '+ temp.getDate() + '.'+ (temp.getMonth() + 1)
+            out.push({value : i , text : text})
+            i =  i + 60*60 *24 * 1000;
         }
-        return [{ text: 'Freitag', value: 0 }, { text: 'Samstag', value: 1 }, { text: 'Sonntag', value: 2 }]
+        return out;
     }
 
     timeCountYear() {
@@ -224,8 +231,8 @@ export default class Admin extends React.Component {
                 <div className="row">
                     <div onClick={(e) => this.onTabChange('event')}>Eventdaten</div>
                     {activeTab.event ? <ul>
-                        <li>Event Start<input type='date' name='e_start' onChange={this.onInput} placeholder={new Date(settings.e_start)} /> </li>
-                        <li>Event End<input type='date' name='e_end' onChange={this.onInput} placeholder={settings.e_end} /></li>
+                        <li>Event Start<input type='date' name='e_start' onChange={this.onInput} placeholder={Date(settings.e_start)} /> </li>
+                        <li>Event End<input type='date' name='e_end' onChange={this.onInput} placeholder={Date(settings.e_end)} /></li>
                         <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
                         <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
                         <li>Min Spielerzahl pro Tisch</li>
@@ -249,7 +256,7 @@ export default class Admin extends React.Component {
                                     onChange={this.onDateInput}
                                     type='year'
                                 />
-                               <input type='time' name='block_start' />
+                                <input type='time' name='block_start' onChange={this.onDateInput} />
                             </li>
                             <li>
                                 Zeit Länge
