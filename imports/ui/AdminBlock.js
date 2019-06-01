@@ -55,17 +55,7 @@ export default class AdminBlock extends React.Component {
 
     //deletes timebock from state and updates mongo
     onBlockDelete = (v) => {
-        console.log(v);
         Meteor.call('BlockDelete', v._id);
-        // let temp = this.state.settings;
-        // let a_slice = []
-        // temp.tb.splice(v, 1);
-        // temp.tb.map((k, v) => {
-        //     a_slice.push({ text: k.text, value: v })
-        // })
-        // temp.tb = a_slice
-        // this.setState({ settings: temp });
-        // this.onSave()
     }
 
     onDateInput = (e, data) => {
@@ -78,7 +68,6 @@ export default class AdminBlock extends React.Component {
         let time = '1970-01-01T' + e.target.value + 'Z'
         let temp = this.state.time
         temp[e.target.name] = new Date(time).getTime() - 1000 * 60 * 60 * 2
-        console.log(temp);
         this.setState({ time: temp });
     }
 
@@ -98,40 +87,29 @@ export default class AdminBlock extends React.Component {
         return out;
     }
 
-    // lengthOptions = () => {
-    //     let out = [];
-    //     let time = new Date('1970-01-01T00:00Z');
-    //     let timestamp = time.getTime();
-    //     let hours = time.getHours();
-    //     let min = time.getMinutes();
-    //     console.log(min)
-    //     for (let i = 0; i <= 6; i++) {
-    //         out.push({
-    //             value: timestamp
-    //         });
-    //         timestamp += 1000*60*15
-    //     }
-    //     return [{ value: 2 * 60 * 60 * 100, text: '2:00' }]
-    // }
+    timeblockClick = (data) => {
+        console.log(data)
+    }
 
     render() {
         let blocks = '';
         const { event, timeblock } = this.props
         if (timeblock.length > 0) {
             // if(timeblock.length > 1){}
-            timeblock.sort(function (a,b) {
-                if(a.block_start < b.block_start){
+            timeblock.sort(function (a, b) {
+                if (a.block_start < b.block_start) {
                     return -1;
                 }
-                if(a.block_start > b.block_start){
+                if (a.block_start > b.block_start) {
                     return +1;
                 }
                 return 0;
             })
             blocks = timeblock.map((k, v) => {
                 return (
-                    <div key={v}>
-                        <li>{k.block_name}<button onClick={() => this.onBlockDelete(k)} >Destroy</button> </li>
+                    <div key={k._id} onClick={() => this.timeblockClick(k)}>
+                        <li>{k.block_name}</li>
+                        <button onClick={() => this.onBlockDelete(k)} >Destroy</button>
                     </div>
                 )
             })

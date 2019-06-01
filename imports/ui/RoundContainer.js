@@ -15,6 +15,6 @@ export default RoundContainer = withTracker(() => {
         loading,
         rounds_box,
         event: event_settings.findOne(),
-        timeblock : timeblock.find().fetch()
+        time_block : timeblock.find().fetch()
     }
 })(Round)

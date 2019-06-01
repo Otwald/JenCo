@@ -23,7 +23,7 @@ export default class Round extends React.Component {
             round_max_pl: 5,
             round_player: []
         },
-        time_block: [],
+        options_time_block: [],
         in_round: [],
     }
 
@@ -31,7 +31,7 @@ export default class Round extends React.Component {
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
             if (this.props.event) {
-                this.timeOptions(this.props.timeblock)
+                this.timeOptions(this.props.time_block)
             }
         }
         if (this.props.in_round !== lastprops.in_round) {
@@ -140,17 +140,17 @@ export default class Round extends React.Component {
 
     //creates options for timeblock when creating new round
     timeOptions = (block) => {
+        console.log(block)
         if (this.props.in_round) {
             block.map((v) => {
-                if (this.props.in_round[v._id] === false) {
-                    return
-                }
-                let temp = this.state.time_block
+                if (v.block_table !== '1') { return }
+                if (this.props.in_round[v._id] === false) { return }
+                let temp = this.state.options_time_block
                 temp.push({
                     text: v.block_name,
                     value: v._id
                 })
-                this.setState({ time_block: temp })
+                this.setState({ options_time_block: temp })
             })
         }
     }
@@ -203,11 +203,11 @@ export default class Round extends React.Component {
     }
 
     render() {
-        const { time_block, round_create } = this.state
-        const { event, timeblock } = this.props
+        const { options_time_block, round_create } = this.state
+        const { event, time_block } = this.props
         let tb = ''
         if (event) {
-            timeblock.sort(function (a, b) {
+            time_block.sort(function (a, b) {
                 if (a.block_start < b.block_start) {
                     return -1;
                 }
@@ -216,7 +216,7 @@ export default class Round extends React.Component {
                 }
                 return 0;
             })
-            tb = timeblock.map((k) => {
+            tb = time_block.map((k) => {
                 if (!k.block_table) { return }
                 return (
                     <div className="row" key={k.block_start}>
@@ -232,7 +232,7 @@ export default class Round extends React.Component {
             <div>
                 {tb}
                 Hidden Block
-                <RoundCreate round_create={round_create} time_block={time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
+                <RoundCreate round_create={round_create} time_block={options_time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
             </div >
         )
     }

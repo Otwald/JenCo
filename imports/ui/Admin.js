@@ -142,7 +142,6 @@ export default class Admin extends React.Component {
                 )
             })
         }
-        console.log(timeblock)
         return (
             <div>
                 <div className="row">
