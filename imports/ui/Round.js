@@ -32,7 +32,7 @@ export default class Round extends React.Component {
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
             if (this.props.event) {
-                this.timeOptions(Object.create(this.props.event.tb))
+                this.timeOptions(Object.create(this.props.timeblock))
             }
         }
         if (this.props.in_round !== lastprops.in_round) {
@@ -42,14 +42,14 @@ export default class Round extends React.Component {
     }
 
     onInput = (e) => {
-        var temp = this.state.round_create
-        var value = e.target.value
+        let temp = this.state.round_create
+        let value = e.target.value
         temp[e.target.name] = value
         this.setState({ round_create: temp })
     }
 
     onInputBlock = (e, data) => {
-        var temp = this.state.round_create
+        let temp = this.state.round_create
         temp[data.type] = data.value
         this.setState({ round_create: temp })
     }
@@ -58,7 +58,7 @@ export default class Round extends React.Component {
     onSave = () => {
         const data = this.state.round_create
         data.round_gm = this.props.user.profil
-        var check = true;
+        let check = true;
         if (data.round_name.length === 0) {
             check = false;
         }
@@ -98,7 +98,7 @@ export default class Round extends React.Component {
 
     //leaves a round
     onLeave(data, time) {
-        var index = Object.keys(data.round_player).map((k) => {
+        let index = Object.keys(data.round_player).map((k) => {
             if (data.round_player[k].user_id === Meteor.userId()) {
                 return k
             }
@@ -118,7 +118,7 @@ export default class Round extends React.Component {
     //checks if user is player in round
     onCheck(data, time) {
         if (data.length !== 0) {
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 if (data[i].user_id === Meteor.userId()) {
                     this.props.onCallback({ key: time, value: false });
                     return false;
@@ -130,7 +130,7 @@ export default class Round extends React.Component {
 
     //gets rounds player names to visiualize
     onPlayers(data) {
-        var out = '';
+        let out = '';
         if (data) {
             out = out.concat(Object.keys(data).map((k) => {
                 return data[k].profil
@@ -142,7 +142,7 @@ export default class Round extends React.Component {
     //creates options for timeblock when creating new round
     timeOptions = (block) => {
         if (this.props.in_round) {
-            for (var i = 0; i < block.length; i++) {
+            for (let i = 0; i < block.length; i++) {
                 if (this.props.in_round[block[i]['value']] === false) {
                     block.splice(i, 1);
                     i--;
@@ -155,9 +155,9 @@ export default class Round extends React.Component {
     //visualizes the rounds in a timeblock
     timeBlockCreate = (time) => {
         const rounds_box = this.props.rounds_box
-        var round = ''
+        let round = ''
         if (rounds_box.length !== 0) {
-            var out = '';
+            let out = '';
             round = rounds_box.map((k, v) => {
                 if (k.round_tb === time) {
                     if (Meteor.userId() && this.props.user) {
@@ -201,15 +201,16 @@ export default class Round extends React.Component {
 
     render() {
         const { time_block, round_create } = this.state
-        const { event } = this.props
-        var tb = ''
+        const { event, timeblock } = this.props
+        let tb = ''
         if (event) {
-            tb = Object.values(event.tb).map((k) => {
+            tb = timeblock.map((k) => {
+                console.log(k);
                 return (
-                    <div className="row" key={k.value}>
+                    <div className="row" key={k.block_start}>
                         <div className="col-sm">
-                            <div className="text-center"><h4>{k.text}</h4></div>
-                            <div className="row">{this.timeBlockCreate(k.value)}</div>
+                            <div className="text-center"><h4>{k.block_name}</h4></div>
+                            <div className="row">{this.timeBlockCreate(k)}</div>
                         </div>
                     </div>
                 )

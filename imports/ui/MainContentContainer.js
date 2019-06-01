@@ -14,7 +14,7 @@ export default class MainContentContainer extends React.Component {
 
     //sets props for timeblocks where user has already joined a table or created
     onCallback = (data) => {
-        var temp = this.state.in_round
+        let temp = this.state.in_round
         temp[data['key']] = data.value;
         this.setState({ in_round: temp });
     }

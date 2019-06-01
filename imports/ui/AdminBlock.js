@@ -25,7 +25,7 @@ export default class AdminBlock extends React.Component {
 
     //creates timeblock for rounds
     onBlockCreate = (e) => {
-        var temp = this.state.block_create;
+        let temp = this.state.block_create;
         if (e.target.name === 'block_pnp') {
             e.target.value = !temp[e.target.name];
         }
@@ -35,7 +35,7 @@ export default class AdminBlock extends React.Component {
 
     //saves timeblock into state and updates mongo
     onBlockSave = () => {
-        var temp = this.state.block_create;
+        let temp = this.state.block_create;
         if (temp.block_name.length === 0) {
             return
         }
@@ -57,8 +57,8 @@ export default class AdminBlock extends React.Component {
     onBlockDelete = (v) => {
         console.log(v);
         Meteor.call('BlockDelete', v._id);
-        // var temp = this.state.settings;
-        // var a_slice = []
+        // let temp = this.state.settings;
+        // let a_slice = []
         // temp.tb.splice(v, 1);
         // temp.tb.map((k, v) => {
         //     a_slice.push({ text: k.text, value: v })
@@ -69,14 +69,14 @@ export default class AdminBlock extends React.Component {
     }
 
     onDateInput = (e, data) => {
-        var temp = this.state.date
+        let temp = this.state.date
         temp[data.type] = data.value
         this.setState({ date: temp });
     }
 
     onTimeInput = (e) => {
-        var time = '1970-01-01T' + e.target.value + 'Z'
-        var temp = this.state.time
+        let time = '1970-01-01T' + e.target.value + 'Z'
+        let temp = this.state.time
         temp[e.target.name] = new Date(time).getTime() - 1000 * 60 * 60 * 2
         console.log(temp);
         this.setState({ time: temp });
@@ -87,11 +87,11 @@ export default class AdminBlock extends React.Component {
         const week = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
         start = new Date(start).getTime();
         end = new Date(end).getTime();
-        var out = []
-        var temp = new Date();
-        for (var i = start; i <= end;) {
+        let out = []
+        let temp = new Date();
+        for (let i = start; i <= end;) {
             temp = new Date(i);
-            var text = week[temp.getDay()] + ' ' + temp.getDate() + '.' + (temp.getMonth() + 1)
+            let text = week[temp.getDay()] + ' ' + temp.getDate() + '.' + (temp.getMonth() + 1)
             out.push({ value: i, text: text })
             i = i + 60 * 60 * 24 * 1000;
         }
@@ -99,13 +99,13 @@ export default class AdminBlock extends React.Component {
     }
 
     // lengthOptions = () => {
-    //     var out = [];
-    //     var time = new Date('1970-01-01T00:00Z');
-    //     var timestamp = time.getTime();
-    //     var hours = time.getHours();
-    //     var min = time.getMinutes();
+    //     let out = [];
+    //     let time = new Date('1970-01-01T00:00Z');
+    //     let timestamp = time.getTime();
+    //     let hours = time.getHours();
+    //     let min = time.getMinutes();
     //     console.log(min)
-    //     for (var i = 0; i <= 6; i++) {
+    //     for (let i = 0; i <= 6; i++) {
     //         out.push({
     //             value: timestamp
     //         });
@@ -115,7 +115,7 @@ export default class AdminBlock extends React.Component {
     // }
 
     render() {
-        var blocks = '';
+        let blocks = '';
         const { event, timeblock } = this.props
         if (timeblock.length > 0) {
             // if(timeblock.length > 1){}

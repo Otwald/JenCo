@@ -10,8 +10,8 @@ export default class Sidebar extends React.Component {
 
 
     render() {
-        var login = ''
-        var admin = ''
+        let login = ''
+        let admin = ''
         if (Meteor.userId()) {
             login = <div className="col-sm"><button onClick={(e) => this.onClickButton('account')}>Account</button></div>
             admin = <div className="col-sm"><button onClick={(e) => this.onClickButton('admin')}>Admin</button> </div>

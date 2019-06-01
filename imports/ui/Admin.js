@@ -28,7 +28,7 @@ export default class Admin extends React.Component {
     componentWillReceiveProps = (nextprops) => {
         if (nextprops.event) {
             if (this.state.settings !== nextprops.event) {
-                // var temp = Object.create()
+                // let temp = Object.create()
                 this.setState({ settings: nextprops.event })
             }
         }
@@ -36,7 +36,7 @@ export default class Admin extends React.Component {
 
     // for state update with event infos
     onInput = (e) => {
-        var temp = this.state.settings
+        let temp = this.state.settings
         temp[e.target.name] = e.target.value
         this.setState({ settings: temp })
     }
@@ -91,14 +91,14 @@ export default class Admin extends React.Component {
     }
 
     onTabChange = (e) => {
-        var temp = this.state.activeTab;
+        let temp = this.state.activeTab;
         temp[e] = !temp[e];
         this.setState({ activeTab: temp })
     }
 
     // timeCount = (min, max) => {
     //     const account = new Account
-    //     var out = account.timeCount(min, max);
+    //     let out = account.timeCount(min, max);
     //     out.map((value, key) => {
     //         if (String(value.text).length < 2) {
     //             value.text = '0' + value.text;
@@ -112,12 +112,12 @@ export default class Admin extends React.Component {
     // timeCountYear() {
     //     const account = new Account;
     //     const date = new Date();
-    //     var today = date.getFullYear()
+    //     let today = date.getFullYear()
     //     return account.timeCount(today, today + 1);
     // }
 
     render() {
-        var user_block = '';
+        let user_block = '';
         const { settings, activeUser, activeTab } = this.state
         const { event, users, timeblock} = this.props
         if (users.length > 0) {

@@ -27,13 +27,13 @@ export default class Account extends React.Component {
     }
 
     onInput = (e) => {
-        var temp = this.state.account
-        var value = e.target.value
+        let temp = this.state.account
+        let value = e.target.value
         temp[e.target.name] = value
         this.setState({ account: temp })
         // if (e.target.name === 'email') {
         //     if (value.includes('@')) {
-        //         var substr = value.split('@')
+        //         let substr = value.split('@')
         //         if (substr[1].includes('.')) {
         //             this.setState({ validemail: true })
         //         }
@@ -48,15 +48,15 @@ export default class Account extends React.Component {
     }
 
     onDateInput = (e, data) => {
-        var temp = this.state.date
+        let temp = this.state.date
         temp[data.type] = data.value
         this.setState({ date: temp })
     }
 
     // timeCount=(min, max)=>{
-    //     var out = [];
+    //     let out = [];
     //     while(min <= max){
-    //         var item = <a className="dropdown-item" href="#" key={min}>{min}</a>
+    //         let item = <a className="dropdown-item" href="#" key={min}>{min}</a>
     //         out.push(item)
     //         min++
     //     }
@@ -68,9 +68,9 @@ export default class Account extends React.Component {
     // }
 
     timeCount = (min, max) => {
-        var out = [];
+        let out = [];
         while (max >= min) {
-            var item = { key: max, text: max, value: max }
+            let item = { key: max, text: max, value: max }
             out.push(item)
             max--
         }
@@ -79,7 +79,7 @@ export default class Account extends React.Component {
 
     onSave = () => {
         const data = this.state.account
-        var check = true;
+        let check = true;
         if (data.profil.length === 0) {
             check = false;
         }
@@ -100,13 +100,13 @@ export default class Account extends React.Component {
     }
 
     render() {
-        var emaivalid = '';
+        let emaivalid = '';
         const today = new Date()
         const { validemail } = this.state
         const { user } = this.props
-        var p_profile = ''
-        var p_first = ''
-        var p_last = ''
+        let p_profile = ''
+        let p_first = ''
+        let p_last = ''
         if (user) {
             p_profile = user.profil
             p_first = user.first

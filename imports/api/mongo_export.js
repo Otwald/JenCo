@@ -9,7 +9,7 @@ export const timeblock = new Mongo.Collection('timeblock');
 
 if (Meteor.isServer) {
     export const Admin = new Mongo.Collection('admin');
-    var all_admin = Admin.find().fetch()
+    let all_admin = Admin.find().fetch()
     Meteor.publish('rounds', function () {
         return Rounds.find();
     });
@@ -70,5 +70,8 @@ if (Meteor.isServer) {
             return this.ready()
         }
         return timeblock.find({});
+    })
+    Meteor.publish('timeblock_table', function(){
+        return timeblock.find({'block_table': '1' });
     })
 }
