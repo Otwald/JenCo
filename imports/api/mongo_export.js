@@ -13,6 +13,11 @@ if (Meteor.isServer) {
     Meteor.publish('rounds', function () {
         return Rounds.find();
     });
+    users_account.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    })
     Meteor.publish('users_account', function (id) {
         if (!this.userId) {
             return this.ready();
@@ -31,11 +36,21 @@ if (Meteor.isServer) {
         }
         return event_settings.find({});
     })
-    Meteor.publish('users_archive', function(id){
-        if(!this.userId){
+    users_archive.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    })
+    Meteor.publish('users_archive', function (id) {
+        if (!this.userId) {
             return this.ready()
         }
         return users_archive.find({});
+    })
+    event_settings.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
     })
     Meteor.publish('event_settings_round', function () {
         return event_settings.find({}, {
@@ -50,8 +65,8 @@ if (Meteor.isServer) {
         update() { return true; },
         remove() { return true; },
     })
-    Meteor.publish('timeblock', function(){
-        if(!this.userId){
+    Meteor.publish('timeblock', function () {
+        if (!this.userId) {
             return this.ready()
         }
         return timeblock.find({});
