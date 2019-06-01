@@ -43,7 +43,7 @@ export default class Admin extends React.Component {
 
     //saves state.setting to mongo
     onSave = () => {
-        event_settings.update({ _id: this.state.settings._id }, this.state.settings)
+        Meteor.call('EventUpdate',  this.state.settings)
     }
 
     // just translats booleans to words
@@ -59,13 +59,14 @@ export default class Admin extends React.Component {
     //switchey paystatus
     onClickUserSwith(data) {
         data.bill = !data.bill
-        users_account.update({ _id: data._id }, data)
+        Meteor.call('AccountUpdate', data);
     }
 
     //archives and destroys user accounts(!loginaccount)
     onClickUserDestroy(data) {
-        users_archive.insert(data)
-        users_account.remove({ _id: data._id });
+        Meteor.call('UserArchiveCreate', data)
+        Meteor.call('AccountUpdate', data);
+        Meteor.call('AccountDelete', data._id);
     }
 
     onClickUserConfirm(data) {

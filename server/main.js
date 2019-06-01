@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
-import { event_settings, timeblock , Rounds} from './../imports/api/mongo_export';
+import { event_settings, timeblock , Rounds , users_archive, users_account} from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
   console.log('Restart');
@@ -57,5 +57,26 @@ Meteor.methods({
   },
   RoundUpdate(data){
     Rounds.update({ _id: data._id }, data)
+  },
+  RoundDelete(id){
+    Rounds.remove({_id:id});
+  },
+  AccountCreate(data){
+    users_account.insert(data);
+  },
+  AccountUpdate(data){
+    users_account.update({ _id: data._id }, data);
+  },
+  AccountDelete(id){
+    users_account.remove({_id:id});
+  },
+  UserArchiveCreate(data){
+    users_archive.insert(data);
+  },
+  AccountUpdate(data){
+    users_account.update({ _id: data._id }, data);
+  },
+  EventUpdate(data){
+    event_settings.update({ _id: data._id }, data);
   },
 });
