@@ -45,6 +45,11 @@ if (Meteor.isServer) {
             }
         })
     })
+    timeblock.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    })
     Meteor.publish('timeblock', function(){
         if(!this.userId){
             return this.ready()

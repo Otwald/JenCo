@@ -49,8 +49,13 @@ Meteor.methods({
   BlockUpdate(data) {
     timeblock.update({ _id: data._id }, data)
   },
+  BlockDelete(id){
+    timeblock.remove({_id:id});
+  },
+  RoundCreate(data){
+    Rounds.insert(data);
+  },
   RoundUpdate(data){
     Rounds.update({ _id: data._id }, data)
   },
-  
 });

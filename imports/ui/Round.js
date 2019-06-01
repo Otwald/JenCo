@@ -72,7 +72,8 @@ export default class Round extends React.Component {
             if (data._id) {
                 Meteor.call('RoundUpdate', data)
             } else {
-                Rounds.insert(data)
+                Meteor.call('RoundCreate', data);
+                // Rounds.insert(data)
             }
         }
     }

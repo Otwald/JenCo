@@ -13,12 +13,12 @@ export default class AdminBlock extends React.Component {
             block_table: null,
         },
         date: {
-            start: 28800000,
-            end: 28810000,
+            start: null,
+            end: null,
         },
         time: {
-            start: 1558656000000,
-            end: 1558656000000,
+            start: null,
+            end: null,
         }
 
     }
@@ -39,13 +39,10 @@ export default class AdminBlock extends React.Component {
         if (temp.block_name.length === 0) {
             return
         }
-        if (temp.block_table === 0) {
-            return
-        }
         if (this.state.date.start === null || this.state.date.end === null) {
             return
         }
-        if (this.state.time.start === null || this.state.date.end === null) {
+        if (this.state.time.start === null || this.state.time.end === null) {
             return
         }
         temp.block_start = this.state.date.start + this.state.time.start;
@@ -58,15 +55,17 @@ export default class AdminBlock extends React.Component {
 
     //deletes timebock from state and updates mongo
     onBlockDelete = (v) => {
-        var temp = this.state.settings;
-        var a_slice = []
-        temp.tb.splice(v, 1);
-        temp.tb.map((k, v) => {
-            a_slice.push({ text: k.text, value: v })
-        })
-        temp.tb = a_slice
-        this.setState({ settings: temp });
-        this.onSave()
+        console.log(v);
+        Meteor.call('BlockDelete', v._id);
+        // var temp = this.state.settings;
+        // var a_slice = []
+        // temp.tb.splice(v, 1);
+        // temp.tb.map((k, v) => {
+        //     a_slice.push({ text: k.text, value: v })
+        // })
+        // temp.tb = a_slice
+        // this.setState({ settings: temp });
+        // this.onSave()
     }
 
     onDateInput = (e, data) => {
@@ -78,7 +77,8 @@ export default class AdminBlock extends React.Component {
     onTimeInput = (e) => {
         var time = '1970-01-01T' + e.target.value + 'Z'
         var temp = this.state.time
-        temp[e.target.type] = new Date(time).getTime() - 1000 * 60 * 60 * 2
+        temp[e.target.name] = new Date(time).getTime() - 1000 * 60 * 60 * 2
+        console.log(temp);
         this.setState({ time: temp });
     }
 
@@ -118,10 +118,20 @@ export default class AdminBlock extends React.Component {
         var blocks = '';
         const { event, timeblock } = this.props
         if (timeblock.length > 0) {
+            // if(timeblock.length > 1){}
+            timeblock.sort(function (a,b) {
+                if(a.block_start < b.block_start){
+                    return -1;
+                }
+                if(a.block_start > b.block_start){
+                    return +1;
+                }
+                return 0;
+            })
             blocks = timeblock.map((k, v) => {
                 return (
                     <div key={v}>
-                        <li>{k.block_name}<button onClick={() => this.onBlockDelete(v)} >Destroy</button> </li>
+                        <li>{k.block_name}<button onClick={() => this.onBlockDelete(k)} >Destroy</button> </li>
                     </div>
                 )
             })
@@ -140,7 +150,7 @@ export default class AdminBlock extends React.Component {
                         onChange={this.onDateInput}
                         type='start'
                     />
-                    <input type='time' name='block_start' onChange={this.onTimeInput} />
+                    <input type='time' name='start' onChange={this.onTimeInput} />
                 </li>
                 <li>
                     Zeit Länge
@@ -152,7 +162,7 @@ export default class AdminBlock extends React.Component {
                         onChange={this.onDateInput}
                         type='end'
                     />
-                    <input type='time' name='block_end' onChange={this.onTimeInput} />
+                    <input type='time' name='end' onChange={this.onTimeInput} />
                 </li>
                 <li>Tisch Anzahl <input type='number' name='block_table' onChange={this.onBlockCreate} /></li>
                 <li>Spielblock <input type='checkbox' name='block_pnp' onChange={this.onBlockCreate} /></li>
