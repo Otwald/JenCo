@@ -5,34 +5,33 @@ import { Rounds } from '../api/mongo_export';
 import RoundCreate from './RoundCreate';
 
 export default class Round extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            // beschreibungsfeld 
-            //Vorgefertigten Charaktere
-            // tisch 5
-            // max 3 plätze online
-            round_create: {
-                round_tb: '',
-                round_name: 'Round Name',
-                setting: 'Setting',
-                ruleset: 'Rules',
-                own_char: true,
-                round_gm: 'Placeholder',
-                round_gm_id: Meteor.userId(),
-                round_curr_pl: 0,
-                round_max_pl: 5,
-                round_player: []
-            },
-            time_block: [],
-            in_round: [],
-        }
+
+    state = {
+        // beschreibungsfeld 
+        //Vorgefertigten Charaktere
+        // tisch 5
+        // max 3 plätze online
+        round_create: {
+            round_tb: '',
+            round_name: 'Round Name',
+            setting: 'Setting',
+            ruleset: 'Rules',
+            own_char: true,
+            round_gm: 'Placeholder',
+            round_gm_id: Meteor.userId(),
+            round_curr_pl: 0,
+            round_max_pl: 5,
+            round_player: []
+        },
+        time_block: [],
+        in_round: [],
     }
+
 
     componentDidUpdate = (lastprops) => {
         if (this.props.rounds_box !== lastprops.rounds_box) {
             if (this.props.event) {
-                this.timeOptions(Object.create(this.props.timeblock))
+                this.timeOptions(this.props.timeblock)
             }
         }
         if (this.props.in_round !== lastprops.in_round) {
@@ -142,13 +141,17 @@ export default class Round extends React.Component {
     //creates options for timeblock when creating new round
     timeOptions = (block) => {
         if (this.props.in_round) {
-            for (let i = 0; i < block.length; i++) {
-                if (this.props.in_round[block[i]['value']] === false) {
-                    block.splice(i, 1);
-                    i--;
+            block.map((v) => {
+                if (this.props.in_round[v._id] === false) {
+                    return
                 }
-            }
-            this.setState({ time_block: block })
+                let temp = this.state.time_block
+                temp.push({
+                    text: v.block_name,
+                    value: v._id
+                })
+                this.setState({ time_block: temp })
+            })
         }
     }
 
@@ -204,13 +207,22 @@ export default class Round extends React.Component {
         const { event, timeblock } = this.props
         let tb = ''
         if (event) {
+            timeblock.sort(function (a, b) {
+                if (a.block_start < b.block_start) {
+                    return -1;
+                }
+                if (a.block_start > b.block_start) {
+                    return +1;
+                }
+                return 0;
+            })
             tb = timeblock.map((k) => {
-                console.log(k);
+                if (!k.block_table) { return }
                 return (
                     <div className="row" key={k.block_start}>
                         <div className="col-sm">
                             <div className="text-center"><h4>{k.block_name}</h4></div>
-                            <div className="row">{this.timeBlockCreate(k)}</div>
+                            <div className="row">{this.timeBlockCreate(k._id)}</div>
                         </div>
                     </div>
                 )
