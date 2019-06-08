@@ -18,7 +18,8 @@ const adminBlock = props => {
         block_pnp: false,
         block_start: null,
         block_end: null,
-        block_table: null,
+        block_table: [],
+        block_max_table:null
     })
 
     //creates timeblock for rounds
@@ -139,7 +140,7 @@ const adminBlock = props => {
                 />
                 <input type='time' name='end' onChange={this.onTimeInput} />
             </li>
-            <li>Tisch Anzahl <input type='number' name='block_table' onChange={this.onBlockCreate} /></li>
+            <li>Tisch Anzahl <input type='number' name='block_max_table' onChange={this.onBlockCreate} /></li>
             <li>Spielblock <input type='checkbox' name='block_pnp' onChange={this.onBlockCreate} /></li>
             <li><button onClick={this.onBlockSave} >Add</button><br /></li>
         </ul>

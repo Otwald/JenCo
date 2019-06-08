@@ -1,62 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import { Rounds } from '../api/mongo_export';
 import RoundCreate from './RoundCreate';
 
-export default class Round extends React.Component {
+const roundComponent = props => {
 
-    state = {
-        // beschreibungsfeld 
-        //Vorgefertigten Charaktere
-        // tisch 5
-        // max 3 plätze online
-        round_create: {
-            round_tb: '',
-            round_name: 'Round Name',
-            setting: 'Setting',
-            ruleset: 'Rules',
-            own_char: true,
-            round_gm: 'Placeholder',
-            round_gm_id: Meteor.userId(),
-            round_curr_pl: 0,
-            round_max_pl: 5,
-            round_player: []
-        },
-        options_time_block: [],
-        in_round: [],
-    }
+    // beschreibungsfeld 
+    //Vorgefertigten Charaktere
+    // tisch 5
+    // max 3 plätze online
+    // {
+    //     "_id" : "zCAggKusFJSR47eWv",
+    //     "block_name" : "Test3",
+    //     "block_pnp" : "true",
+    //     "block_start" : NaN,
+    //     "block_end" : NaN,
+    //     "block_table" : [],
+    //     "block_max_table" : "5"
+    // }
 
 
-    componentDidUpdate = (lastprops) => {
-        if (this.props.rounds_box !== lastprops.rounds_box) {
-            if (this.props.event) {
-                this.timeOptions(this.props.time_block)
-            }
-        }
-        if (this.props.in_round !== lastprops.in_round) {
-            this.setState({ in_round: this.props.in_round });
-        }
+    const [round_create, setRoundCreate] = useState({
+        round_tb: '',
+        round_name: 'Round Name',
+        setting: 'Setting',
+        ruleset: 'Rules',
+        own_char: true,
+        round_gm: 'Placeholder',
+        round_gm_id: Meteor.userId(),
+        round_curr_pl: 0,
+        round_max_pl: 5,
+        round_player: []
+    })
+    const [options_time_block, setOptions_time_block] = useState([]);
+    const [in_round, setIn_round] = useState([]);
 
-    }
+
+    useEffect(() => {
+        timeOptions(props.time_block);
+        return (() => { setOptions_time_block([]); })
+    }, [props.time_block])
+    useEffect(() => {
+        setIn_round(props.in_round);
+    }, [props.in_round])
+    useEffect(() => {
+    }, [props.user, props.rounds_box])
 
     onInput = (e) => {
-        let temp = this.state.round_create
+        let temp = round_create
         let value = e.target.value
         temp[e.target.name] = value
-        this.setState({ round_create: temp })
+        setRoundCreate(temp);
     }
 
     onInputBlock = (e, data) => {
-        let temp = this.state.round_create
+        let temp = round_create
         temp[data.type] = data.value
-        this.setState({ round_create: temp })
+        setRoundCreate(round_create)
     }
 
     //saves a round into the db, is a callback
     onSave = () => {
-        const data = this.state.round_create
-        data.round_gm = this.props.user.profil
+        const data = round_create
+        data.round_gm = props.user.profil
         let check = true;
         if (data.round_name.length === 0) {
             check = false;
@@ -79,24 +86,24 @@ export default class Round extends React.Component {
 
     //loads rounds setting
     onEdit = (data) => {
-        this.setState({ round_create: data })
+        setRoundCreate(round_create)
     }
 
     //destroys round in timeblock
     onDestroy = (data, time) => {
-        Rounds.remove({ _id: data._id })
-        this.props.onCallback({ key: time, value: true });
+        Meteor.call('RoundDelete', data._id)
+        props.onCallback({ key: time, value: true });
     }
 
     //joins a round
-    onJoin(data) {
-        data.round_player.push({ 'profil': this.props.user.profil, 'user_id': Meteor.userId() })
+    onJoin = (data) => {
+        data.round_player.push({ 'profil': props.user.profil, 'user_id': Meteor.userId() })
         data.round_curr_pl++
         Meteor.call('RoundUpdate', data)
     }
 
     //leaves a round
-    onLeave(data, time) {
+    onLeave = (data, time) => {
         let index = Object.keys(data.round_player).map((k) => {
             if (data.round_player[k].user_id === Meteor.userId()) {
                 return k
@@ -110,16 +117,16 @@ export default class Round extends React.Component {
                 }
             })
         }
-        this.props.onCallback({ key: time, value: true });
+        props.onCallback({ key: time, value: true });
         Meteor.call('RoundUpdate', data)
     }
 
     //checks if user is player in round
-    onCheck(data, time) {
+    onCheck = (data, time) => {
         if (data.length !== 0) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].user_id === Meteor.userId()) {
-                    this.props.onCallback({ key: time, value: false });
+                    props.onCallback({ key: time, value: false });
                     return false;
                 }
             }
@@ -128,7 +135,7 @@ export default class Round extends React.Component {
     }
 
     //gets rounds player names to visiualize
-    onPlayers(data) {
+    function onPlayers(data) {
         let out = '';
         if (data) {
             out = out.concat(Object.keys(data).map((k) => {
@@ -140,35 +147,34 @@ export default class Round extends React.Component {
 
     //creates options for timeblock when creating new round
     timeOptions = (block) => {
-        console.log(block)
-        if (this.props.in_round) {
+        if (in_round) {
             block.map((v) => {
-                if (v.block_table !== '1') { return }
-                if (this.props.in_round[v._id] === false) { return }
-                let temp = this.state.options_time_block
+                if (v.block_max_table == v.block_table.length) { return }
+                if (in_round[v._id] === false) { return }
+                let temp = options_time_block
                 temp.push({
                     text: v.block_name,
                     value: v._id
                 })
-                this.setState({ options_time_block: temp })
+                setOptions_time_block(temp)
             })
         }
     }
 
     //visualizes the rounds in a timeblock
     timeBlockCreate = (time) => {
-        const rounds_box = this.props.rounds_box
-        let round = ''
+        const rounds_box = props.rounds_box
+        let roundtemplate = ''
         if (rounds_box.length !== 0) {
             let out = '';
-            round = rounds_box.map((k, v) => {
+            roundtemplate = rounds_box.map((k, v) => {
                 if (k.round_tb === time) {
-                    if (Meteor.userId() && this.props.user) {
-                        if (this.props.user.bill) {
+                    if (Meteor.userId() && props.user) {
+                        if (props.user.bill) {
                             if (k.round_gm_id === Meteor.userId()) {
-                                this.props.onCallback({ key: time, value: false });
+                                props.onCallback({ key: time, value: false });
                                 out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k, time)} >Destroy</button></li>
-                            } else if (this.props.in_round[time] !== false) {
+                            } else if (in_round[time] !== false) {
                                 if (this.onCheck(k.round_player, time)) {
                                     if (k.round_curr_pl < k.round_max_pl) {
                                         out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
@@ -190,7 +196,7 @@ export default class Round extends React.Component {
                                     <li>Regelwerk = {k.ruleset}</li>
                                     <li>Spielleiter = {k.round_gm}</li>
                                     <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                                    <li>Spieler Namen = {this.onPlayers(k.round_player)}</li>
+                                    <li>Spieler Namen = {onPlayers(k.round_player)}</li>
                                     {out}
                                 </ul>
                             </div>
@@ -199,41 +205,39 @@ export default class Round extends React.Component {
                 }
             })
         }
-        return round
+        return roundtemplate
     }
-
-    render() {
-        const { options_time_block, round_create } = this.state
-        const { event, time_block } = this.props
-        let tb = ''
-        if (event) {
-            time_block.sort(function (a, b) {
-                if (a.block_start < b.block_start) {
-                    return -1;
-                }
-                if (a.block_start > b.block_start) {
-                    return +1;
-                }
-                return 0;
-            })
-            tb = time_block.map((k) => {
-                if (!k.block_table) { return }
-                return (
-                    <div className="row" key={k.block_start}>
-                        <div className="col-sm">
-                            <div className="text-center"><h4>{k.block_name}</h4></div>
-                            <div className="row">{this.timeBlockCreate(k._id)}</div>
-                        </div>
+    console.log(props)
+    let tb = ''
+    if (props.time_block.length > 0) {
+        props.time_block.sort(function (a, b) {
+            if (a.block_start < b.block_start) {
+                return -1;
+            }
+            if (a.block_start > b.block_start) {
+                return +1;
+            }
+            return 0;
+        })
+        tb = props.time_block.map((k) => {
+            if (!k.block_table) { return }
+            return (
+                <div className="row" key={k._id}>
+                    <div className="col-sm">
+                        <div className="text-center"><h4>{k.block_name}</h4></div>
+                        <div className="row">{this.timeBlockCreate(k._id)}</div>
                     </div>
-                )
-            })
-        }
-        return (
-            <div>
-                {tb}
-                Hidden Block
-                <RoundCreate round_create={round_create} time_block={options_time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
-            </div >
-        )
+                </div>
+            )
+        })
     }
+    return (
+        <div>
+            {tb}
+            Hidden Block
+                <RoundCreate round_create={round_create} time_block={options_time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
+        </div >
+    )
 }
+
+export default roundComponent

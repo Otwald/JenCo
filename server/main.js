@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
-import { event_settings, timeblock , Rounds , users_archive, users_account} from './../imports/api/mongo_export';
+import { event_settings, timeblock, Rounds, users_archive, users_account } from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
   console.log('Restart');
@@ -49,34 +49,48 @@ Meteor.methods({
   BlockUpdate(data) {
     timeblock.update({ _id: data._id }, data)
   },
-  BlockDelete(id){
-    timeblock.remove({_id:id});
+  BlockDelete(id) {
+    timeblock.remove({ _id: id });
   },
-  RoundCreate(data){
+  RoundCreate(data) {
     Rounds.insert(data);
+    const table = Rounds.findOne(data);
+    const block = timeblock.findOne({ _id: data.round_tb });
+    block.block_table.push(table._id)
+    timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
-  RoundUpdate(data){
+  RoundUpdate(data) {
     Rounds.update({ _id: data._id }, data)
   },
-  RoundDelete(id){
-    Rounds.remove({_id:id});
+  RoundDelete(id) {
+    const table = Rounds.findOne({ _id: id });
+    Rounds.remove({ _id: id });
+    const block = timeblock.findOne({ _id: table.round_tb })
+    block.block_table.map((v, i) => {
+      console.log(v)
+      console.log(i)
+      if (v === id) {
+        block.block_table.splice(i, 1)
+      }
+    })
+    timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
-  AccountCreate(data){
+  AccountCreate(data) {
     users_account.insert(data);
   },
-  AccountUpdate(data){
+  AccountUpdate(data) {
     users_account.update({ _id: data._id }, data);
   },
-  AccountDelete(id){
-    users_account.remove({_id:id});
+  AccountDelete(id) {
+    users_account.remove({ _id: id });
   },
-  UserArchiveCreate(data){
+  UserArchiveCreate(data) {
     users_archive.insert(data);
   },
-  AccountUpdate(data){
+  AccountUpdate(data) {
     users_account.update({ _id: data._id }, data);
   },
-  EventUpdate(data){
+  EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
 });

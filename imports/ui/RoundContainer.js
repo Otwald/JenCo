@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 import { withTracker } from 'meteor/react-meteor-data';
 
-import Round from './Round';
+import RoundComponent from './Round';
 import { Rounds, event_settings, timeblock } from '../api/mongo_export';
 
 export default RoundContainer = withTracker(() => {
@@ -12,9 +12,9 @@ export default RoundContainer = withTracker(() => {
     const loading = connection.ready();
     let rounds_box = Rounds.find().fetch();
     return {
-        loading,
+        // loading,
         rounds_box,
-        event: event_settings.findOne(),
+        // event: event_settings.findOne(),
         time_block : timeblock.find().fetch()
     }
-})(Round)
+})(RoundComponent)
