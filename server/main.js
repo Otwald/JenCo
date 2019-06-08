@@ -67,8 +67,6 @@ Meteor.methods({
     Rounds.remove({ _id: id });
     const block = timeblock.findOne({ _id: table.round_tb })
     block.block_table.map((v, i) => {
-      console.log(v)
-      console.log(i)
       if (v === id) {
         block.block_table.splice(i, 1)
       }

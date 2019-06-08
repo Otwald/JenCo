@@ -35,17 +35,20 @@ const roundComponent = props => {
     })
     const [options_time_block, setOptions_time_block] = useState([]);
     const [in_round, setIn_round] = useState([]);
+    const [tableOptions, setTableOptions] = useState([]);
 
 
     useEffect(() => {
         timeOptions(props.time_block);
-        return (() => { setOptions_time_block([]); })
-    }, [props.time_block])
-    useEffect(() => {
         setIn_round(props.in_round);
-    }, [props.in_round])
-    useEffect(() => {
-    }, [props.user, props.rounds_box])
+        return (() => { setOptions_time_block([]); })
+    }, [props.time_block, props.user, props.rounds_box, props.in_round])
+    // useEffect(() => {
+    //     setIn_round(props.in_round);
+    // }, [props.in_round])
+    // useEffect(() => {
+    //     return (() => { })
+    // }, [props.user, props.rounds_box])
 
     onInput = (e) => {
         let temp = round_create
@@ -56,10 +59,23 @@ const roundComponent = props => {
 
     onInputBlock = (e, data) => {
         let temp = round_create
-        temp[data.type] = data.value
+        temp[data.type] = data.value;
         setRoundCreate(round_create)
+
+        createTableOptions(data.value)
     }
 
+    createTableOptions = (id) => {
+        const block = props.time_block.filter((v) => {
+            return v._id === id
+        })
+        var number = block[0].block_table.length
+        for (var i = 1; i <= block[0].block_max_table; i++) {
+            
+            setTableOptions(tableOptions.push({ name: i, value: i }));
+        }
+        console.log(tableOptions);
+    }
     //saves a round into the db, is a callback
     onSave = () => {
         const data = round_create
@@ -149,7 +165,7 @@ const roundComponent = props => {
     timeOptions = (block) => {
         if (in_round) {
             block.map((v) => {
-                if (v.block_max_table == v.block_table.length) { return }
+                if (v.block_max_table < v.block_table.length) { return }
                 if (in_round[v._id] === false) { return }
                 let temp = options_time_block
                 temp.push({
@@ -207,7 +223,7 @@ const roundComponent = props => {
         }
         return roundtemplate
     }
-    console.log(props)
+    // console.log(props)
     let tb = ''
     if (props.time_block.length > 0) {
         props.time_block.sort(function (a, b) {
@@ -235,7 +251,14 @@ const roundComponent = props => {
         <div>
             {tb}
             Hidden Block
-                <RoundCreate round_create={round_create} time_block={options_time_block} onInput={this.onInput} onSave={this.onSave} onInputBlock={this.onInputBlock} />
+                <RoundCreate
+                round_create={round_create}
+                time_block={options_time_block}
+                onInput={this.onInput}
+                onSave={this.onSave}
+                onInputBlock={this.onInputBlock}
+                tableOptions={tableOptions}
+            />
         </div >
     )
 }
