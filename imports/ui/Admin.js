@@ -1,53 +1,45 @@
-import React from 'react';
-
-import { users_account, event_settings, users_archive } from '../api/mongo_export';
+import React, { useState, useEffect } from 'react';
 import AdminBlock from './AdminBlock';
 
 
-export default class Admin extends React.Component {
+const admin = props => {
     // capache abfragen für anmeldung
 
     // mail mit konto info beim account erstellen,
-    state = {
-        settings: {
-            e_start: null,
-            e_end: null,
-            e_loc: null,
-            tb: [],
-            table: null,
-            price: null,
-        },
-        activeUser: null,
-        activeTab: {
-            user: false,
-            event: false,
-            tb: false
-        },
-    }
+    const [settings, setSettings] = useState({
+        e_end: null,
+        e_loc: null,
+        e_start: null,
+        price: null,
+    });
+    const [activeUser, setActiveUser] = useState(null);
+    const [eventTab, setEventTab] = useState(false);
+    const [userTab, setUserTab] = useState(false);
+    const [tbTab, setTbTab] = useState(false);
 
-    componentWillReceiveProps = (nextprops) => {
-        if (nextprops.event) {
-            if (this.state.settings !== nextprops.event) {
-                // let temp = Object.create()
-                this.setState({ settings: nextprops.event })
-            }
-        }
-    }
+    useEffect(() => {
+        setSettings(props.event)
+    }, [props.event])
+    // useEffect(() => {
+    //     return (() => {
+    //         setActivTab(activeTab)
+    //     })
+    // }, [activeTab])
 
     // for state update with event infos
     onInput = (e) => {
-        let temp = this.state.settings
+        let temp = settings
         temp[e.target.name] = e.target.value
-        this.setState({ settings: temp })
+        setSettings(temp)
     }
 
     //saves state.setting to mongo
     onSave = () => {
-        Meteor.call('EventUpdate',  this.state.settings)
+        Meteor.call('EventUpdate', settings)
     }
 
     // just translats booleans to words
-    outPay(data) {
+    outPay = (data) => {
         if (data) {
             return 'hat bezahlt'
         } else {
@@ -57,19 +49,19 @@ export default class Admin extends React.Component {
     }
 
     //switchey paystatus
-    onClickUserSwith(data) {
+    onClickUserSwith = data => {
         data.bill = !data.bill
         Meteor.call('AccountUpdate', data);
     }
 
     //archives and destroys user accounts(!loginaccount)
-    onClickUserDestroy(data) {
+    onClickUserDestroy = (data) => {
         Meteor.call('UserArchiveCreate', data)
         Meteor.call('AccountUpdate', data);
         Meteor.call('AccountDelete', data._id);
     }
 
-    onClickUserConfirm(data) {
+    onClickUserConfirm = (data) => {
         // Client: Asynchronously send an email.
         data.email = 'handkrampf@mytrashmailer.com'
         Meteor.call(
@@ -82,18 +74,19 @@ export default class Admin extends React.Component {
 
     //for user table
     mouseIn = (e) => {
-        this.setState({ activeUser: e.target.value })
+        setActiveUser(e.target.value);
     }
 
     //for user table
     mouseOut = (e) => {
-        this.setState({ activeUser: null })
+        setActiveUser(null)
     }
 
     onTabChange = (e) => {
-        let temp = this.state.activeTab;
+        let temp = activeTab;
         temp[e] = !temp[e];
-        this.setState({ activeTab: temp })
+        setActivTab(Object.assign(temp))
+        console.log(activeTab)
     }
 
     // timeCount = (min, max) => {
@@ -115,61 +108,58 @@ export default class Admin extends React.Component {
     //     let today = date.getFullYear()
     //     return account.timeCount(today, today + 1);
     // }
+    console.log(settings)
+    let user_block = '';
+    if (props.users.length > 0) {
+        props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
+        user_block = props.users.map((key, value) => {
+            return (
+                <li onMouseEnter={this.mouseIn} onMouseLeave={this.mouseOut} key={'User' + value} value={value}>
+                    {key.last} {this.outPay(key.bill)}
+                    {value === activeUser ?
+                        <ul>
+                            <li>{key.first}</li>
+                            <li>{key.last}</li>
+                            <li>{key.profil}</li>
+                            <li>{key.age}</li>
+                            <li>{key.email}</li>
+                            <li><button onClick={(e) => this.onClickUserSwith(key)} >Switch Pay</button></li>
+                            <li><button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</button><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
+                        </ul>
+                        : ""}
+                </li>
 
-    render() {
-        let user_block = '';
-        const { settings, activeUser, activeTab } = this.state
-        const { event, users, timeblock} = this.props
-        if (users.length > 0) {
-            users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
-            user_block = users.map((key, value) => {
-                return (
-                    <li onMouseEnter={this.mouseIn} onMouseLeave={this.mouseOut} key={'User' + value} value={value}>
-                        {key.last} {this.outPay(key.bill)}
-                        {value === activeUser ?
-                            <ul>
-                                <li>{key.first}</li>
-                                <li>{key.last}</li>
-                                <li>{key.profil}</li>
-                                <li>{key.age}</li>
-                                <li>{key.email}</li>
-                                <li><button onClick={(e) => this.onClickUserSwith(key)} >Switch Pay</button></li>
-                                <li><button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</button><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
-                            </ul>
-                            : ""}
-                    </li>
-
-                )
-            })
-        }
-        return (
-            <div>
-                <div className="row">
-                    <div onClick={(e) => this.onTabChange('user')}>Nutzerverwaltung</div>
-                    {activeTab.user ? <ul>
-                        {user_block}
-                    </ul> : ''}
-                </div>
-                <div className="row">
-                    <div onClick={(e) => this.onTabChange('event')}>Eventdaten</div>
-                    {activeTab.event ? <ul>
-                        <li>Event Start<input type='date' name='e_start' onChange={this.onInput} placeholder={Date(settings.e_start)} /> </li>
-                        <li>Event End<input type='date' name='e_end' onChange={this.onInput} placeholder={Date(settings.e_end)} /></li>
-                        <li>Event Location<input type='text' name='e_loc' onChange={this.onInput} placeholder={settings.e_loc} /></li>
-                        <li>Preis<input type='text' name='price' onChange={this.onInput} placeholder={settings.price} /></li>
-                        <li>Min Spielerzahl pro Tisch</li>
-                        <li>Table<input type='text' name='table' onChange={this.onInput} placeholder={settings.table} /></li>
-                        <li><button onClick={this.onSave} >Save</button></li>
-                    </ul> : ''}
-                </div>
-                <div className="row">
-                    {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
-                    <div onClick={(e) => this.onTabChange('tb')}>ZeitBlock Einstellungen</div>
-                    {activeTab.tb ?
-                        <AdminBlock event={event} timeblock={timeblock} />
-                        : ''}
-                </div>
-            </div>
-        )
+            )
+        })
     }
+    return (
+        <div >
+            <div className="row">
+                <div onClick={() => setUserTab(!userTab)}>Nutzerverwaltung</div>
+                {userTab ? <ul>
+                    {user_block}
+                </ul> : ''}
+            </div>
+            <div className="row">
+                <div onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
+                {eventTab ? <ul>
+                    <li>Event Start<input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> </li>
+                    <li>Event End<input type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} /></li>
+                    <li>Event Location<input type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} /></li>
+                    <li>Preis<input type='text' name='price' onChange={onInput} placeholder={settings.price} /></li>
+                    <li><button onClick={onSave} >Save</button></li>
+                </ul> : ''}
+            </div>
+            <div className="row">
+                {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
+                <div onClick={() => setTbTab(!tbTab)}> ZeitBlock Einstellungen</div>
+                {tbTab ?
+                    <AdminBlock event={props.event} timeblock={props.timeblock} />
+                    : ''}
+            </div>
+        </div>
+    )
+
 }
+
+export default admin;
