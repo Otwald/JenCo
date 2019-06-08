@@ -72,6 +72,6 @@ if (Meteor.isServer) {
         return timeblock.find({});
     })
     Meteor.publish('timeblock_table', function(){
-        return timeblock.find({'block_table': '1' });
+        return timeblock.find({"block_pnp": "true" });
     })
 }
