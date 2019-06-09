@@ -18,15 +18,25 @@ const admin = props => {
     const [userTab, setUserTab] = useState(false);
     const [tbTab, setTbTab] = useState(false);
     const [eventEdit, setEventEdit] = useState(false);
+    const [eventPay , setEventPay] = useState(0);
 
     useEffect(() => {
         if (props.event) {
             setSettings(props.event)
         }
+        if (props.users) {
+            let money = 0 
+            props.users.map((v) => {
+                if (v.bill) {
+                    money = money + parseInt(settings.t_price)
+                    setEventPay(money);
+                }
+            })
+        }
         return (() => {
             setSettings()
         })
-    }, [props.event])
+    }, [props.event, props.users])
     // useEffect(() => {
     //     return (() => {
     //         setActivTab(activeTab)
@@ -149,15 +159,28 @@ const admin = props => {
             </div>
             <div className="row">
                 <div onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
-                {eventTab ? <ul>
-                    <li>Event Start {eventEdit ? <input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> : settings.e_start}</li>
-                    <li>Event End {eventEdit ? <input type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} /> : settings.e_end}</li>
-                    <li>Event Location {eventEdit ? <input type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} /> : settings.e_loc}</li>
-                    <li>Teilnahme Preis {eventEdit ? <input type='number' name='t_price' onChange={onInput} placeholder={settings.t_price} /> : settings.t_price}</li>
-                    <li>Event Kosten {eventEdit ? <input type='number' name='e_price' onChange={onInput} placeholder={settings.e_price} /> : settings.e_price} </li>
-                    {eventEdit ? <li><button onClick={() => setEventEdit(false)} >Cancel</button> <button onClick={onSave} >Save</button> </li>
-                        : <li><button onClick={() => setEventEdit(true)}>Edit</button></li>}
-                </ul> : ''}
+                {eventTab ? <div>
+                    {eventEdit ?
+                        <ul>
+                            <li>Event Start <input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> </li>
+                            <li>Event End <input type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} /> </li>
+                            <li>Event Location <input type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} /> </li>
+                            <li>Teilnahme Preis <input type='number' name='t_price' onChange={onInput} placeholder={settings.t_price} /></li>
+                            <li>Event Kosten <input type='number' name='e_price' onChange={onInput} placeholder={settings.e_price} /></li>
+                            <li><button onClick={() => setEventEdit(false)} >Cancel</button> <button onClick={onSave} >Save</button> </li>
+                        </ul> :
+                        <ul>
+                            <li>Event Start {settings.e_start}</li>
+                            <li>Event End {settings.e_end}</li>
+                            <li>Event Location {settings.e_loc}</li>
+                            <li>Teilnahme Preis {settings.t_price}</li>
+                            <li>Event Kosten {settings.e_price} </li>
+                            <li>Event Rechnung {eventPay / settings.e_price * 100}% bezahlt</li>
+                            <li><button onClick={() => setEventEdit(true)}>Edit</button></li>
+
+                        </ul>
+                    }
+                </div> : ''}
             </div>
             <div className="row">
                 {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
