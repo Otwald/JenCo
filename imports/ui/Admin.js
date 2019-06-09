@@ -50,8 +50,6 @@ const admin = props => {
 
     //switchey paystatus
     onClickUserSwith = data => {
-        data.bill = !data.bill
-        Meteor.call('AccountUpdate', data);
     }
 
     //archives and destroys user accounts(!loginaccount)
@@ -123,7 +121,7 @@ const admin = props => {
                             <li>{key.profil}</li>
                             <li>{key.age}</li>
                             <li>{key.email}</li>
-                            <li><button onClick={(e) => this.onClickUserSwith(key)} >Switch Pay</button></li>
+                            <li><button onClick={(e) => Meteor.call('SwitchBill', key._id)} >Switch Pay</button></li>
                             <li><button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</button><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
                         </ul>
                         : ""}

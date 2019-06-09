@@ -59,6 +59,7 @@ const roundComponent = props => {
         }
     }
 
+    //Creates Array for table choice 
     createTableOptions = (id) => {
         const block = props.time_block.filter((v) => {
             return v._id === id
@@ -72,8 +73,8 @@ const roundComponent = props => {
                 setTableOptions(table);
             }
         }
-        // console.log(tableOptions)
     }
+
     //saves a round into the db, is a callback
     onSave = () => {
         const data = round_create
@@ -93,7 +94,6 @@ const roundComponent = props => {
                 Meteor.call('RoundUpdate', data)
             } else {
                 Meteor.call('RoundCreate', data);
-                // Rounds.insert(data)
             }
         }
     }

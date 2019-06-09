@@ -74,20 +74,31 @@ Meteor.methods({
     timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
   AccountCreate(data) {
+    data._id = this.userId
+    data.bill = false;
     users_account.insert(data);
   },
   AccountUpdate(data) {
-    users_account.update({ _id: data._id }, data);
+    users_account.update({ _id: this.userId }, {
+      $set: {
+        "first": data.first, "last": data.last, "profil": data.profil, "age": data.age
+      }
+    });
   },
   AccountDelete(id) {
-    users_account.remove({ _id: id });
+    users_account.remove({ _id: this.userId });
   },
   UserArchiveCreate(data) {
     users_archive.insert(data);
   },
-  // AccountUpdate(data) {
-  //   users_account.update({ _id: data._id }, data);
-  // },
+  SwitchBill(data) {
+    const user = users_account.findOne({ _id: data });  
+    users_account.update({ _id: data}, {
+      $set: {
+        "bill": !user.bill
+      }
+    });
+  },
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
