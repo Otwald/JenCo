@@ -31,7 +31,8 @@ const roundComponent = props => {
         round_gm_id: Meteor.userId(),
         round_curr_pl: 0,
         round_max_pl: 5,
-        round_player: []
+        round_player: [],
+        round_table: null
     })
     const [options_time_block, setOptions_time_block] = useState([]);
     const [in_round, setIn_round] = useState([]);
@@ -41,8 +42,10 @@ const roundComponent = props => {
     useEffect(() => {
         timeOptions(props.time_block);
         setIn_round(props.in_round);
-        return (() => { setOptions_time_block([]); })
-    }, [props.time_block, props.user, props.rounds_box, props.in_round])
+        return (() => {
+            setOptions_time_block([]);
+        })
+    }, [props.time_block, props.user, props.rounds_box, props.in_round, props.user])
     // useEffect(() => {
     //     setIn_round(props.in_round);
     // }, [props.in_round])
@@ -61,20 +64,25 @@ const roundComponent = props => {
         let temp = round_create
         temp[data.type] = data.value;
         setRoundCreate(round_create)
-
-        createTableOptions(data.value)
+        if (data.type === 'round_tb') {
+            createTableOptions(data.value)
+        }
     }
 
     createTableOptions = (id) => {
         const block = props.time_block.filter((v) => {
             return v._id === id
         })
-        var number = block[0].block_table.length
+        var table = [];
         for (var i = 1; i <= block[0].block_max_table; i++) {
-            
-            setTableOptions(tableOptions.push({ name: i, value: i }));
+            if (block[0].block_table.filter((v) => {
+                return v == i
+            }).length === 0) {
+                table.push({ text: i, value: i })
+                setTableOptions(table);
+            }
         }
-        console.log(tableOptions);
+        // console.log(tableOptions)
     }
     //saves a round into the db, is a callback
     onSave = () => {
@@ -247,11 +255,11 @@ const roundComponent = props => {
             )
         })
     }
-    return (
-        <div>
-            {tb}
-            Hidden Block
-                <RoundCreate
+    console.log(tableOptions)
+    let rc = '';
+    if (props.user) {
+        if (props.user.bill && props.user.profil) {
+            rc = <RoundCreate
                 round_create={round_create}
                 time_block={options_time_block}
                 onInput={this.onInput}
@@ -259,6 +267,14 @@ const roundComponent = props => {
                 onInputBlock={this.onInputBlock}
                 tableOptions={tableOptions}
             />
+
+        }
+    }
+    return (
+        <div>
+            {tb}
+            Hidden Block
+                {rc}
         </div >
     )
 }

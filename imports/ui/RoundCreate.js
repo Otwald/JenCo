@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Dropdown } from 'semantic-ui-react';
 
 
 const roundCreate = props => {
 
+    const [tableOptions, setTableOptions] = useState([]);
     useEffect(() => {
-        // console.log(props.time_block);
-    }, [props.time_block])
-
+        setTableOptions(props.tableOptions);
+        return (()=>{
+            setTableOptions([]);
+        })
+    }, [props.time_block, props.round_create, props.tableOptions])
     let create = '';
     if (Meteor.userId()) {
         create = <div>
@@ -20,6 +23,16 @@ const roundCreate = props => {
                         scrolling
                         onChange={props.onInputBlock}
                         type='round_tb'
+                    />
+                </li>
+                <li>
+                    Tisch Nummer
+                    <Dropdown
+                        placeholder='Block'
+                        options={props.tableOptions}
+                        scrolling
+                        onChange={props.onInputBlock}
+                        type='round_table'
                     />
                 </li>
                 <li>Runden Name<input type='text' name='round_name' onChange={props.onInput} placeholder={props.round_create.round_name} /></li>

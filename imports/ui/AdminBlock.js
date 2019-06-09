@@ -19,7 +19,7 @@ const adminBlock = props => {
         block_start: null,
         block_end: null,
         block_table: [],
-        block_max_table:null
+        block_max_table: 0
     })
 
     //creates timeblock for rounds

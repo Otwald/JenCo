@@ -56,7 +56,7 @@ Meteor.methods({
     Rounds.insert(data);
     const table = Rounds.findOne(data);
     const block = timeblock.findOne({ _id: data.round_tb });
-    block.block_table.push(table._id)
+    block.block_table.push(table.round_table)
     timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
   RoundUpdate(data) {
@@ -67,7 +67,7 @@ Meteor.methods({
     Rounds.remove({ _id: id });
     const block = timeblock.findOne({ _id: table.round_tb })
     block.block_table.map((v, i) => {
-      if (v === id) {
+      if (v === table.round_table) {
         block.block_table.splice(i, 1)
       }
     })
@@ -85,9 +85,9 @@ Meteor.methods({
   UserArchiveCreate(data) {
     users_archive.insert(data);
   },
-  AccountUpdate(data) {
-    users_account.update({ _id: data._id }, data);
-  },
+  // AccountUpdate(data) {
+  //   users_account.update({ _id: data._id }, data);
+  // },
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
