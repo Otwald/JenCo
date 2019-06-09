@@ -8,17 +8,7 @@ const roundComponent = props => {
 
     // beschreibungsfeld 
     //Vorgefertigten Charaktere
-    // tisch 5
     // max 3 plätze online
-    // {
-    //     "_id" : "zCAggKusFJSR47eWv",
-    //     "block_name" : "Test3",
-    //     "block_pnp" : "true",
-    //     "block_start" : NaN,
-    //     "block_end" : NaN,
-    //     "block_table" : [],
-    //     "block_max_table" : "5"
-    // }
 
 
     const [round_create, setRoundCreate] = useState({
@@ -73,8 +63,8 @@ const roundComponent = props => {
         const block = props.time_block.filter((v) => {
             return v._id === id
         })
-        var table = [];
-        for (var i = 1; i <= block[0].block_max_table; i++) {
+        let table = [];
+        for (let i = 1; i <= block[0].block_max_table; i++) {
             if (block[0].block_table.filter((v) => {
                 return v == i
             }).length === 0) {
@@ -171,11 +161,11 @@ const roundComponent = props => {
 
     //creates options for timeblock when creating new round
     timeOptions = (block) => {
+        let temp = []
         if (in_round) {
             block.map((v) => {
                 if (v.block_max_table < v.block_table.length) { return }
                 if (in_round[v._id] === false) { return }
-                let temp = options_time_block
                 temp.push({
                     text: v.block_name,
                     value: v._id
@@ -221,6 +211,7 @@ const roundComponent = props => {
                                     <li>Spielleiter = {k.round_gm}</li>
                                     <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
                                     <li>Spieler Namen = {onPlayers(k.round_player)}</li>
+                                    <li>Tisch = {k.round_table}</li>
                                     {out}
                                 </ul>
                             </div>
@@ -231,7 +222,6 @@ const roundComponent = props => {
         }
         return roundtemplate
     }
-    // console.log(props)
     let tb = ''
     if (props.time_block.length > 0) {
         props.time_block.sort(function (a, b) {
@@ -255,10 +245,9 @@ const roundComponent = props => {
             )
         })
     }
-    console.log(tableOptions)
     let rc = '';
     if (props.user) {
-        if (props.user.bill && props.user.profil) {
+        if (props.user.bill && props.user.profil && (options_time_block.length > 0)) {
             rc = <RoundCreate
                 round_create={round_create}
                 time_block={options_time_block}
