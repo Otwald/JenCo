@@ -92,9 +92,9 @@ export default class Account extends React.Component {
         if (check) {
             if (this.props.user) {
                 data['_id'] = this.props.user._id
-                users_account.update({ _id: data._id }, data)
+                Meteor.call('AccountUpdate', data)
             } else {
-                users_account.insert(data);
+                Meteor.call('AccountCreate', data)
             }
         }
     }
