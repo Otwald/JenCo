@@ -10,15 +10,22 @@ const admin = props => {
         e_end: null,
         e_loc: null,
         e_start: null,
-        price: null,
+        t_price: null,
+        e_price: null
     });
     const [activeUser, setActiveUser] = useState(null);
     const [eventTab, setEventTab] = useState(false);
     const [userTab, setUserTab] = useState(false);
     const [tbTab, setTbTab] = useState(false);
+    const [eventEdit, setEventEdit] = useState(false);
 
     useEffect(() => {
-        setSettings(props.event)
+        if (props.event) {
+            setSettings(props.event)
+        }
+        return (() => {
+            setSettings()
+        })
     }, [props.event])
     // useEffect(() => {
     //     return (() => {
@@ -35,7 +42,11 @@ const admin = props => {
 
     //saves state.setting to mongo
     onSave = () => {
-        Meteor.call('EventUpdate', settings)
+        if (props.event) {
+            Meteor.call('EventUpdate', settings)
+        } else {
+            Meteor.call('EventCreate', settings)
+        }
     }
 
     // just translats booleans to words
@@ -139,18 +150,20 @@ const admin = props => {
             <div className="row">
                 <div onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
                 {eventTab ? <ul>
-                    <li>Event Start<input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> </li>
-                    <li>Event End<input type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} /></li>
-                    <li>Event Location<input type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} /></li>
-                    <li>Preis<input type='text' name='price' onChange={onInput} placeholder={settings.price} /></li>
-                    <li><button onClick={onSave} >Save</button></li>
+                    <li>Event Start {eventEdit ? <input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> : settings.e_start}</li>
+                    <li>Event End {eventEdit ? <input type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} /> : settings.e_end}</li>
+                    <li>Event Location {eventEdit ? <input type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} /> : settings.e_loc}</li>
+                    <li>Teilnahme Preis {eventEdit ? <input type='number' name='t_price' onChange={onInput} placeholder={settings.t_price} /> : settings.t_price}</li>
+                    <li>Event Kosten {eventEdit ? <input type='number' name='e_price' onChange={onInput} placeholder={settings.e_price} /> : settings.e_price} </li>
+                    {eventEdit ? <li><button onClick={() => setEventEdit(false)} >Cancel</button> <button onClick={onSave} >Save</button> </li>
+                        : <li><button onClick={() => setEventEdit(true)}>Edit</button></li>}
                 </ul> : ''}
             </div>
             <div className="row">
                 {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
                 <div onClick={() => setTbTab(!tbTab)}> ZeitBlock Einstellungen</div>
                 {tbTab ?
-                    <AdminBlock event={props.event} timeblock={props.timeblock} />
+                    <AdminBlock event={settings} timeblock={props.timeblock} />
                     : ''}
             </div>
         </div>

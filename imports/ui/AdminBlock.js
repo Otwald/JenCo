@@ -129,7 +129,7 @@ const adminBlock = props => {
                 <input type='time' name='start' onChange={this.onTimeInput} />
             </li>
             <li>
-                Zeit Länge
+                Zeit Ende
                     <Dropdown
                     placeholder='Tag'
                     search

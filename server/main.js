@@ -7,17 +7,17 @@ import { event_settings, timeblock, Rounds, users_archive, users_account } from 
 Meteor.startup(() => {
   console.log('Restart');
   // for initial Setup Creating one Empty Event Entry
-  const cursor = event_settings.findOne();
-  if (!cursor) {
-    event_settings.insert({
-      e_start: null,
-      e_end: null,
-      e_loc: null,
-      tb: [],
-      table: null,
-      price: null,
-    });
-  }
+  // const cursor = event_settings.findOne();
+  // if (!cursor) {
+  //   event_settings.insert({
+  //     e_start: null,
+  //     e_end: null,
+  //     e_loc: null,
+  //     tb: [],
+  //     table: null,
+  //     price: null,
+  //   });
+  // }
 });
 
 
@@ -92,12 +92,15 @@ Meteor.methods({
     users_archive.insert(data);
   },
   SwitchBill(data) {
-    const user = users_account.findOne({ _id: data });  
-    users_account.update({ _id: data}, {
+    const user = users_account.findOne({ _id: data });
+    users_account.update({ _id: data }, {
       $set: {
         "bill": !user.bill
       }
     });
+  },
+  EventCreate(data) {
+    event_settings.insert(data);
   },
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
