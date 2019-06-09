@@ -57,6 +57,7 @@ const admin = props => {
         } else {
             Meteor.call('EventCreate', settings)
         }
+        setEventEdit(false)
     }
 
     // just translats booleans to words
@@ -130,6 +131,7 @@ const admin = props => {
     if (props.users.length > 0) {
         props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
         user_block = props.users.map((key, value) => {
+            // Namens Sortierung | Radial alle , bezahlt, nicht bezahlt | Minderjährige
             return (
                 <li onMouseEnter={this.mouseIn} onMouseLeave={this.mouseOut} key={'User' + value} value={value}>
                     {key.last} {this.outPay(key.bill)}
