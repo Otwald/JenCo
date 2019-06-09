@@ -63,6 +63,10 @@ const account = props => {
         }
     }
 
+    let bill = 'Noch kein Zahlungseingang'
+    if (props.user) {
+        bill = props.user.bill ? 'Zahlungseingang ist bestätigt' : 'Noch kein Zahlungseingang'
+    }
     return (
         <div className="text-center">
             <div className="row">
@@ -73,6 +77,7 @@ const account = props => {
                         <li>Vorname<input type='text' name='first' onChange={this.onInput} placeholder={account.first} /></li>
                         <li>Nachname<input type='text' name='last' onChange={this.onInput} placeholder={account.last} /></li>
                         <li>Alter<input type='date' name='age' onChange={onInput} /></li>
+                        <li>{bill}</li>
                         <li><button onClick={this.onSave} >Save</button></li>
                     </ul>
                 </div>

@@ -84,7 +84,6 @@ const admin = props => {
         let temp = activeTab;
         temp[e] = !temp[e];
         setActivTab(Object.assign(temp))
-        console.log(activeTab)
     }
 
     // timeCount = (min, max) => {
@@ -106,7 +105,6 @@ const admin = props => {
     //     let today = date.getFullYear()
     //     return account.timeCount(today, today + 1);
     // }
-    console.log(settings)
     let user_block = '';
     if (props.users.length > 0) {
         props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
