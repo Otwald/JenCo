@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Button } from 'semantic-ui-react';
 
 import { Rounds } from '../api/mongo_export';
 import RoundCreate from './RoundCreate';
@@ -187,16 +188,16 @@ const roundComponent = props => {
                         if (props.user.bill) {
                             if (k.round_gm_id === Meteor.userId()) {
                                 props.onCallback({ key: time, value: false });
-                                out = <li><button onClick={() => this.onEdit(k)} >Edit</button><button onClick={() => this.onDestroy(k, time)} >Destroy</button></li>
+                                out = <li><Button onClick={() => this.onEdit(k)} >Edit</Button><Button onClick={() => this.onDestroy(k, time)} >Destroy</Button></li>
                             } else if (in_round[time] !== false) {
                                 if (this.onCheck(k.round_player, time)) {
                                     if (k.round_curr_pl < k.round_max_pl) {
-                                        out = <li><button onClick={() => this.onJoin(k)} >Join</button></li>
+                                        out = <li><Button onClick={() => this.onJoin(k)} >Join</Button></li>
                                     }
                                 }
                             } else {
                                 if (!this.onCheck(k.round_player, time)) {
-                                    out = <li><button onClick={() => this.onLeave(k, time)} >Leave</button></li>
+                                    out = <li><Button onClick={() => this.onLeave(k, time)} >Leave</Button></li>
                                 }
                             }
                         }

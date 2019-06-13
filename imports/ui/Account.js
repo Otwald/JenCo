@@ -77,14 +77,17 @@ const account = props => {
 
                         {edit ?
                         <ul className="list-unstyled">
-                            <li>Profil Name<input type='text' name='profil' onChange={this.onInput} placeholder={account.profil} /></li>
+                            <li>
+                                Profil Name:
+                                <input type='text' name='profil' onChange={this.onInput} placeholder={account.profil} />
+                            </li>
                             <li>Vorname<input type='text' name='first' onChange={this.onInput} placeholder={account.first} /></li>
                             <li>Nachname<input type='text' name='last' onChange={this.onInput} placeholder={account.last} /></li>
                             <li>Alter<input type='date' name='age' onChange={onInput} /></li>
                             <li><button onClick={() => setEdit(false)} >Cancel</button><button onClick={onSave} >Save</button></li>
                         </ul>
                         :
-                        <ul>
+                        <ul className="list-unstyled">
                             <li>Profil Name: {account.profil} </li>
                             <li>Vorname: {account.first} </li>
                             <li>Nachname: {account.last} </li>

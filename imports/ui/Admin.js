@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from 'semantic-ui-react';
+
 import AdminBlock from './AdminBlock';
 
 
@@ -10,8 +12,8 @@ const admin = props => {
         e_end: null,
         e_loc: null,
         e_start: null,
-        t_price: null,
-        e_price: null
+        t_price: 0,
+        e_price: 0
     });
     const [activeUser, setActiveUser] = useState(null);
     const [eventTab, setEventTab] = useState(false);
@@ -28,7 +30,7 @@ const admin = props => {
             let money = 0 
             props.users.map((v) => {
                 if (v.bill) {
-                    money = money + parseInt(settings.t_price)
+                    money = money + parseInt(props.t_price)
                     setEventPay(money);
                 }
             })
@@ -142,8 +144,8 @@ const admin = props => {
                             <li>{key.profil}</li>
                             <li>{key.age}</li>
                             <li>{key.email}</li>
-                            <li><button onClick={(e) => Meteor.call('SwitchBill', key._id)} >Switch Pay</button></li>
-                            <li><button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</button><button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</button></li>
+                            <li><Button onClick={(e) => Meteor.call('SwitchBill', key._id)} >Switch Pay</Button></li>
+                            <li><Button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</Button><Button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</Button></li>
                         </ul>
                         : ""}
                 </li>
