@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Dropdown } from 'semantic-ui-react';
-
-import { users_account } from './../api/mongo_export';
 
 const account = props => {
 
@@ -73,52 +70,59 @@ const account = props => {
         <div className="text-center">
             <div className="row">
                 <div className="col-sm-12">
-                    Account Content
-
-                        {edit ?
+                    {edit ?
                         <form>
-                            <div className='form-row'>
-                                <div className='form-group col-sm-4'>
-                                    <label for='profil' className='col-sm-4'>Profil Name</label>
+                            <div className='form-row justify-content-center'>
+                                <div className='form-group col-sm-3'>
+                                    <label for='profil'>Profil Name</label>
                                     <input type='text' className='form-control' name='profil' onChange={this.onInput} placeholder={account.profil} id='profil' />
                                 </div>
-                                <div className='form-group col-sm-4'>
-                                    <label for='first' className='col-sm-4'>Vorname</label>
+                            </div>
+                            <div className='form-row justify-content-center'>
+                                <div className='form-group col-sm-3'>
+                                    <label for='first' >Vorname</label>
                                     <input type='text' className='form-control' name='first' onChange={this.onInput} placeholder={account.first} id='first' />
 
                                 </div>
-                                <div className='form-group col-sm-4'>
-                                    <label for='last' className='col-sm-4'>Nachname</label>
+                                <div className='form-group col-sm-3'>
+                                    <label for='last' >Nachname</label>
 
 
                                     <input type='text' className='form-control' name='last' onChange={this.onInput} placeholder={account.last} id='last' />
                                 </div>
                             </div>
                             <div className='form-row justify-content-center'>
-                                <div className='form-group'>
+                                <div className='form-group col-sm-3'>
                                     <label for='age'>Alter</label>
                                     <input type='date' name='age' className='form-control' id='age' onChange={onInput} />
                                 </div>
 
                             </div>
-                            <div className='form-row'>
-                                <div className='form-group col-sm-6'>
+                            <div className='form-row justify-content-center'>
+                                <div className='form-group col-sm-3'>
                                     <button className='form-control' onClick={() => setEdit(false)} >Cancel</button>
                                 </div>
-                                <div className='form-group col-sm-6'>
+                                <div className='form-group col-sm-3'>
                                     <button className='form-control' onClick={onSave} >Save</button>
                                 </div>
                             </div>
                         </form>
                         :
-                        <ul className="list-unstyled">
-                            <li>Profil Name: {account.profil} </li>
-                            <li>Vorname: {account.first} </li>
-                            <li>Nachname: {account.last} </li>
-                            <li>Alter:  {account.age}</li>
-                            <li>{bill}</li>
-                            <li><button onClick={() => setEdit(true)} >Edit</button></li>
-                        </ul>
+                        <div className='row justify-content-center'>
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className='card-title'>Profil Name</h5>
+                                    <p className='text-muted'>{account.profil}</p>
+                                    <h5 className='card-title'>Vorname</h5>
+                                    <p className='text-muted'>{account.first}</p>
+                                    <h5 className='card-title'>Nachname</h5>
+                                    <p className='text-muted'>{account.last} </p>
+                                    <li>Alter:  {new Date(account.age).toDateString()}</li>
+                                    <li>{bill}</li>
+                                    <li><button onClick={() => setEdit(true)} >Edit</button></li>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </div>
             </div>

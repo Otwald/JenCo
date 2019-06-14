@@ -1,6 +1,5 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Button, Menu } from 'semantic-ui-react';
 
 import AccountsUI from './AccountsUI'
 
