@@ -4,30 +4,47 @@ import { Button, Menu } from 'semantic-ui-react';
 
 import AccountsUI from './AccountsUI'
 
-export default class Sidebar extends React.Component {
+const sidebar = props => {
     onClickButton = (data) => {
-        this.props.onTabChange(data)
+        props.onTabChange(data)
     }
 
 
-    render() {
-        let login = ''
-        let admin = ''
-        if (Meteor.userId()) {
-            login = <div className="col-sm"><Button primary onClick={(e) => this.onClickButton('account')}>Account</Button></div>
-            admin = <div className="col-sm"><Button primary onClick={(e) => this.onClickButton('admin')}>Admin</Button> </div>
-        }
-
-        return (
-            <div className="row">
-                    <div className="col-sm"><Button primary onClick={(e) => this.onClickButton('welcome')} >Willkommen</Button></div>
-                    <div className="col-sm"><Button primary onClick={(e) => this.onClickButton('round')} >Spielerunde</Button></div>
-                    {login}
-                    {admin}
-                    <div className="col-sm">
-                        <AccountsUI />
-                    </div>
+    let login = ''
+    let admin = ''
+    if (Meteor.userId()) {
+        login = <li className="nav-item py-0">
+            <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
+                <button primary onClick={() => this.onClickButton('account')}>Account</button>
             </div>
-        )
+        </li>
+        admin = <li className="nav-item py-0">
+            <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
+                <button primary onClick={() => this.onClickButton('admin')}>Admin</button>
+            </div>
+        </li>
     }
+
+    return (
+        <ul className="nav nav-fill nav-tabs justify-content-center">
+            <li className="nav-item py-0">
+                <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
+                    <button primary onClick={() => this.onClickButton('welcome')} >Willkommen</button>
+
+                </div>
+            </li>
+            <li className="nav-item py-0">
+                <div className={props.tab === 'round' ? `nav-link active` : "nav-link"}>
+                    <button primary onClick={() => this.onClickButton('round')} >Spielerunde</button>
+                </div>
+            </li>
+            {login}
+            {admin}
+            <li className="nav-item py-0">
+                <AccountsUI />
+            </li>
+        </ul>
+    )
 }
+
+export default sidebar
