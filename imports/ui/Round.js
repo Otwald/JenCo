@@ -181,23 +181,23 @@ const roundComponent = props => {
         const rounds_box = props.rounds_box
         let roundtemplate = ''
         if (rounds_box.length !== 0) {
-            let out = '';
             roundtemplate = rounds_box.map((k, v) => {
+                let out = '';
                 if (k.round_tb === time) {
                     if (Meteor.userId() && props.user) {
                         if (props.user.bill) {
                             if (k.round_gm_id === Meteor.userId()) {
                                 props.onCallback({ key: time, value: false });
-                                out = <li><Button onClick={() => this.onEdit(k)} >Edit</Button><Button onClick={() => this.onDestroy(k, time)} >Destroy</Button></li>
+                                out = <li><button className='btn btn-outline-dark' onClick={() => this.onEdit(k)} >Ändern</button><button className='btn btn-outline-dark' onClick={() => this.onDestroy(k, time)} >Löschen</button></li>
                             } else if (in_round[time] !== false) {
                                 if (this.onCheck(k.round_player, time)) {
                                     if (k.round_curr_pl < k.round_max_pl) {
-                                        out = <li><Button onClick={() => this.onJoin(k)} >Join</Button></li>
+                                        out = <li><button className='btn btn-outline-dark' onClick={() => this.onJoin(k)} >Beitreten</button></li>
                                     }
                                 }
                             } else {
                                 if (!this.onCheck(k.round_player, time)) {
-                                    out = <li><Button onClick={() => this.onLeave(k, time)} >Leave</Button></li>
+                                    out = <li><button className='btn btn-outline-dark' onClick={() => this.onLeave(k, time)} >Speichern</button></li>
                                 }
                             }
                         }
@@ -206,13 +206,14 @@ const roundComponent = props => {
                         <div className="col-sm-6" key={v}>
                             <div className="text-center">
                                 <ul className="list-unstyled">
+                                    { ? Runde Regelwerk 0/10 :
                                     <li>Runden Name = {k.round_name}</li>
                                     <li>Setting = {k.setting}</li>
                                     <li>Regelwerk = {k.ruleset}</li>
                                     <li>Spielleiter = {k.round_gm}</li>
                                     <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
                                     <li>Spieler Namen = {onPlayers(k.round_player)}</li>
-                                    <li>Tisch = {k.round_table}</li>
+                                    <li>Tisch = {k.round_table}</li>}
                                     {out}
                                 </ul>
                             </div>

@@ -100,10 +100,10 @@ const account = props => {
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
-                                    <button className='form-control' onClick={() => setEdit(false)} >Cancel</button>
+                                    <button className='btn btn-outline-dark' onClick={() => setEdit(false)} >Cancel</button>
                                 </div>
                                 <div className='form-group col-sm-3'>
-                                    <button className='form-control' onClick={onSave} >Save</button>
+                                    <button className='btn btn-outline-dark' onClick={onSave} >Save</button>
                                 </div>
                             </div>
                         </form>
@@ -117,9 +117,10 @@ const account = props => {
                                     <p className='text-muted'>{account.first}</p>
                                     <h5 className='card-title'>Nachname</h5>
                                     <p className='text-muted'>{account.last} </p>
-                                    <li>Alter:  {new Date(account.age).toDateString()}</li>
-                                    <li>{bill}</li>
-                                    <li><button onClick={() => setEdit(true)} >Edit</button></li>
+                                    <h5 className='card-title'>Alter</h5>  
+                                    <p className='text-muted'>{new Date(account.age).toDateString()}</p>
+                                    <h5 className='card-title'>{bill}</h5>
+                                    <button className='btn btn-outline-dark' onClick={() => setEdit(true)} >Edit</button>
                                 </div>
                             </div>
                         </div>

@@ -96,12 +96,12 @@ const admin = props => {
 
     //for user table
     mouseIn = (e) => {
-        setActiveUser(e.target.value);
-    }
+        if(activeUser === null){
+            setActiveUser(e.target.value);
+        }else{
+            setActiveUser(null)
+        }
 
-    //for user table
-    mouseOut = (e) => {
-        setActiveUser(null)
     }
 
     onTabChange = (e) => {
@@ -135,7 +135,7 @@ const admin = props => {
         user_block = props.users.map((key, value) => {
             // Namens Sortierung | Radial alle , bezahlt, nicht bezahlt | Minderjährige
             return (
-                <li onMouseEnter={this.mouseIn} onMouseLeave={this.mouseOut} key={'User' + value} value={value}>
+                <li onClick={(e) =>this.mouseIn(e)}  key={'User' + value} value={value}>
                     {key.last} {this.outPay(key.bill)}
                     {value === activeUser ?
                         <ul>
