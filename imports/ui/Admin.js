@@ -96,7 +96,7 @@ const admin = props => {
 
     //for user table
     mouseIn = (e) => {
-        if(activeUser === null){
+        if(activeUser !== e.target.value){
             setActiveUser(e.target.value);
         }else{
             setActiveUser(null)
@@ -110,25 +110,6 @@ const admin = props => {
         setActivTab(Object.assign(temp))
     }
 
-    // timeCount = (min, max) => {
-    //     const account = new Account
-    //     let out = account.timeCount(min, max);
-    //     out.map((value, key) => {
-    //         if (String(value.text).length < 2) {
-    //             value.text = '0' + value.text;
-    //             value.value = '0' + value.value;
-    //             return value
-    //         }
-    //     })
-    //     return out
-    // }
-
-    // timeCountYear() {
-    //     const account = new Account;
-    //     const date = new Date();
-    //     let today = date.getFullYear()
-    //     return account.timeCount(today, today + 1);
-    // }
     let user_block = '';
     if (props.users.length > 0) {
         props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));

@@ -28,7 +28,7 @@ const roundComponent = props => {
     const [options_time_block, setOptions_time_block] = useState([]);
     const [in_round, setIn_round] = useState([]);
     const [tableOptions, setTableOptions] = useState([]);
-    const [roundTab, setRoundTab] = useState(null);
+    const [blockTab, setBlockTab] = useState(null);
 
 
     useEffect(() => {
@@ -205,11 +205,11 @@ const roundComponent = props => {
         }
     }
 
-    roundTabControll = (id) => {
-        if (roundTab !== id) {
-            setRoundTab(id);
+    blockTabControll = (id) => {
+        if (blockTab !== id) {
+            setBlockTab(id);
         } else {
-            setRoundTab(null);
+            setBlockTab(null);
         }
     }
 
@@ -234,39 +234,68 @@ const roundComponent = props => {
                                 }
                             } else {
                                 if (!this.onCheck(k.round_player, time)) {
-                                    out = <li><button className='btn btn-outline-dark' onClick={() => this.onLeave(k, time)} >Speichern</button></li>
+                                    out = <li><button className='btn btn-outline-dark' onClick={() => this.onLeave(k, time)} >Austreten</button></li>
                                 }
                             }
                         }
                     }
+                    let expand = ''
+                    let content =
+                        <div className='row '>
+                            <div className="col-sm-2">
+                                <div className="text-center">
+                                    <strong>{k.round_table}</strong>
+                                </div>
+                            </div>
+                            <div className='col-sm-10'>
+                                <div className="text-left">
+                                    <div className='row'>
+
+                                        <label className="col-sm-4">Runden Name</label>
+                                        <div className='col-sm-8 text-muted'>
+                                            {k.round_name}
+                                        </div>
+                                    </div>
+
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Setting</label>
+                                        <div className='col-sm-8 text-muted'>{k.setting}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Regelwerk</label>
+                                        <div className='col-sm-8 text-muted'>{k.ruleset}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Spielleiter</label>
+                                        <div className='col-sm-8 text-muted' >{k.round_gm}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Spieler Cur/Max</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_pl}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Spieler Namen</label>
+                                        <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
+                                    </div>
+                                    <div className='col-sm text-center'>{expand === '' ? '...' : expand}</div>
+                                    {out}
+                                </div>
+                            </div >
+                        </div>
+                    if (round_create._id === k._id) {
+                        content = <RoundCreate
+                            round_create={round_create}
+                            time_block={edit_options_time_block}
+                            onInput={this.onInput}
+                            onSave={this.onSave}
+                            onInputBlock={this.onInputBlock}
+                            tableOptions={tableOptions}
+                            onCancel={this.onCancel}
+                        />
+                    }
                     return (
                         <div className="col-sm-6" key={v}>
-                            <div className="text-center">
-                                {roundTab === k._id ?
-                                    round_create._id === k._id ?
-                                        <RoundCreate
-                                            round_create={round_create}
-                                            time_block={edit_options_time_block}
-                                            onInput={this.onInput}
-                                            onSave={this.onSave}
-                                            onInputBlock={this.onInputBlock}
-                                            tableOptions={tableOptions}
-                                            onCancel={this.onCancel}
-                                        /> :
-                                        <ul className="list-unstyled">
-                                            <li onClick={() => roundTabControll(k._id)}>Runden Name = {k.round_name}</li>
-                                            <li>Setting = {k.setting}</li>
-                                            <li>Regelwerk = {k.ruleset}</li>
-                                            <li>Spielleiter = {k.round_gm}</li>
-                                            <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                                            <li>Spieler Namen = {onPlayers(k.round_player)}</li>
-                                            <li>Tisch = {k.round_table}</li>
-                                            {out}
-                                        </ul>
-                                    :
-                                    <div onClick={() => roundTabControll(k._id)}>{k.round_name} {k.setting} {k.round_curr_pl}/{k.round_max_pl} </div>
-                                }
-                            </div>
+                            {content}
                         </div>
                     )
                 }
@@ -290,8 +319,8 @@ const roundComponent = props => {
             return (
                 <div className="row" key={k._id}>
                     <div className="col-sm">
-                        <div className="text-center"><h4>{k.block_name}</h4></div>
-                        <div className="row">{this.timeBlockCreate(k._id)}</div>
+                        <div className="text-center" onClick={() => blockTabControll(k._id)}><h4>{k.block_name}</h4></div>
+                        {blockTab === k._id ? <div className="row">{this.timeBlockCreate(k._id)}</div> : ''}
                     </div>
                 </div>
             )
