@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Button } from 'semantic-ui-react';
 
-import { Rounds } from '../api/mongo_export';
 import RoundCreate from './RoundCreate';
 
 const roundComponent = props => {
@@ -13,6 +11,7 @@ const roundComponent = props => {
 
 
     const [round_create, setRoundCreate] = useState({
+        _id: null,
         round_tb: '',
         round_name: 'Round Name',
         setting: 'Setting',
@@ -25,9 +24,11 @@ const roundComponent = props => {
         round_player: [],
         round_table: null
     })
+    const [edit_options_time_block, setEdit_Options_time_block] = useState([]);
     const [options_time_block, setOptions_time_block] = useState([]);
     const [in_round, setIn_round] = useState([]);
     const [tableOptions, setTableOptions] = useState([]);
+    const [roundTab, setRoundTab] = useState(null);
 
 
     useEffect(() => {
@@ -96,12 +97,40 @@ const roundComponent = props => {
             } else {
                 Meteor.call('RoundCreate', data);
             }
+            this.onCancel()
         }
     }
 
     //loads rounds setting
-    onEdit = (data) => {
-        setRoundCreate(round_create)
+    onEdit = (round, time) => {
+        setRoundCreate(round)
+        setEdit_Options_time_block(options_time_block);
+        time = props.time_block.filter((v) => {
+            return v._id === time
+        })
+        edit_options_time_block.push({
+            text: time[0].block_name,
+            value: time[0]._id
+        })
+        setEdit_Options_time_block(edit_options_time_block)
+    }
+
+    onCancel = () => {
+        setRoundCreate({
+            _id: null,
+            round_tb: '',
+            round_name: 'Round Name',
+            setting: 'Setting',
+            ruleset: 'Rules',
+            own_char: true,
+            round_gm: 'Placeholder',
+            round_gm_id: Meteor.userId(),
+            round_curr_pl: 0,
+            round_max_pl: 5,
+            round_player: [],
+            round_table: null
+        })
+        setEdit_Options_time_block([])
     }
 
     //destroys round in timeblock
@@ -176,6 +205,14 @@ const roundComponent = props => {
         }
     }
 
+    roundTabControll = (id) => {
+        if (roundTab !== id) {
+            setRoundTab(id);
+        } else {
+            setRoundTab(null);
+        }
+    }
+
     //visualizes the rounds in a timeblock
     timeBlockCreate = (time) => {
         const rounds_box = props.rounds_box
@@ -188,7 +225,7 @@ const roundComponent = props => {
                         if (props.user.bill) {
                             if (k.round_gm_id === Meteor.userId()) {
                                 props.onCallback({ key: time, value: false });
-                                out = <li><button className='btn btn-outline-dark' onClick={() => this.onEdit(k)} >Ändern</button><button className='btn btn-outline-dark' onClick={() => this.onDestroy(k, time)} >Löschen</button></li>
+                                out = <li><button className='btn btn-outline-dark' onClick={() => this.onEdit(k, time)} >Ändern</button><button className='btn btn-outline-dark' onClick={() => this.onDestroy(k, time)} >Löschen</button></li>
                             } else if (in_round[time] !== false) {
                                 if (this.onCheck(k.round_player, time)) {
                                     if (k.round_curr_pl < k.round_max_pl) {
@@ -205,17 +242,30 @@ const roundComponent = props => {
                     return (
                         <div className="col-sm-6" key={v}>
                             <div className="text-center">
-                                <ul className="list-unstyled">
-                                    { ? Runde Regelwerk 0/10 :
-                                    <li>Runden Name = {k.round_name}</li>
-                                    <li>Setting = {k.setting}</li>
-                                    <li>Regelwerk = {k.ruleset}</li>
-                                    <li>Spielleiter = {k.round_gm}</li>
-                                    <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
-                                    <li>Spieler Namen = {onPlayers(k.round_player)}</li>
-                                    <li>Tisch = {k.round_table}</li>}
-                                    {out}
-                                </ul>
+                                {roundTab === k._id ?
+                                    round_create._id === k._id ?
+                                        <RoundCreate
+                                            round_create={round_create}
+                                            time_block={edit_options_time_block}
+                                            onInput={this.onInput}
+                                            onSave={this.onSave}
+                                            onInputBlock={this.onInputBlock}
+                                            tableOptions={tableOptions}
+                                            onCancel={this.onCancel}
+                                        /> :
+                                        <ul className="list-unstyled">
+                                            <li onClick={() => roundTabControll(k._id)}>Runden Name = {k.round_name}</li>
+                                            <li>Setting = {k.setting}</li>
+                                            <li>Regelwerk = {k.ruleset}</li>
+                                            <li>Spielleiter = {k.round_gm}</li>
+                                            <li>Spieler Zahl/Max = {k.round_curr_pl}/{k.round_max_pl}</li>
+                                            <li>Spieler Namen = {onPlayers(k.round_player)}</li>
+                                            <li>Tisch = {k.round_table}</li>
+                                            {out}
+                                        </ul>
+                                    :
+                                    <div onClick={() => roundTabControll(k._id)}>{k.round_name} {k.setting} {k.round_curr_pl}/{k.round_max_pl} </div>
+                                }
                             </div>
                         </div>
                     )
@@ -257,6 +307,7 @@ const roundComponent = props => {
                 onSave={this.onSave}
                 onInputBlock={this.onInputBlock}
                 tableOptions={tableOptions}
+                onCancel={this.onCancel}
             />
 
         }
