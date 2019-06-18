@@ -316,11 +316,13 @@ const roundComponent = props => {
         })
         tb = props.time_block.map((k) => {
             if (!k.block_table) { return }
+            let round = ''
+            round = this.timeBlockCreate(k._id)
             return (
                 <div className="row" key={k._id}>
                     <div className="col-sm">
                         <div className="text-center" onClick={() => blockTabControll(k._id)}><h4>{k.block_name}</h4></div>
-                        {blockTab === k._id ? <div className="row">{this.timeBlockCreate(k._id)}</div> : ''}
+                        {blockTab === k._id ? <div className="row">{round}</div> : ''}
                     </div>
                 </div>
             )
