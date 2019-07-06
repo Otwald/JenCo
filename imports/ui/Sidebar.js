@@ -14,12 +14,12 @@ const sidebar = props => {
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
             <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
-                <button primary onClick={() => this.onClickButton('account')}>Account</button>
+                <button onClick={() => this.onClickButton('account')}>Account</button>
             </div>
         </li>
         admin = <li className="nav-item py-0">
             <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
-                <button primary onClick={() => this.onClickButton('admin')}>Admin</button>
+                <button onClick={() => this.onClickButton('admin')}>Admin</button>
             </div>
         </li>
     }
@@ -28,13 +28,13 @@ const sidebar = props => {
         <ul className="nav nav-fill nav-tabs justify-content-center">
             <li className="nav-item py-0">
                 <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
-                    <button primary onClick={() => this.onClickButton('welcome')} >Willkommen</button>
+                    <button onClick={() => this.onClickButton('welcome')} >Willkommen</button>
 
                 </div>
             </li>
             <li className="nav-item py-0">
                 <div className={props.tab === 'round' ? `nav-link active` : "nav-link"}>
-                    <button primary onClick={() => this.onClickButton('round')} >Spielerunde</button>
+                    <button onClick={() => this.onClickButton('round')} >Spielerunde</button>
                 </div>
             </li>
             {login}
