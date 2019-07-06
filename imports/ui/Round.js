@@ -101,7 +101,9 @@ const roundComponent = props => {
         }
     }
 
-    //loads rounds setting
+    /**
+    * loads rounds setting
+    */
     onEdit = (round, time) => {
         setRoundCreate(round)
         setEdit_Options_time_block(options_time_block);
@@ -225,16 +227,23 @@ const roundComponent = props => {
                         if (props.user.bill) {
                             if (k.round_gm_id === Meteor.userId()) {
                                 props.onCallback({ key: time, value: false });
-                                out = <li><button className='btn btn-outline-dark' onClick={() => this.onEdit(k, time)} >Ändern</button><button className='btn btn-outline-dark' onClick={() => this.onDestroy(k, time)} >Löschen</button></li>
+                                out = <div className='row'>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(k, time)} >Löschen</button>
+                                </div>
                             } else if (in_round[time] !== false) {
                                 if (this.onCheck(k.round_player, time)) {
                                     if (k.round_curr_pl < k.round_max_pl) {
-                                        out = <li><button className='btn btn-outline-dark' onClick={() => this.onJoin(k)} >Beitreten</button></li>
+                                        out = <div className='row'>
+                                            <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k)} >Beitreten</button>
+                                        </div>
                                     }
                                 }
                             } else {
                                 if (!this.onCheck(k.round_player, time)) {
-                                    out = <li><button className='btn btn-outline-dark' onClick={() => this.onLeave(k, time)} >Austreten</button></li>
+                                    out = <div className='row'>
+                                        <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k, time)} >Austreten</button>
+                                    </div>
                                 }
                             }
                         }
@@ -243,6 +252,7 @@ const roundComponent = props => {
                     let content =
                         <div className='row '>
                             <div className="col-sm-2">
+                                {/* place for the Icon */}
                                 <div className="text-center">
                                     <strong>{k.round_table}</strong>
                                 </div>
@@ -250,13 +260,11 @@ const roundComponent = props => {
                             <div className='col-sm-10'>
                                 <div className="text-left">
                                     <div className='row'>
-
                                         <label className="col-sm-4">Runden Name</label>
                                         <div className='col-sm-8 text-muted'>
                                             {k.round_name}
                                         </div>
                                     </div>
-
                                     <div className='row'>
                                         <label className='col-sm-4'>Setting</label>
                                         <div className='col-sm-8 text-muted'>{k.setting}</div>
@@ -321,7 +329,13 @@ const roundComponent = props => {
             return (
                 <div className="row" key={k._id}>
                     <div className="col-sm">
-                        <div className="text-center" onClick={() => blockTabControll(k._id)}><h4>{k.block_name}</h4></div>
+                        <div className="text-center row" onClick={() => blockTabControll(k._id)}>
+                            <h4 className="col-sm-4">{k.block_name}</h4>
+                            <div className='col-sm-3'>
+                                <label>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
+                            </div>
+
+                        </div>
                         {blockTab === k._id ? <div className="row">{round}</div> : ''}
                     </div>
                 </div>
@@ -340,15 +354,14 @@ const roundComponent = props => {
                 tableOptions={tableOptions}
                 onCancel={this.onCancel}
             />
-
         }
     }
     return (
-        <div>
+        <React.Fragment>
             {tb}
             Hidden Block
                 {rc}
-        </div >
+        </React.Fragment>
     )
 }
 
