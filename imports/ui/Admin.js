@@ -20,14 +20,14 @@ const admin = props => {
     const [userTab, setUserTab] = useState(false);
     const [tbTab, setTbTab] = useState(false);
     const [eventEdit, setEventEdit] = useState(false);
-    const [eventPay , setEventPay] = useState(0);
+    const [eventPay, setEventPay] = useState(0);
 
     useEffect(() => {
         if (props.event) {
             setSettings(props.event)
         }
         if (props.users) {
-            let money = 0 
+            let money = 0
             props.users.map((v) => {
                 if (v.bill) {
                     money = money + parseInt(props.t_price)
@@ -96,9 +96,9 @@ const admin = props => {
 
     //for user table
     mouseIn = (e) => {
-        if(activeUser !== e.target.value){
+        if (activeUser !== e.target.value) {
             setActiveUser(e.target.value);
-        }else{
+        } else {
             setActiveUser(null)
         }
 
@@ -116,7 +116,7 @@ const admin = props => {
         user_block = props.users.map((key, value) => {
             // Namens Sortierung | Radial alle , bezahlt, nicht bezahlt | Minderjährige
             return (
-                <li onClick={(e) =>this.mouseIn(e)}  key={'User' + value} value={value}>
+                <li onClick={(e) => this.mouseIn(e)} key={'User' + value} value={value}>
                     {key.last} {this.outPay(key.bill)}
                     {value === activeUser ?
                         <ul>
@@ -135,16 +135,16 @@ const admin = props => {
         })
     }
     return (
-        <div >
+        <React.Fragment >
             <div className="row">
-                <div onClick={() => setUserTab(!userTab)}>Nutzerverwaltung</div>
+                <div className='col-sm-3' onClick={() => setUserTab(!userTab)}>Nutzerverwaltung</div>
                 {userTab ? <ul>
                     {user_block}
                 </ul> : ''}
             </div>
             <div className="row">
-                <div onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
-                {eventTab ? <div>
+                <div className='col-sm-3' onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
+                {eventTab ? <React.Fragment>
                     {eventEdit ?
                         <ul>
                             <li>Event Start <input type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} /> </li>
@@ -154,27 +154,48 @@ const admin = props => {
                             <li>Event Kosten <input type='number' name='e_price' onChange={onInput} placeholder={settings.e_price} /></li>
                             <li><button onClick={() => setEventEdit(false)} >Cancel</button> <button onClick={onSave} >Save</button> </li>
                         </ul> :
-                        <ul>
-                            <li>Event Start {settings.e_start}</li>
-                            <li>Event End {settings.e_end}</li>
-                            <li>Event Location {settings.e_loc}</li>
-                            <li>Teilnahme Preis {settings.t_price}</li>
-                            <li>Event Kosten {settings.e_price} </li>
-                            <li>Event Rechnung {eventPay / settings.e_price * 100}% bezahlt</li>
-                            <li><button onClick={() => setEventEdit(true)}>Edit</button></li>
-
-                        </ul>
+                        <div className='col-sm-9'>
+                            <div className='text-left'>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Event Start</label>
+                                    <div className='col-sm-8 text-muted'>{settings.e_start}</div>
+                                </div>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Event End</label>
+                                    <div className='text-muted col-sm-8'>{settings.e_end}</div>
+                                </div>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Event Location</label>
+                                    <div className='text-muted col-sm-8'>{settings.e_loc}</div>
+                                </div>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Teilnahme Preis</label>
+                                    <div className='text-muted col-sm-8'>{settings.t_price}</div>
+                                </div>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Event Kosten</label>
+                                    <div className='text-muted col-sm-8'>{settings.e_price} </div>
+                                </div>
+                                <div className='Row'>
+                                    <label className='col-sm-4'>Event Rechnung</label>
+                                    <div className='text-muted col-sm-8'>{eventPay / settings.e_price * 100}% bezahlt</div>
+                                </div>
+                                <div className='Row'>
+                                    <button className='btn btn-outline-dark col-sm-5' onClick={() => setEventEdit(true)}>Edit</button>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </div> : ''}
+                </React.Fragment> : ''}
             </div>
             <div className="row">
                 {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
-                <div onClick={() => setTbTab(!tbTab)}> ZeitBlock Einstellungen</div>
+                <div className='col-sm-3' onClick={() => setTbTab(!tbTab)}> ZeitBlock Einstellungen</div>
                 {tbTab ?
                     <AdminBlock event={settings} timeblock={props.timeblock} />
                     : ''}
             </div>
-        </div>
+        </React.Fragment >
     )
 
 }

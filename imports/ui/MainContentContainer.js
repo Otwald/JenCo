@@ -20,12 +20,12 @@ const mainContentContainer = props => {
     }
 
     return (
-        <div>
+        <React.Fragment>
             {props.tab === 'welcome' ? <Welcome /> : ''}
             {props.tab === 'round' ? <RoundContainer user={props.user} in_round={in_round} onCallback={this.onCallback} /> : ''}
             {props.tab === 'account' ? <Account user={props.user} /> : ''}
             {props.tab === 'admin' ? <AdminContainer /> : ''}
-        </div>
+        </React.Fragment>
     )
  
 }
