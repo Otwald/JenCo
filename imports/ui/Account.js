@@ -74,18 +74,18 @@ const account = props => {
                         <form>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
-                                    <label for='profil'>Profil Name</label>
+                                    <label>Profil Name</label>
                                     <input type='text' className='form-control' name='profil' onChange={this.onInput} placeholder={account.profil} id='profil' />
                                 </div>
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
-                                    <label for='first' >Vorname</label>
+                                    <label >Vorname</label>
                                     <input type='text' className='form-control' name='first' onChange={this.onInput} placeholder={account.first} id='first' />
 
                                 </div>
                                 <div className='form-group col-sm-3'>
-                                    <label for='last' >Nachname</label>
+                                    <label >Nachname</label>
 
 
                                     <input type='text' className='form-control' name='last' onChange={this.onInput} placeholder={account.last} id='last' />
@@ -93,7 +93,7 @@ const account = props => {
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
-                                    <label for='age'>Alter</label>
+                                    <label >Alter</label>
                                     <input type='date' name='age' className='form-control' id='age' onChange={onInput} />
                                 </div>
 
@@ -117,7 +117,7 @@ const account = props => {
                                     <p className='text-muted'>{account.first}</p>
                                     <h5 className='card-title'>Nachname</h5>
                                     <p className='text-muted'>{account.last} </p>
-                                    <h5 className='card-title'>Alter</h5>  
+                                    <h5 className='card-title'>Alter</h5>
                                     <p className='text-muted'>{new Date(account.age).toDateString()}</p>
                                     <h5 className='card-title'>{bill}</h5>
                                     <button className='btn btn-outline-dark' onClick={() => setEdit(true)} >Edit</button>
