@@ -4,14 +4,34 @@ import { Dropdown } from 'semantic-ui-react';
 
 
 const roundCreate = props => {
-    const [desc, setDesc] = useState('');
+    const [params, setParams] = useState({
+        round_name: '',
+        setting: '',
+        ruleset: '',
+        own_char: true,
+        round_max_online_pl: 0,
+        round_max_pl: 5,
+        round_desc: '',
+    }
+    );
 
-    useEffect(()=>{
-        setDesc(props.round_create.round_desc)
-    },[props.round_create.round_desc])
+    useEffect(() => {
+        setParams({
+            round_name: props.round_create.round_name,
+            setting: props.round_create.setting,
+            ruleset: props.round_create.ruleset,
+            own_char: props.round_create.own_char,
+            round_max_online_pl: props.round_create.round_max_online_pl,
+            round_max_pl: props.round_create.round_max_pl,
+            round_desc: props.round_create.round_desc,
+        })
+    }, [props.round_create])
 
-    onTextfield=(e)=>{
-        setDesc(e.target.value)
+    onValueChange = (e) => {
+        let temp = params
+        let value = e.target.value
+        temp[e.target.name] = value
+        setParams(temp);
         props.onInput(e);
     }
 
@@ -45,7 +65,7 @@ const roundCreate = props => {
                     Runden Name
                     </label>
                 <div className='col-sm-9'>
-                    <input type='text' name='round_name' className='form-control' onChange={props.onInput} placeholder={props.round_create.round_name} />
+                    <input required value={params.round_name} type='text' name='round_name' className='form-control' onChange={onValueChange} placeholder={props.round_create.round_name} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -53,7 +73,7 @@ const roundCreate = props => {
                     Setting
                 </label>
                 <div className='col-sm-9'>
-                    <input type='text' name='setting' className='form-control' onChange={props.onInput} placeholder={props.round_create.setting} />
+                    <input required value={params.setting} type='text' name='setting' className='form-control' onChange={onValueChange} placeholder={props.round_create.setting} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -61,7 +81,7 @@ const roundCreate = props => {
                     Regelwerk
                     </label>
                 <div className='col-sm-9'>
-                    <input type='text' name='ruleset' className='form-control' onChange={props.onInput} placeholder={props.round_create.ruleset} />
+                    <input required value={params.ruleset} type='text' name='ruleset' className='form-control' onChange={onValueChange} placeholder={props.round_create.ruleset} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -69,7 +89,7 @@ const roundCreate = props => {
                     Spielerplätze Maximal
                 </label>
                 <div className='col-sm-9'>
-                    <input type='number' name='round_max_pl' className='form-control' onChange={props.onInput} placeholder={props.round_create.round_max_pl} />
+                    <input required value={params.round_max_pl} type='number' name='round_max_pl' className='form-control' onChange={onValueChange} placeholder={props.round_create.round_max_pl} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -77,7 +97,7 @@ const roundCreate = props => {
                     Maximal Online Anmeldungsplätze
                 </label>
                 <div className='col-sm-9'>
-                    <input type='number' name='round_max_online_pl' className='form-control' onChange={props.onInput} placeholder={props.round_create.round_max_online_pl} />
+                    <input required value={params.round_max_online_pl} type='number' name='round_max_online_pl' className='form-control' onChange={onValueChange} placeholder={props.round_create.round_max_online_pl} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -86,12 +106,12 @@ const roundCreate = props => {
                 </label>
                 <div className='col-sm-9'>
                     <div className='form-check form-check-inline'>
-                        <input type='radio' name='own_char' id='inlineradiochar1' className='form-check-input' onChange={props.onInput} value='true' />
+                        <input required type='radio' name='own_char' id='inlineradiochar1' className='form-check-input' onChange={onValueChange} value={true} />
                         <label className="form-check-label">Ja</label>
 
                     </div>
                     <div className='form-check form-check-inline'>
-                        <input type='radio' name='own_char' id='inlineradiochar2' className='form-check-input' onChange={props.onInput} value='false' />
+                        <input required type='radio' name='own_char' id='inlineradiochar2' className='form-check-input' onChange={onValueChange} value={false} />
                         <label className="form-check-label">Nein</label>
                     </div>
                 </div>
@@ -101,7 +121,7 @@ const roundCreate = props => {
                     Rundenbeschreibung
                 </label>
                 <div className='col-sm-9'>
-                    <textarea required value={desc} type='number' name='round_desc' className='form-control' onChange={onTextfield} placeholder={props.round_create.round_desc}/>
+                    <textarea required value={params.round_desc} type='number' name='round_desc' className='form-control' onChange={onValueChange} placeholder={props.round_create.round_desc} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>

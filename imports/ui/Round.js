@@ -5,22 +5,21 @@ import RoundCreate from './RoundCreate';
 
 const roundComponent = props => {
 
-    // beschreibungsfeld 
     //Vorgefertigten Charaktere
-    // max 3 plätze online
-
 
     const [round_create, setRoundCreate] = useState({
         _id: null,
         round_tb: '',
-        round_name: 'Round Name',
-        setting: 'Setting',
-        ruleset: 'Rules',
+        round_name: '',
+        setting: '',
+        ruleset: '',
         own_char: true,
         round_gm: 'Placeholder',
         round_gm_id: Meteor.userId(),
+        round_max_online_pl: 0,
         round_curr_pl: 0,
-        round_max_pl: 5,
+        round_max_pl: 0,
+        round_desc: '',
         round_player: [],
         round_table: null
     })
@@ -29,6 +28,7 @@ const roundComponent = props => {
     const [in_round, setIn_round] = useState([]);
     const [tableOptions, setTableOptions] = useState([]);
     const [blockTab, setBlockTab] = useState(null);
+    const [extendR, setExtendR] = useState('');
 
 
     useEffect(() => {
@@ -91,6 +91,7 @@ const roundComponent = props => {
         if (data.setting.length === 0) {
             check = false;
         }
+        console.log(data)
         if (check) {
             if (data._id) {
                 Meteor.call('RoundUpdate', data)
@@ -128,7 +129,9 @@ const roundComponent = props => {
             round_gm: 'Placeholder',
             round_gm_id: Meteor.userId(),
             round_curr_pl: 0,
+            round_max_online_pl: 0,
             round_max_pl: 5,
+            round_desc: '',
             round_player: [],
             round_table: null
         })
@@ -215,6 +218,14 @@ const roundComponent = props => {
         }
     }
 
+    onExtendRound = (k, v) => {
+        if (k._id == extendR) {
+            setExtendR('');
+        } else {
+            setExtendR(k._id);
+        }
+    }
+
     //visualizes the rounds in a timeblock
     timeBlockCreate = (time) => {
         const rounds_box = props.rounds_box
@@ -250,7 +261,7 @@ const roundComponent = props => {
                     }
                     let expand = ''
                     let content =
-                        <div className='row '>
+                        <div className='row ' onClick={() => onExtendRound(k, v)}>
                             <div className="col-sm-2">
                                 {/* place for the Icon */}
                                 <div className="text-center">
@@ -265,6 +276,14 @@ const roundComponent = props => {
                                             {k.round_name}
                                         </div>
                                     </div>
+                                    {extendR !== k._id ? '' :
+                                        <React.Fragment>
+                                            <div className='row text-left'>
+                                                <label className='col-sm-4'>Spielleiter</label>
+                                                <div className='col-sm-8 text-muted' >{k.round_gm}</div>
+                                            </div>
+                                        </React.Fragment>
+                                    }
                                     <div className='row'>
                                         <label className='col-sm-4'>Setting</label>
                                         <div className='col-sm-8 text-muted'>{k.setting}</div>
@@ -274,18 +293,29 @@ const roundComponent = props => {
                                         <div className='col-sm-8 text-muted'>{k.ruleset}</div>
                                     </div>
                                     <div className='row'>
-                                        <label className='col-sm-4'>Spielleiter</label>
-                                        <div className='col-sm-8 text-muted' >{k.round_gm}</div>
+                                        <label className='col-sm-4'>Spieler Online Curr/Max</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
                                     </div>
-                                    <div className='row'>
-                                        <label className='col-sm-4'>Spieler Cur/Max</label>
-                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_pl}</div>
-                                    </div>
-                                    <div className='row'>
-                                        <label className='col-sm-4'>Spieler Namen</label>
-                                        <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
-                                    </div>
-                                    <div className='col-sm text-center'>{expand === '' ? '...' : expand}</div>
+                                    {extendR !== k._id ? '...' :
+                                        <React.Fragment>
+                                            <div className='row'>
+                                                <label className='col-sm-4'>Teilnehmer</label>
+                                                <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
+                                            </div>
+                                            <div className='row text-left'>
+                                                <label className='col-sm-4'>maximale Spieler</label>
+                                                <div className='col-sm-8 text-muted'>{k.round_max_pl}</div>
+                                            </div>
+                                            <div className='row text-left'>
+                                                <label className='col-sm-4'>Vorgefertigte Charaktere</label>
+                                                <div className='col-sm-8 text-muted' >{JSON.parse(k.own_char) ? 'Ja' : 'Nein'}</div>
+                                            </div>
+                                            <div className='row text-left'>
+                                                <label className='col-sm-4'>Rundenbeschreibung</label>
+                                                <div className='col-sm-8 text-muted'>{k.round_desc}</div>
+                                            </div>
+                                        </React.Fragment>
+                                    }
                                     {out}
                                 </div>
                             </div >
