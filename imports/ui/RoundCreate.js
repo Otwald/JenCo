@@ -4,10 +4,20 @@ import { Dropdown } from 'semantic-ui-react';
 
 
 const roundCreate = props => {
+    const [desc, setDesc] = useState('');
+
+    useEffect(()=>{
+        setDesc(props.round_create.round_desc)
+    },[props.round_create.round_desc])
+
+    onTextfield=(e)=>{
+        setDesc(e.target.value)
+        props.onInput(e);
+    }
 
     let create = '';
     if (Meteor.userId()) {
-        create = <form>
+        create = <form className="was-validated">
             <div className='form-row justify-content-center'>
                 <div className='form-group col-sm-2'>
                     <label>ZeitBlock</label>
@@ -91,7 +101,7 @@ const roundCreate = props => {
                     Rundenbeschreibung
                 </label>
                 <div className='col-sm-9'>
-                    <textarea type='number' name='round_desc' className='form-control' onChange={props.onInput} placeholder={props.round_create.round_desc} />
+                    <textarea required value={desc} type='number' name='round_desc' className='form-control' onChange={onTextfield} placeholder={props.round_create.round_desc}/>
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
