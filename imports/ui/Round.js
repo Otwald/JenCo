@@ -15,7 +15,7 @@ const roundComponent = props => {
         ruleset: '',
         own_char: true,
         round_gm: 'Placeholder',
-        round_gm_id: Meteor.userId(),
+        round_gm_id: '',
         round_max_online_pl: 0,
         round_curr_pl: 0,
         round_max_pl: 0,
