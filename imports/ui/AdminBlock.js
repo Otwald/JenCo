@@ -22,19 +22,10 @@ const adminBlock = props => {
         block_max_table: 0
     })
 
-    //creates timeblock for rounds
-    onBlockCreate = (e) => {
-        let temp = block_create;
-        if (e.target.name === 'block_pnp') {
-            e.target.value = !temp[e.target.name];
-        }
-        temp[e.target.name] = e.target.value
-        setBlock_create(temp);
-    }
-
     //saves timeblock into state and updates mongo
     onBlockSave = () => {
         let temp = block_create;
+        console.log(temp);
         if (temp.block_name.length === 0) {
             return
         }
@@ -116,7 +107,16 @@ const adminBlock = props => {
     return (
         <ul>
             {blocks}
-            <li>Name <input type='text' name='block_name' onChange={this.onBlockCreate} placeholder='Hier Namen einfügen' /></li>
+            <li>Name
+                <input
+                    type='text'
+                    name='block_name'
+                    onChange={() => setBlock_create((prev) => {
+                        prev.block_name = event.target.value;
+                        return prev
+                    })}
+                    placeholder='Hier Namen einfügen'
+                /></li>
             <li>Zeit Start
                     <Dropdown
                     placeholder='Tag'
@@ -140,8 +140,24 @@ const adminBlock = props => {
                 />
                 <input type='time' name='end' onChange={this.onTimeInput} />
             </li>
-            <li>Tisch Anzahl <input type='number' name='block_max_table' onChange={this.onBlockCreate} /></li>
-            <li>Spielblock <input type='checkbox' name='block_pnp' onChange={this.onBlockCreate} /></li>
+            <li>Tisch Anzahl
+                <input
+                    type='number'
+                    name='block_max_table'
+                    onChange={() => setBlock_create((prev) => {
+                        prev.block_max_table = Number(event.target.value)
+                        return prev
+                    })}
+                /></li>
+            <li>Spielblock
+                <input
+                    type='checkbox'
+                    name='block_pnp'
+                    onChange={() => setBlock_create((prev) => {
+                        prev.block_pnp = JSON.parse(prev.block_pnp);
+                        return prev;
+                    })}
+                /></li>
             <li><button onClick={this.onBlockSave} >Add</button><br /></li>
         </ul>
     )

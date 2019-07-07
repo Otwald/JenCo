@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
@@ -20,6 +21,14 @@ Meteor.startup(() => {
   // }
 });
 
+MethodWrapper = (func) => {
+  try {
+    func()
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
 
 //todo: log send emails
 // Server: Define a method that the client can call.
@@ -43,16 +52,65 @@ Meteor.methods({
   },
 
   BlockCreate(data) {
-    timeblock.insert(data);
+    console.log(data);
+    try {
+      check(data, {
+        block_name: String,
+        block_pnp: Boolean,
+        block_start: Number,
+        block_end: Number,
+        block_table: Array,
+        block_max_table: Number
+      })
+      timeblock.insert(data);
+    }
+    catch (er) {
+      console.log(er);
+    }
 
   },
   BlockUpdate(data) {
-    timeblock.update({ _id: data._id }, data)
+    try {
+      check(data, {
+        _id: String,
+        block_name: String,
+        block_pnp: Boolean,
+        block_start: Number,
+        block_end: Number,
+        block_table: Array,
+        block_max_table: Number
+      })
+      timeblock.update({ _id: data._id }, data)
+    }
+    catch (err) {
+      console.log(err)
+    }
   },
   BlockDelete(id) {
-    timeblock.remove({ _id: id });
+    try {
+      check(id, String);
+      timeblock.remove({ _id: id });
+    }
+    catch (err) {
+      console.log(err);
+    }
   },
   RoundCreate(data) {
+    check(data, {
+      round_tb: String,
+      round_name: String,
+      setting: String,
+      ruleset: String,
+      own_char: Boolean,
+      round_gm: String,
+      round_max_online_pl: Number,
+      round_curr_pl: Number,
+      round_max_pl: Number,
+      round_desc: String,
+      round_player: Array,
+      round_table: Number
+    })
+    data.round_gm_id = this.userId;
     Rounds.insert(data);
     const table = Rounds.findOne(data);
     const block = timeblock.findOne({ _id: data.round_tb });
@@ -60,32 +118,68 @@ Meteor.methods({
     timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
   RoundUpdate(data) {
-    Rounds.update({ _id: data._id }, data)
+    check(data, {
+      _id: String,
+      round_tb: String,
+      round_name: String,
+      setting: String,
+      ruleset: String,
+      own_char: Boolean,
+      round_gm: String,
+      round_gm_id: String,
+      round_max_online_pl: Number,
+      round_curr_pl: Number,
+      round_max_pl: Number,
+      round_desc: String,
+      round_player: Array,
+      round_table: Number
+    })
+    const round = Rounds.findOne({ _id: id })
+    if (round.round_gm_id === this.userId) {
+      Rounds.update({ _id: data._id }, data)
+    }
   },
   RoundDelete(id) {
+    check(id, String);
     const table = Rounds.findOne({ _id: id });
-    Rounds.remove({ _id: id });
-    const block = timeblock.findOne({ _id: table.round_tb })
-    block.block_table.map((v, i) => {
-      if (v === table.round_table) {
-        block.block_table.splice(i, 1)
+    if (table) {
+      if (table.round_gm_id == this.userId) {
+        Rounds.remove({ _id: id });
+        const block = timeblock.findOne({ _id: table.round_tb })
+        block.block_table.map((v, i) => {
+          if (v === table.round_table) {
+            block.block_table.splice(i, 1)
+          }
+        })
+        timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
       }
-    })
-    timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
+    }
   },
   AccountCreate(data) {
+    check(data, {
+      profil: String,
+      first: String,
+      last: String,
+      age: Number
+    })
     data._id = this.userId
     data.bill = false;
     users_account.insert(data);
   },
   AccountUpdate(data) {
+    check(data, {
+      profil: String,
+      first: String,
+      last: String,
+      age: Number
+    })
     users_account.update({ _id: this.userId }, {
       $set: {
         "first": data.first, "last": data.last, "profil": data.profil, "age": data.age
       }
     });
   },
-  AccountDelete(id) {
+  AccountDelete() {
     users_account.remove({ _id: this.userId });
   },
   UserArchiveCreate(data) {
