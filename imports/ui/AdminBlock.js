@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Dropdown } from 'semantic-ui-react';
+// import { Dropdown } from 'semantic-ui-react';
 
 
 const adminBlock = props => {
@@ -21,6 +21,13 @@ const adminBlock = props => {
         block_table: [],
         block_max_table: 0
     })
+
+    const [phTime, setPhTime] = useState({
+        start: 'Start',
+        end: 'Ende'
+    })
+    const [showdp_start, setShowdp_start] = useState('');
+    const [showdp_end, setShowdp_end] = useState('');
 
     //saves timeblock into state and updates mongo
     onBlockSave = () => {
@@ -103,63 +110,129 @@ const adminBlock = props => {
             )
         })
     }
-
+    console.log(date)
     return (
-        <ul>
-            {blocks}
-            <li>Name
-                <input
-                    type='text'
-                    name='block_name'
-                    onChange={() => setBlock_create((prev) => {
-                        prev.block_name = event.target.value;
-                        return prev
-                    })}
-                    placeholder='Hier Namen einfügen'
-                /></li>
-            <li>Zeit Start
-                    <Dropdown
-                    placeholder='Tag'
-                    search
-                    options={this.inBetweenTime(props.event.e_start, props.event.e_end)}
-                    scrolling
-                    onChange={this.onDateInput}
-                    type='start'
-                />
-                <input type='time' name='start' onChange={this.onTimeInput} />
-            </li>
-            <li>
-                Zeit Ende
-                    <Dropdown
-                    placeholder='Tag'
-                    search
-                    options={this.inBetweenTime(props.event.e_start, props.event.e_end)}
-                    scrolling
-                    onChange={this.onDateInput}
-                    type='end'
-                />
-                <input type='time' name='end' onChange={this.onTimeInput} />
-            </li>
-            <li>Tisch Anzahl
-                <input
-                    type='number'
-                    name='block_max_table'
-                    onChange={() => setBlock_create((prev) => {
-                        prev.block_max_table = Number(event.target.value)
-                        return prev
-                    })}
-                /></li>
-            <li>Spielblock
-                <input
-                    type='checkbox'
-                    name='block_pnp'
-                    onChange={() => setBlock_create((prev) => {
-                        prev.block_pnp = JSON.parse(prev.block_pnp);
-                        return prev;
-                    })}
-                /></li>
-            <li><button onClick={this.onBlockSave} >Add</button><br /></li>
-        </ul>
+        <div className='col-sm-9'>
+            {/* {blocks} */}
+            <div className='row'>
+                <form className='col-sm-7'>
+                    <div className='form-row'>
+                        <div className='input-group mb-3'>
+                            <span className='input-group-prepend input-group-text col-sm-3'>Name</span>
+                            <input
+                                className='form-control'
+                                type='text'
+                                name='block_name'
+                                onChange={() => setBlock_create((prev) => {
+                                    prev.block_name = event.target.value;
+                                    return prev
+                                })}
+                                placeholder='Hier Namen einfügen'
+                            />
+                        </div>
+                    </div>
+                    <div className='form-row'>
+                        <div className='input-group mb-3'>
+                            <button
+                                className='btn btn-outline-secondary dropdown-toggle col-sm-3'
+                                data-toggle="dropdown"
+                                onClick={() => setShowdp_start((prev) => {
+                                    if (prev.length > 0) {
+                                        return ''
+                                    }
+                                    return ' show'
+                                })}
+                                type='button'
+                            >{phTime.start}</button>
+                            <div className={'dropdown-menu' + showdp_start}>
+                                {inBetweenTime(props.event.e_start, props.event.e_end).map((v) => {
+                                    return <a
+                                        className='dropdown-item'
+                                        href='#'
+                                        onClick={() => {
+                                            setShowdp_start('');
+                                            setDate((prev) => {
+                                                prev.start = Number(v.value)
+                                                return prev
+                                            })
+                                            setPhTime((prev) => {
+                                                prev.start = (v.text)
+                                                return prev
+                                            })
+                                        }}
+                                        key={v.value}>{v.text}</a>
+                                })}
+                            </div>
+                            <input className='form-control' type='time' name='start' onChange={this.onTimeInput} />
+                        </div>
+                    </div>
+                    <div className='form-row'>
+                        <div className='input-group mb-3'>
+                            <button
+                                className='btn btn-outline-secondary dropdown-toggle col-sm-3'
+                                data-toggle="dropdown"
+                                onClick={() => setShowdp_end((prev) => {
+                                    if (prev.length > 0) {
+                                        return ''
+                                    }
+                                    return ' show'
+                                })}
+                                onChange={this.onDateInput}
+                                type='button'
+                            >{phTime.end}</button>
+                            <div className={'dropdown-menu' + showdp_end}>
+                                {inBetweenTime(props.event.e_start, props.event.e_end).map((v) => {
+                                    return <a
+                                        className='dropdown-item'
+                                        href='#'
+                                        onClick={() => {
+                                            setShowdp_end('');
+                                            setDate((prev) => {
+                                                prev.end = Number(v.value)
+                                                return prev
+                                            })
+                                            setPhTime((prev) => {
+                                                prev.end = v.text
+                                                return prev
+                                            })
+                                        }}
+                                        key={v.value}>{v.text}</a>
+                                })}
+                            </div>
+                            <input className='form-control' type='time' name='end' onChange={this.onTimeInput} />
+                        </div>
+                    </div>
+                    <div className='form-row'>
+                        <div className='input-group mb3'>
+                            <span className='input-group-prepend input-group-text col-sm-3'>Tisch Anzahl</span>
+                            <input
+                                className='form-control'
+                                type='number'
+                                name='block_max_table'
+                                onChange={() => setBlock_create((prev) => {
+                                    prev.block_max_table = Number(event.target.value)
+                                    return prev
+                                })}
+                            />
+                        </div>
+                    </div>
+                    <div className='form-row'>
+                        <div className='input-group mb3'>
+                            <span className='input-group-prepend input-group-text col-sm-3'>Spielblock</span>
+                            <input
+                                className='form-control col-sm-1'
+                                type='checkbox'
+                                name='block_pnp'
+                                onChange={() => setBlock_create((prev) => {
+                                    prev.block_pnp = JSON.parse(prev.block_pnp);
+                                    return prev;
+                                })}
+                            /></div>
+                    </div>
+                    <li><button onClick={this.onBlockSave} >Add</button><br /></li>
+                </form>
+            </div>
+        </div>
     )
 
 }
