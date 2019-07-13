@@ -116,8 +116,9 @@ const admin = props => {
         user_block = props.users.map((key, value) => {
             // Namens Sortierung | Radial alle , bezahlt, nicht bezahlt | Minderjährige
             return (
-                <li onClick={(e) => this.mouseIn(e)} key={'User' + value} value={value}>
-                    {key.last} {this.outPay(key.bill)}
+                <tr onClick={(e) => this.mouseIn(e)} key={'User' + value} value={value}>
+                    <th>{key.last}</th>
+                    <th>{this.outPay(key.bill)}</th>
                     {value === activeUser ?
                         <ul>
                             <li>{key.first}</li>
@@ -129,8 +130,7 @@ const admin = props => {
                             <li><Button onClick={(e) => this.onClickUserConfirm(key)} >Bestätigung</Button><Button onClick={(e) => this.onClickUserDestroy(key)} >Destroy</Button></li>
                         </ul>
                         : ""}
-                </li>
-
+                </tr>
             )
         })
     }
@@ -138,9 +138,21 @@ const admin = props => {
         <React.Fragment >
             <div className="row">
                 <div className='col-sm-3' onClick={() => setUserTab(!userTab)}>Nutzerverwaltung</div>
-                {userTab ? <ul>
-                    {user_block}
-                </ul> : ''}
+                {userTab ?
+                    <div className='col-sm-9'>
+                        <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {user_block}
+                            </tbody>
+                        </table>
+                    </div>
+                    : ''}
             </div>
             <div className="row">
                 <div className='col-sm-3' onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
