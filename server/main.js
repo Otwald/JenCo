@@ -80,6 +80,7 @@ Meteor.methods({
         block_table: Array,
         block_max_table: Number
       })
+      //todo admincheck
       timeblock.update({ _id: data._id }, data)
     }
     catch (err) {

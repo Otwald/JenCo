@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const adminblockform = props => {
     const [time, setTime] = useState({
@@ -15,41 +15,63 @@ const adminblockform = props => {
     })
     const [showdp_start, setShowdp_start] = useState('');
     const [showdp_end, setShowdp_end] = useState('');
-    const [block_create, setBlock_create] = useState({
-        block_name: 'null',
-        block_pnp: false,
-        block_start: null,
-        block_end: null,
-        block_table: [],
-        block_max_table: 0
-    })
+    const [activeTables, setActiveTables] = useState([])
+    const [clock_end, setClock_end] = useState('00:00');
+    const [clock_start, setClock_start] = useState('00:00');
+    const [name, setName] = useState('');
+    const [table_number, setTable_number] = useState('');
+    const [pnp, setPnp] = useState(false);
+
+
+    useEffect(() => {
+        if (props.block) {
+            setName(props.block.block_name);
+            setPhTime({
+                start: props.getStringDate(props.block.block_start),
+                end: props.getStringDate(props.block.block_end)
+            });
+            setTable_number(props.block.block_max_table);
+            setClock_start(props.getStringClock(props.block.block_start));
+            setClock_end(props.getStringClock(props.block.block_end));
+            setDate({
+                start: props.block.block_start - onTimeInput(props.getStringClock(props.block.block_start)),
+                end: props.block.block_end - onTimeInput(props.getStringClock(props.block.block_end)),
+            })
+            setPnp(props.block.block_pnp);
+            setActiveTables(props.block.block_table);
+        }
+    }, [props.block])
 
     /**
-     * saves timeblock into state and calls a Meteor Method
-     * after some small valdiations
+     * reads all states into one json to hand them over to the server
+     * and add the new timeblock to the db
+     * checks if name empty and a times exist
      */
     onBlockSave = () => {
-        let temp = block_create;
-        console.log(temp);
-        if (temp.block_name.length === 0) {
+        let temp = {
+            block_name: name,
+            block_pnp: pnp,
+            block_table: activeTables,
+            block_max_table: Number(table_number)
+        }
+        if (temp.block_name.length < 1) {
             return
         }
         if (date.start === null || date.end === null) {
             return
         }
-        if (time.start === null || time.end === null) {
-            return
-        }
-        temp.block_start = date.start + time.start;
-        temp.block_end = date.end + time.end
+        temp.block_start = date.start + onTimeInput(clock_start);
+        temp.block_end = date.end + onTimeInput(clock_end);
         if (temp.block_start > temp.block_end) {
             return
         }
-        Meteor.call('BlockCreate', temp)
-    }
-
-    onBlockCancel = () => {
-
+        if(props.block){
+            temp._id = props.block._id
+            Meteor.call('BlockUpdate', temp)
+        }else{
+            Meteor.call('BlockCreate', temp)
+        }
+        props.onCancelButton();
     }
 
     /**
@@ -60,7 +82,7 @@ const adminblockform = props => {
      * @param Number end
      */
     inBetweenTime = (start, end) => {
-        const week = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+        const week = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
         start = new Date(start).getTime();
         end = new Date(end).getTime();
         let out = []
@@ -74,16 +96,19 @@ const adminblockform = props => {
         return out;
     }
 
-    onTimeInput = (e) => {
-        let time = '1970-01-01T' + e.target.value + 'Z'
-        let temp = time
-        temp[e.target.name] = new Date(time).getTime() - 1000 * 60 * 60 * 2
-        setTime(temp);
-
+    /**
+     * takes clock times to convert them into timestamp
+     * 
+     * @param String data , holds the clock in format 00:00
+     * @return Numbe holds timestamp
+     */
+    onTimeInput = (data) => {
+        let time = '1970-01-01T' + data + 'Z'
+        let date = new Date(time)
+        return date.getTime() - 1000 * 60 * 60 * 2
     }
-
     return (
-        <div className='row'>
+        <div className='row justify-content-center'>
             <form className='col-sm-7'>
                 <div className='form-row'>
                     <div className='input-group mb-3'>
@@ -92,11 +117,9 @@ const adminblockform = props => {
                             className='form-control'
                             type='text'
                             name='block_name'
-                            onChange={() => setBlock_create((prev) => {
-                                prev.block_name = event.target.value;
-                                return prev
-                            })}
+                            onChange={() => setName(event.target.value)}
                             placeholder='Hier Namen einfügen'
+                            value={name}
                         />
                     </div>
                 </div>
@@ -132,7 +155,13 @@ const adminblockform = props => {
                                     key={v.value}>{v.text}</a>
                             })}
                         </div>
-                        <input className='form-control' type='time' name='start' onChange={this.onTimeInput} />
+                        <input
+                            className='form-control'
+                            type='time'
+                            name='start'
+                            onChange={() => setClock_start(event.target.value)}
+                            value={clock_start}
+                        />
                     </div>
                 </div>
                 <div className='form-row'>
@@ -167,7 +196,7 @@ const adminblockform = props => {
                                     key={v.value}>{v.text}</a>
                             })}
                         </div>
-                        <input className='form-control' type='time' name='end' onChange={this.onTimeInput} />
+                        <input className='form-control' type='time' name='end' onChange={() => setClock_end(event.target.value)} value={clock_end} />
                     </div>
                 </div>
                 <div className='form-row'>
@@ -177,10 +206,8 @@ const adminblockform = props => {
                             className='form-control'
                             type='number'
                             name='block_max_table'
-                            onChange={() => setBlock_create((prev) => {
-                                prev.block_max_table = Number(event.target.value)
-                                return prev
-                            })}
+                            onChange={() => setTable_number(Number(event.target.value))}
+                            value={table_number}
                         />
                     </div>
                 </div>
@@ -191,14 +218,12 @@ const adminblockform = props => {
                             className='form-control col-sm-1'
                             type='checkbox'
                             name='block_pnp'
-                            onChange={() => setBlock_create((prev) => {
-                                prev.block_pnp = JSON.parse(prev.block_pnp);
-                                return prev;
-                            })}
+                            checked={pnp}
+                            onChange={() => setPnp(!pnp)}
                         /></div>
                 </div>
                 <div className='form-row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={this.onBlockCancel} >Abbrechen</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={props.onCancelButton} >Abbrechen</button>
                     <button className='btn btn-outline-dark col-sm-4' onClick={this.onBlockSave} >Speichern</button>
                 </div>
             </form>

@@ -4,7 +4,8 @@ import Adminblockform from './AdminBlockForm';
 
 const adminBlock = props => {
 
-
+    const [activeBlock, setActiveBlock] = useState('');
+    const [edit, setEdit] = useState('');
 
     //deletes timebock from state and updates mongo
     onBlockDelete = (v) => {
@@ -12,12 +13,50 @@ const adminBlock = props => {
     }
 
     timeblockClick = (data) => {
-        console.log(data)
+        if (activeBlock == data._id) {
+            setActiveBlock('');
+        } else {
+            setActiveBlock(data._id);
+        }
+    }
+
+    /**
+     * a small helper to convert the timestamp back to readable Time
+     */
+    getStringTime = (timestamp) => {
+        let out = getStringDate(timestamp);
+        let min = getStringClock(timestamp)
+        out += ' ' + min;
+        return out
+    }
+
+    getStringDate = (timestamp) => {
+        let date = new Date(timestamp);
+        let out = '';
+        const week = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+        out += week[date.getDay()] + ' ' + date.getDate() + '.' + date.getMonth() + '.'
+        return out;
+    }
+
+    getStringClock = (timestamp) => {
+        let date = new Date(timestamp);
+        let min = date.getMinutes()
+        if (min < 10) {
+            min = '0' + min;
+        }
+        out = date.getHours() + ':' + min;
+        return out
+    }
+
+    /**
+     * resets the states to hide AdminBlockForm
+     */
+    onCancelButton = () => {
+        setEdit('');
     }
 
     let blocks = '';
     if (props.timeblock.length > 0) {
-        // if(timeblock.length > 1){}
         props.timeblock.sort(function (a, b) {
             if (a.block_start < b.block_start) {
                 return -1;
@@ -29,18 +68,56 @@ const adminBlock = props => {
         })
         blocks = props.timeblock.map((k, v) => {
             return (
-                <div key={k._id} onClick={() => this.timeblockClick(k)}>
-                    <li>{k.block_name}</li>
-                    <button onClick={() => this.onBlockDelete(k)} >Destroy</button>
-                </div>
+                <React.Fragment key={k._id}>
+                    {edit == k._id ?
+                        <li className='row list-group-item'>
+                            <Adminblockform
+                                event={props.event}
+                                block={k}
+                                getStringDate={getStringDate}
+                                getStringClock={getStringClock}
+                                onCancelButton={onCancelButton}
+                            />
+                        </li>
+                        :
+                        <React.Fragment>
+                            <li className={'row list-group-item' + (k._id == activeBlock ? ' active' : '')} key={k._id} onClick={() => this.timeblockClick(k)}>
+                                <h4 className='text-center'><strong >{k.block_name}</strong></h4>
+                                <p className='text-center'>
+                                    <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start)}</span>
+                                    <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end)}</span>
+                                    <span className='col-sm-3'><strong>Spielblock: </strong>{k.block_pnp ? 'Ja' : 'Nein'}</span>
+                                    <span className='col-sm-3'><strong>Tisch:</strong>{k.block_table.length}/{k.block_max_table}</span>
+                                </p>
+                            </li>
+                            {k._id == activeBlock ?
+                                <div className='row justify-content-center'>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onBlockDelete(k)} >Löschen</button>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setEdit((prev) => { if (prev != k._id) { return k._id } })} >Editieren</button>
+                                </div>
+                                : ''}
+                        </React.Fragment>
+                    }
+                </React.Fragment>
             )
+            // 
         })
     }
-
     return (
         <div className='col-sm-9'>
-            {blocks}
-            <Adminblockform event={props.event} />
+            <ul className='list-group'>
+                {blocks}
+            </ul>
+            {edit == 'new' ?
+                <Adminblockform
+                    event={props.event}
+                    onCancelButton={onCancelButton}
+                />
+                :
+                <div className='row justify-content-center'>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setEdit('new')} >Neuer Block</button>
+                </div>
+            }
         </div>
     )
 
