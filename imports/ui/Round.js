@@ -29,6 +29,8 @@ const roundComponent = props => {
     const [tableOptions, setTableOptions] = useState([]);
     const [blockTab, setBlockTab] = useState(null);
     const [extendR, setExtendR] = useState('');
+    const [addBlock, setAddBlock] = useState(false);
+    const [gm, setGm] = useState({});
 
 
     useEffect(() => {
@@ -236,7 +238,13 @@ const roundComponent = props => {
                 if (k.round_tb === time) {
                     if (Meteor.userId() && props.user) {
                         if (props.user.bill) {
-                            if (k.round_gm_id === Meteor.userId()) {
+                            Meteor.call('CheckGM', k._id, (err, res)=>{
+                                setGm((prev)=>{
+                                    prev[k._id] = res;
+                                    return prev;
+                                })
+                            })
+                            if (gm[k._id] == true) {
                                 props.onCallback({ key: time, value: false });
                                 out = <div className='row'>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
@@ -375,22 +383,28 @@ const roundComponent = props => {
     let rc = '';
     if (props.user) {
         if (props.user.bill && props.user.profil && (options_time_block.length > 0)) {
-            rc = <RoundCreate
-                round_create={round_create}
-                time_block={options_time_block}
-                onInput={this.onInput}
-                onSave={this.onSave}
-                onInputBlock={this.onInputBlock}
-                tableOptions={tableOptions}
-                onCancel={this.onCancel}
-            />
+            if (addBlock === true) {
+                rc = <RoundCreate
+                    round_create={round_create}
+                    time_block={options_time_block}
+                    onInput={this.onInput}
+                    onSave={this.onSave}
+                    onInputBlock={this.onInputBlock}
+                    tableOptions={tableOptions}
+                    onCancel={this.onCancel}
+                />
+            } else {
+                <div className='row justify-content-center'>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setAddBlock(!addBlock)} >Neue Runde Hinzufügen</button>
+                </div>
+            }
+
         }
     }
     return (
         <React.Fragment>
             {tb}
-            Hidden Block
-                {rc}
+            {rc}
         </React.Fragment>
     )
 }

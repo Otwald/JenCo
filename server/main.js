@@ -51,6 +51,7 @@ Meteor.methods({
     }
   },
 
+  //todo: getting decorators to work
   BlockCreate(data) {
     console.log(data);
     try {
@@ -200,4 +201,18 @@ Meteor.methods({
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
+  CheckGM(id) {
+    try {
+      check(id, String);
+      let round = Rounds.findOne({ '_id': id });
+      if (round.round_gm_id === this.userId) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    catch (err) {
+      return false;
+    }
+  }
 });

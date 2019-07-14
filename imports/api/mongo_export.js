@@ -11,7 +11,7 @@ if (Meteor.isServer) {
     export const Admin = new Mongo.Collection('admin');
     let all_admin = Admin.find().fetch()
     Meteor.publish('rounds', function () {
-        return Rounds.find();
+        return Rounds.find({}, { fields: { round_gm_id: 0 } });
     });
     users_account.deny({
         insert() { return true; },
