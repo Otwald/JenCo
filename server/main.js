@@ -104,7 +104,6 @@ Meteor.methods({
       setting: String,
       ruleset: String,
       own_char: Boolean,
-      round_gm: String,
       round_max_online_pl: Number,
       round_curr_pl: Number,
       round_max_pl: Number,
@@ -113,13 +112,17 @@ Meteor.methods({
       round_table: Number
     })
     data.round_gm_id = this.userId;
-    Rounds.insert(data);
+    users_account.findOne({ '_id': this.userId });
+    data.round_gm = users_account.profil,
+    data.round_player_id = [];
+      Rounds.insert(data);
     const table = Rounds.findOne(data);
     const block = timeblock.findOne({ _id: data.round_tb });
     block.block_table.push(table.round_table)
     timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
   RoundUpdate(data) {
+    console.log(data);
     check(data, {
       _id: String,
       round_tb: String,
@@ -127,17 +130,17 @@ Meteor.methods({
       setting: String,
       ruleset: String,
       own_char: Boolean,
-      round_gm: String,
-      round_gm_id: String,
       round_max_online_pl: Number,
       round_curr_pl: Number,
       round_max_pl: Number,
       round_desc: String,
       round_player: Array,
-      round_table: Number
+      round_table: Number,
+      round_gm: String
     })
-    const round = Rounds.findOne({ _id: id })
+    const round = Rounds.findOne({ _id: data._id })
     if (round.round_gm_id === this.userId) {
+      data['round_gm_id'] = this.userId;
       Rounds.update({ _id: data._id }, data)
     }
   },
@@ -212,6 +215,23 @@ Meteor.methods({
       }
     }
     catch (err) {
+      return false;
+    }
+  },
+  CheckPlayer(id) {
+    try {
+      check(id, String);
+      let round = Rounds.findOne({ '_id': id });
+      if (round) {
+        round.player_id.map((v) => {
+          if (value == this.userId) {
+            return true;
+          }
+        })
+      } else {
+        return false;
+      }
+    } catch (err) {
       return false;
     }
   }

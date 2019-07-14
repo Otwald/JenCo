@@ -31,15 +31,31 @@ const roundComponent = props => {
     const [extendR, setExtendR] = useState('');
     const [addBlock, setAddBlock] = useState(false);
     const [gm, setGm] = useState({});
+    const [player, setPlayer] = useState({});
 
 
     useEffect(() => {
-        timeOptions(props.time_block);
+        console.log(props.rounds_box);
+        props.rounds_box.map((v) => {
+            Meteor.call('CheckGM', v._id, (err, res) => {
+                setGm((prev) => {
+                    prev[v._id] = res;
+                    return prev;
+                })
+            });
+            Meteor.call('CheckPlayer', v._id, (err, res) => {
+                setPlayer((prev) => {
+                    prev[v._id] = res;
+                    return prev;
+                })
+            })
+        })
         setIn_round(props.in_round);
+        timeOptions(props.time_block);
         return (() => {
             setOptions_time_block([]);
         })
-    }, [props.time_block, props.user, props.rounds_box, props.in_round, props.user])
+    }, [props.time_block, props.rounds_box, props.in_round])
     // useEffect(() => {
     //     setIn_round(props.in_round);
     // }, [props.in_round])
@@ -54,16 +70,12 @@ const roundComponent = props => {
         setRoundCreate(temp);
     }
 
-    onInputBlock = (e, data) => {
-        let temp = round_create
-        temp[data.type] = data.value;
-        setRoundCreate(round_create)
-        if (data.type === 'round_tb') {
-            createTableOptions(data.value)
-        }
-    }
-
-    //Creates Array for table choice 
+    /**
+     *  Creates Array for table choice form a given timeblock,
+     * for roundcreate dropdown
+     * @param String id the id of the timeblock
+     * @return Array
+     */
     createTableOptions = (id) => {
         const block = props.time_block.filter((v) => {
             return v._id === id
@@ -79,33 +91,11 @@ const roundComponent = props => {
         }
     }
 
-    //saves a round into the db, is a callback
-    onSave = () => {
-        const data = round_create
-        data.round_gm = props.user.profil
-        let check = true;
-        if (data.round_name.length === 0) {
-            check = false;
-        }
-        if (data.round_max_pl < 4) {
-            check = false;
-        }
-        if (data.setting.length === 0) {
-            check = false;
-        }
-        console.log(data)
-        if (check) {
-            if (data._id) {
-                Meteor.call('RoundUpdate', data)
-            } else {
-                Meteor.call('RoundCreate', data);
-            }
-            this.onCancel()
-        }
-    }
-
     /**
-    * loads rounds setting
+    * loads rounds setting and adds this timeblock to the possible options of
+    * timeblocks, to allow switching between them
+    * @param States round /todo what is it?
+    * @param Array time is array of timeblocks 
     */
     onEdit = (round, time) => {
         setRoundCreate(round)
@@ -120,6 +110,9 @@ const roundComponent = props => {
         setEdit_Options_time_block(edit_options_time_block)
     }
 
+    /**
+     * resets States to cancel the input of a new round
+     */
     onCancel = () => {
         setRoundCreate({
             _id: null,
@@ -137,7 +130,8 @@ const roundComponent = props => {
             round_player: [],
             round_table: null
         })
-        setEdit_Options_time_block([])
+        setEdit_Options_time_block([]);
+        setAddBlock('');
     }
 
     //destroys round in timeblock
@@ -196,7 +190,13 @@ const roundComponent = props => {
         return out
     }
 
-    //creates options for timeblock when creating new round
+    /**
+     * rounds over every timeblock and checks if there are still
+     * tables free
+     * and if the user is already booked for an table
+     * if not adds the timeblock to possible options
+     * @param Array block holds all possble timeblocks
+     */
     timeOptions = (block) => {
         let temp = []
         if (in_round) {
@@ -238,32 +238,27 @@ const roundComponent = props => {
                 if (k.round_tb === time) {
                     if (Meteor.userId() && props.user) {
                         if (props.user.bill) {
-                            Meteor.call('CheckGM', k._id, (err, res)=>{
-                                setGm((prev)=>{
-                                    prev[k._id] = res;
-                                    return prev;
-                                })
-                            })
                             if (gm[k._id] == true) {
                                 props.onCallback({ key: time, value: false });
                                 out = <div className='row'>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(k, time)} >Löschen</button>
                                 </div>
-                            } else if (in_round[time] !== false) {
+                            } else if (player === true) {
+                                out = <div className='row'>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k, time)} >Austreten</button>
+                                </div>
+                            } else {
+                                // if (!this.onCheck(k.round_player, time)) {
                                 if (this.onCheck(k.round_player, time)) {
+
                                     if (k.round_curr_pl < k.round_max_pl) {
                                         out = <div className='row'>
                                             <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k)} >Beitreten</button>
                                         </div>
                                     }
                                 }
-                            } else {
-                                if (!this.onCheck(k.round_player, time)) {
-                                    out = <div className='row'>
-                                        <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k, time)} >Austreten</button>
-                                    </div>
-                                }
+                                // }
                             }
                         }
                     }
@@ -333,8 +328,7 @@ const roundComponent = props => {
                             round_create={round_create}
                             time_block={edit_options_time_block}
                             onInput={this.onInput}
-                            onSave={this.onSave}
-                            onInputBlock={this.onInputBlock}
+                            createTableOptions={createTableOptions}
                             tableOptions={tableOptions}
                             onCancel={this.onCancel}
                         />
@@ -388,19 +382,20 @@ const roundComponent = props => {
                     round_create={round_create}
                     time_block={options_time_block}
                     onInput={this.onInput}
-                    onSave={this.onSave}
-                    onInputBlock={this.onInputBlock}
+                    createTableOptions={createTableOptions}
                     tableOptions={tableOptions}
                     onCancel={this.onCancel}
                 />
             } else {
-                <div className='row justify-content-center'>
+                rc = <div className='row justify-content-center'>
                     <button className='btn btn-outline-dark col-sm-4' onClick={() => setAddBlock(!addBlock)} >Neue Runde Hinzufügen</button>
                 </div>
             }
 
         }
     }
+    console.log(gm);
+    console.log(player)
     return (
         <React.Fragment>
             {tb}
