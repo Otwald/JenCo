@@ -21,7 +21,8 @@ const adminBlock = props => {
     }
 
     /**
-     * a small helper to convert the timestamp back to readable Time
+     * calls getStringDate and getStringClock
+     * and builds one Date Format from it
      */
     getStringTime = (timestamp) => {
         let out = getStringDate(timestamp);
@@ -30,21 +31,37 @@ const adminBlock = props => {
         return out
     }
 
+    /**
+     * takes timestamp and extracts the date as an string
+     * the form is Weekday 01.01
+     * @param Number timestamp 
+     * @return String
+     */
     getStringDate = (timestamp) => {
         let date = new Date(timestamp);
         let out = '';
         const week = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-        out += week[date.getDay()] + ' ' + date.getDate() + '.' + date.getMonth() + '.'
+        out += week[date.getDay()] + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.'
         return out;
     }
 
+    /**
+     * takes timestamp and extracts clocktime
+     * returns it as a string
+     * @param Number timestamp 
+     * @return String
+     */
     getStringClock = (timestamp) => {
         let date = new Date(timestamp);
-        let min = date.getMinutes()
+        let min = date.getMinutes();
+        let hour = date.getHours();
         if (min < 10) {
             min = '0' + min;
         }
-        out = date.getHours() + ':' + min;
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        out = hour + ':' + min;
         return out
     }
 
