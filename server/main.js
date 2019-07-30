@@ -8,7 +8,7 @@ import { event_settings, timeblock, Rounds, users_archive, users_account } from 
 Meteor.startup(() => {
   console.log('Restart');
   // for initial Setup Creating one Empty Event Entry
-  // const cursor = event_settings.findOne();
+  // let cursor = event_settings.findOne();
   // if (!cursor) {
   //   event_settings.insert({
   //     e_start: null,
@@ -53,7 +53,6 @@ Meteor.methods({
 
   //todo: getting decorators to work
   BlockCreate(data) {
-    console.log(data);
     try {
       check(data, {
         block_name: String,
@@ -105,19 +104,17 @@ Meteor.methods({
       ruleset: String,
       own_char: Boolean,
       round_max_online_pl: Number,
-      round_curr_pl: Number,
       round_max_pl: Number,
       round_desc: String,
-      round_player: Array,
       round_table: Number
     })
     data.round_gm_id = this.userId;
     users_account.findOne({ '_id': this.userId });
-    data.round_gm = users_account.profil,
     data.round_player_id = [];
-      Rounds.insert(data);
-    const table = Rounds.findOne(data);
-    const block = timeblock.findOne({ _id: data.round_tb });
+    data.round_curr_pl = 0;
+    Rounds.insert(data);
+    let table = Rounds.findOne(data, { transform: null });
+    let block = timeblock.findOne({ _id: data.round_tb });
     block.block_table.push(table.round_table)
     timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
   },
@@ -131,26 +128,37 @@ Meteor.methods({
       ruleset: String,
       own_char: Boolean,
       round_max_online_pl: Number,
-      round_curr_pl: Number,
       round_max_pl: Number,
       round_desc: String,
-      round_player: Array,
       round_table: Number,
-      round_gm: String
     })
-    const round = Rounds.findOne({ _id: data._id })
+    let round = Rounds.findOne({ _id: data._id }, { transform: null })
     if (round.round_gm_id === this.userId) {
-      data['round_gm_id'] = this.userId;
-      Rounds.update({ _id: data._id }, data)
+      Rounds.update({ _id: data._id },
+        {
+          $set: {
+            round_tb: data.round_tb,
+            round_name: data.round_name,
+            setting: data.setting,
+            ruleset: data.ruleset,
+            own_char: data.own_char,
+            round_max_online_pl: data.round_max_online_pl,
+            round_max_pl: data.round_max_pl,
+            round_desc: data.round_desc,
+            round_table: data.round_table,
+
+          }
+        }
+      )
     }
   },
   RoundDelete(id) {
     check(id, String);
-    const table = Rounds.findOne({ _id: id });
+    let table = Rounds.findOne({ _id: id }, { transform: null });
     if (table) {
       if (table.round_gm_id == this.userId) {
         Rounds.remove({ _id: id });
-        const block = timeblock.findOne({ _id: table.round_tb })
+        let block = timeblock.findOne({ _id: table.round_tb })
         block.block_table.map((v, i) => {
           if (v === table.round_table) {
             block.block_table.splice(i, 1)
@@ -158,6 +166,46 @@ Meteor.methods({
         })
         timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
       }
+    }
+  },
+  RoundAddPlayer(id) {
+    try {
+      check(id, String);
+      let table = Rounds.findOne({ _id: id }, { transform: null });
+      if (table) {
+        let check_player = table.round_player_id.filter(id => id == this.userId);
+        if (check_player.length == 0) {
+          table.round_player_id.push(this.userId);
+          table.round_curr_pl++
+          Rounds.update({ _id: id }, {
+            $set: {
+              'round_player_id': table.round_player_id,
+              'round_curr_pl': table.round_curr_pl
+            }
+          })
+        }
+      }
+    }
+    catch (err) {
+    }
+  },
+  RoundRemovePlayer(id) {
+    try {
+      check(id, String);
+      let table = Rounds.findOne({ _id: id }, { transform: null });
+      if (table) {
+        let check_player = table.round_player_id.filter(id => id != this.userId);
+        table.round_curr_pl--
+        Rounds.update({ _id: id }, {
+          $set: {
+            'round_player_id': check_player,
+            'round_curr_pl': table.round_curr_pl
+          }
+        })
+      }
+    }
+    catch (err) {
+      console.log(err);
     }
   },
   AccountCreate(data) {
@@ -191,7 +239,7 @@ Meteor.methods({
     users_archive.insert(data);
   },
   SwitchBill(data) {
-    const user = users_account.findOne({ _id: data });
+    let user = users_account.findOne({ _id: data });
     users_account.update({ _id: data }, {
       $set: {
         "bill": !user.bill
@@ -207,7 +255,7 @@ Meteor.methods({
   CheckGM(id) {
     try {
       check(id, String);
-      let round = Rounds.findOne({ '_id': id });
+      let round = Rounds.findOne({ '_id': id }, { transform: null });
       if (round.round_gm_id === this.userId) {
         return true;
       } else {
@@ -221,13 +269,15 @@ Meteor.methods({
   CheckPlayer(id) {
     try {
       check(id, String);
-      let round = Rounds.findOne({ '_id': id });
+      let round = Rounds.findOne({ '_id': id }, { transform: null });
+      console.log(round)
       if (round) {
-        round.player_id.map((v) => {
-          if (value == this.userId) {
-            return true;
-          }
-        })
+        let check_player = round.round_player_id.filter(id => id == this.userId);
+        if (check_player.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }

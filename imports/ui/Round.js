@@ -35,7 +35,6 @@ const roundComponent = props => {
 
 
     useEffect(() => {
-        console.log(props.rounds_box);
         props.rounds_box.map((v) => {
             Meteor.call('CheckGM', v._id, (err, res) => {
                 setGm((prev) => {
@@ -140,30 +139,36 @@ const roundComponent = props => {
         props.onCallback({ key: time, value: true });
     }
 
-    //joins a round
-    onJoin = (data) => {
-        data.round_player.push({ 'profil': props.user.profil, 'user_id': Meteor.userId() })
-        data.round_curr_pl++
-        Meteor.call('RoundUpdate', data)
+    /**
+     * sends Request to server to add player into player_id array
+     * @param String id the id of the Round where you want to add a player
+     */
+    onJoin = (id) => {
+        Meteor.call('RoundAddPlayer', id)
+        onPlayerUpdate(id);
     }
 
-    //leaves a round
-    onLeave = (data, time) => {
-        let index = Object.keys(data.round_player).map((k) => {
-            if (data.round_player[k].user_id === Meteor.userId()) {
-                return k
-            }
-        })
-        if (index.length !== 0) {
-            index.map((k, v) => {
-                if (k !== undefined) {
-                    data.round_curr_pl--
-                    data.round_player.splice(k, 1);
-                }
-            })
-        }
+    /**
+     * takes the id of an round and sends request to the server to remove player from player_ids
+     * @param String id
+     */
+    onLeave = (id, time) => {
         props.onCallback({ key: time, value: true });
-        Meteor.call('RoundUpdate', data)
+        Meteor.call('RoundRemovePlayer', id)
+        onPlayerUpdate(id);
+    }
+
+    /**
+     * small helper to recheck after changes if player is in a round or not
+     * @param String id
+     */
+    onPlayerUpdate = (id) => {
+        Meteor.call('CheckPlayer', id, (err, res) => {
+            setPlayer((prev) => {
+                prev[id] = res;
+                return prev;
+            })
+        })
     }
 
     //checks if user is player in round
@@ -181,12 +186,14 @@ const roundComponent = props => {
 
     //gets rounds player names to visiualize
     function onPlayers(data) {
+        console.log(data);
         let out = '';
         if (data) {
             out = out.concat(Object.keys(data).map((k) => {
-                return data[k].profil
+                return data
             }))
         }
+        console.log(out)
         return out
     }
 
@@ -244,17 +251,16 @@ const roundComponent = props => {
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(k, time)} >Löschen</button>
                                 </div>
-                            } else if (player === true) {
+                            } else if (player[k._id] === true) {
                                 out = <div className='row'>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k, time)} >Austreten</button>
+                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k._id, time)} >Austreten</button>
                                 </div>
                             } else {
                                 // if (!this.onCheck(k.round_player, time)) {
                                 if (this.onCheck(k.round_player, time)) {
-
                                     if (k.round_curr_pl < k.round_max_pl) {
                                         out = <div className='row'>
-                                            <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k)} >Beitreten</button>
+                                            <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k._id)} >Beitreten</button>
                                         </div>
                                     }
                                 }
@@ -394,8 +400,8 @@ const roundComponent = props => {
 
         }
     }
-    console.log(gm);
-    console.log(player)
+    // console.log(gm);
+    // console.log(player)
     return (
         <React.Fragment>
             {tb}

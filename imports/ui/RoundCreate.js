@@ -54,9 +54,7 @@ const roundCreate = props => {
             own_char: own_char,
             round_max_online_pl: max_online_pl,
             round_max_pl: max_pl,
-            round_curr_pl: 0,
             round_desc: desc,
-            round_player: [],
             round_tb: tb,
             round_table: Number(table)
         }
@@ -73,9 +71,6 @@ const roundCreate = props => {
         if (check) {
             if (props.round_create._id) {
                 data['_id'] = props.round_create._id
-                data['round_curr_pl'] = props.round_create.round_curr_pl;
-                data['round_player'] = props.round_create.round_player;
-                data['round_gm'] = props.round_create.round_gm;
                 Meteor.call('RoundUpdate', data)
             } else {
                 Meteor.call('RoundCreate', data);
