@@ -30,6 +30,29 @@ MethodWrapper = (func) => {
   }
 }
 
+/**
+ * a handel to update the timeblocks, to hold the id and the used table from given new rounds in there scope
+ * @param Object new_data holds the Information of the new round
+ * @param Object old_data holds the old Information of the Round
+ */
+timeblock_update = (new_data = {}, old_data = {}) => {
+  if (Object.keys(old_data).length > 0) {
+    let old_tb = timeblock.findOne({ _id: old_data.round_tb });
+    if (old_tb) {
+      let filter_block_table = old_tb.block_table.filter((item) => item != old_data.round_table);
+      console.log(filter_block_table);
+      let filter_block_table_id = old_tb.block_table_id.filter((item) => item != old_data._id);
+      timeblock.update({ _id: old_tb._id }, { $set: { "block_table": filter_block_table, 'block_table_id': filter_block_table_id } });
+    }
+  }
+  if (Object.keys(new_data).length > 0) {
+    let new_tb = timeblock.findOne({ _id: new_data.round_tb });
+    new_tb.block_table.push(new_data.round_table)
+    new_tb.block_table_id.push(new_data._id)
+    timeblock.update({ _id: new_tb._id }, { $set: { "block_table": new_tb.block_table, 'block_table_id': new_tb.block_table_id } });
+  }
+}
+
 //todo: log send emails
 // Server: Define a method that the client can call.
 Meteor.methods({
@@ -59,9 +82,10 @@ Meteor.methods({
         block_pnp: Boolean,
         block_start: Number,
         block_end: Number,
-        block_table: Array,
         block_max_table: Number
       })
+      data.block_table = [];
+      data.block_table_id = [];
       timeblock.insert(data);
     }
     catch (er) {
@@ -77,11 +101,19 @@ Meteor.methods({
         block_pnp: Boolean,
         block_start: Number,
         block_end: Number,
-        block_table: Array,
         block_max_table: Number
       })
       //todo admincheck
-      timeblock.update({ _id: data._id }, data)
+      timeblock.update({ _id: data._id },
+        {
+          $set: {
+            block_name: data.block_name,
+            block_pnp: data.block_pnp,
+            block_start: data.block_start,
+            block_end: data.block_end,
+            block_max_table: data.block_max_table
+          }
+        })
     }
     catch (err) {
       console.log(err)
@@ -114,12 +146,9 @@ Meteor.methods({
     data.round_curr_pl = 0;
     Rounds.insert(data);
     let table = Rounds.findOne(data, { transform: null });
-    let block = timeblock.findOne({ _id: data.round_tb });
-    block.block_table.push(table.round_table)
-    timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
+    timeblock_update(new_tb = table);
   },
   RoundUpdate(data) {
-    console.log(data);
     check(data, {
       _id: String,
       round_tb: String,
@@ -134,6 +163,7 @@ Meteor.methods({
     })
     let round = Rounds.findOne({ _id: data._id }, { transform: null })
     if (round.round_gm_id === this.userId) {
+      timeblock_update(data, round);
       Rounds.update({ _id: data._id },
         {
           $set: {
@@ -158,13 +188,14 @@ Meteor.methods({
     if (table) {
       if (table.round_gm_id == this.userId) {
         Rounds.remove({ _id: id });
-        let block = timeblock.findOne({ _id: table.round_tb })
-        block.block_table.map((v, i) => {
-          if (v === table.round_table) {
-            block.block_table.splice(i, 1)
-          }
-        })
-        timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
+        // let block = timeblock.findOne({ _id: table.round_tb })
+        // block.block_table.map((v, i) => {
+        //   if (v === table.round_table) {
+        //     block.block_table.splice(i, 1)
+        //   }
+        // })
+        timeblock_update(old_data = table);
+        // timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
       }
     }
   },
@@ -270,7 +301,6 @@ Meteor.methods({
     try {
       check(id, String);
       let round = Rounds.findOne({ '_id': id }, { transform: null });
-      console.log(round)
       if (round) {
         let check_player = round.round_player_id.filter(id => id == this.userId);
         if (check_player.length > 0) {

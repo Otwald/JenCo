@@ -32,6 +32,7 @@ const roundComponent = props => {
     const [addBlock, setAddBlock] = useState(false);
     const [gm, setGm] = useState({});
     const [player, setPlayer] = useState({});
+    const [booked_tb, setBooked_tb] = useState([]);
 
 
     useEffect(() => {
@@ -49,6 +50,7 @@ const roundComponent = props => {
                 })
             })
         })
+        // onCheck()
         setIn_round(props.in_round);
         timeOptions(props.time_block);
         return (() => {
@@ -190,7 +192,7 @@ const roundComponent = props => {
         let out = '';
         if (data) {
             out = out.concat(Object.keys(data).map((k) => {
-                return data
+                return data + ', '
             }))
         }
         console.log(out)

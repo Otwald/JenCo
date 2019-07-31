@@ -15,7 +15,6 @@ const adminblockform = props => {
     })
     const [showdp_start, setShowdp_start] = useState('');
     const [showdp_end, setShowdp_end] = useState('');
-    const [activeTables, setActiveTables] = useState([])
     const [clock_end, setClock_end] = useState('00:00');
     const [clock_start, setClock_start] = useState('00:00');
     const [name, setName] = useState('');
@@ -38,7 +37,6 @@ const adminblockform = props => {
                 end: props.block.block_end - onTimeInput(props.getStringClock(props.block.block_end)),
             })
             setPnp(props.block.block_pnp);
-            setActiveTables(props.block.block_table);
         }
     }, [props.block])
 
@@ -51,7 +49,6 @@ const adminblockform = props => {
         let temp = {
             block_name: name,
             block_pnp: pnp,
-            block_table: activeTables,
             block_max_table: Number(table_number)
         }
         if (temp.block_name.length < 1) {
