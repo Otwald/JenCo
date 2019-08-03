@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import RoundCreate from './RoundCreate';
 
 const roundComponent = props => {
-
-    //Vorgefertigten Charaktere
-
     const [round_create, setRoundCreate] = useState({
         _id: null,
         round_tb: '',
@@ -36,33 +33,66 @@ const roundComponent = props => {
 
 
     useEffect(() => {
-        props.rounds_box.map((v) => {
-            Meteor.call('CheckGM', v._id, (err, res) => {
-                setGm((prev) => {
-                    prev[v._id] = res;
-                    return prev;
-                })
-            });
-            Meteor.call('CheckPlayer', v._id, (err, res) => {
-                setPlayer((prev) => {
-                    prev[v._id] = res;
-                    return prev;
-                })
-            })
-        })
-        // onCheck()
-        setIn_round(props.in_round);
-        timeOptions(props.time_block);
+        onCheck()
+        // Object.keys(bookedRef.current).forEach((value) => {
+        //     console.log('test');
+        //     if (bookedRef.current[value] != booked_tb[value]) {
+        //     }
+        // })
         return (() => {
-            setOptions_time_block([]);
+            // setOptions_time_block([]);
+            setGm([]);
+            setPlayer([]);
         })
     }, [props.time_block, props.rounds_box, props.in_round])
+
     // useEffect(() => {
-    //     setIn_round(props.in_round);
-    // }, [props.in_round])
-    // useEffect(() => {
-    //     return (() => { })
-    // }, [props.user, props.rounds_box])
+    //     if (bookedRef.current != booked_tb) {
+    //         bookedRef.current = booked_tb;
+    //     }
+    //     console.log(typeof (bookedRef.current))
+    //     Object.keys(bookedRef.current).forEach((value) => {
+    //         console.log(value);
+    //     })
+    //     if (booked_tb.length > 0) {
+    //         timeOptions(props.time_block);
+    //     }
+    //     // return (() => {
+    //     //     setOptions_time_block([])
+    //     // })
+    // })
+
+    onCheck = () => {
+        Meteor.call('Check', (err, res) => {
+            console.log(res);
+            setGm(res.gm);
+            setPlayer(res.player);
+            setOptions_time_block(res.timeoptions)
+            setBooked_tb(res.booked);
+        })
+        // props.rounds_box.map((v) => {
+        //     Meteor.call('CheckGM', v._id, (err, res) => {
+        //         setGm((prev) => {
+        //             prev[v._id] = res;
+        //             return prev;
+        //         })
+        //     });
+        //     Meteor.call('CheckPlayer', v._id, (err, res) => {
+        //         setPlayer((prev) => {
+        //             prev[v._id] = res;
+        //             return prev;
+        //         })
+        //     });
+        // })
+        // props.time_block.map((v) => {
+        //     Meteor.call('CheckBooked', v._id, (err, res) => {
+        //         setBooked_tb((prev) => {
+        //             prev[v._id] = res;
+        //             return prev;
+        //         })
+        //     })
+        // })
+    }
 
     onInput = (e) => {
         let temp = round_create
@@ -148,6 +178,7 @@ const roundComponent = props => {
     onJoin = (id) => {
         Meteor.call('RoundAddPlayer', id)
         onPlayerUpdate(id);
+        onCheck();
     }
 
     /**
@@ -158,6 +189,7 @@ const roundComponent = props => {
         props.onCallback({ key: time, value: true });
         Meteor.call('RoundRemovePlayer', id)
         onPlayerUpdate(id);
+        onCheck();
     }
 
     /**
@@ -173,29 +205,27 @@ const roundComponent = props => {
         })
     }
 
-    //checks if user is player in round
-    onCheck = (data, time) => {
-        if (data.length !== 0) {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].user_id === Meteor.userId()) {
-                    props.onCallback({ key: time, value: false });
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    // //checks if user is player in round
+    // onCheck = (data, time) => {
+    //     if (data.length !== 0) {
+    //         for (let i = 0; i < data.length; i++) {
+    //             if (data[i].user_id === Meteor.userId()) {
+    //                 props.onCallback({ key: time, value: false });
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
 
     //gets rounds player names to visiualize
     function onPlayers(data) {
-        console.log(data);
         let out = '';
         if (data) {
             out = out.concat(Object.keys(data).map((k) => {
                 return data + ', '
             }))
         }
-        console.log(out)
         return out
     }
 
@@ -206,19 +236,22 @@ const roundComponent = props => {
      * if not adds the timeblock to possible options
      * @param Array block holds all possble timeblocks
      */
-    timeOptions = (block) => {
+    timeOptions = () => {
         let temp = []
-        if (in_round) {
-            block.map((v) => {
-                if (v.block_max_table < v.block_table.length) { return }
-                if (in_round[v._id] === false) { return }
-                temp.push({
-                    text: v.block_name,
-                    value: v._id
-                })
-                setOptions_time_block(temp)
+        props.time_block.map((v) => {
+            let test = v._id;;
+            if (booked_tb[test]) {
+                console.log('test');
+            }
+            if (v.block_max_table < v.block_table.length) { return }
+            if (booked_tb[v._id] === true) { return }
+            temp.push({
+                text: v.block_name,
+                value: v._id
             })
-        }
+            setOptions_time_block(temp)
+        })
+
     }
 
     blockTabControll = (id) => {
@@ -258,15 +291,14 @@ const roundComponent = props => {
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k._id, time)} >Austreten</button>
                                 </div>
                             } else {
-                                // if (!this.onCheck(k.round_player, time)) {
-                                if (this.onCheck(k.round_player, time)) {
+                                console.log(booked_tb);
+                                if (booked_tb[k.round_tb] == false) {
                                     if (k.round_curr_pl < k.round_max_pl) {
                                         out = <div className='row'>
                                             <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k._id)} >Beitreten</button>
                                         </div>
                                     }
                                 }
-                                // }
                             }
                         }
                     }
@@ -402,8 +434,6 @@ const roundComponent = props => {
 
         }
     }
-    // console.log(gm);
-    // console.log(player)
     return (
         <React.Fragment>
             {tb}

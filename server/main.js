@@ -40,7 +40,6 @@ timeblock_update = (new_data = {}, old_data = {}) => {
     let old_tb = timeblock.findOne({ _id: old_data.round_tb });
     if (old_tb) {
       let filter_block_table = old_tb.block_table.filter((item) => item != old_data.round_table);
-      console.log(filter_block_table);
       let filter_block_table_id = old_tb.block_table_id.filter((item) => item != old_data._id);
       timeblock.update({ _id: old_tb._id }, { $set: { "block_table": filter_block_table, 'block_table_id': filter_block_table_id } });
     }
@@ -194,7 +193,7 @@ Meteor.methods({
         //     block.block_table.splice(i, 1)
         //   }
         // })
-        timeblock_update(old_data = table);
+        timeblock_update({}, old_data = table);
         // timeblock.update({ _id: block._id }, { $set: { "block_table": block.block_table } })
       }
     }
@@ -283,35 +282,76 @@ Meteor.methods({
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
-  CheckGM(id) {
+  // CheckGM(id) {
+  //   try {
+  //     check(id, String);
+  //     let round = Rounds.findOne({ '_id': id }, { transform: null });
+  //     if (round.round_gm_id === this.userId) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  //   catch (err) {
+  //     return false;
+  //   }
+  // },
+  // CheckPlayer(id) {
+  //   try {
+  //     check(id, String);
+  //     let round = Rounds.findOne({ '_id': id }, { transform: null });
+  //     if (round) {
+  //       if (round.round_player_id.includes(this.userId)) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // },
+  Check() {
     try {
-      check(id, String);
-      let round = Rounds.findOne({ '_id': id }, { transform: null });
-      if (round.round_gm_id === this.userId) {
-        return true;
-      } else {
-        return false;
-      }
+      let blocks = timeblock.find({ 'block_pnp': true });
+      let gm = {};
+      let player = {};
+      let timeoptions = [];
+      let booked = {}
+      blocks.map((tb) => {
+        checkrounds = tb.block_table_id.map((value) => {
+          let round = Rounds.findOne({ '_id': value }, { transform: null });
+          if (round) {
+            if (round.round_gm_id == this.userId) {
+              gm[value] = true;
+              booked[tb._id] = true;
+            }
+            else {
+              gm[value] = false;
+            }
+            if (round.round_player_id.includes(this.userId)) {
+              player[value] = true;
+              booked[tb._id] = true;
+            } else {
+              player[value] = false;
+            }
+          }
+        })
+        if (!booked[tb._id]) {
+          booked[tb._id] = false;
+          timeoptions.push({
+            text: tb.block_name,
+            value: tb._id
+          })
+        }
+        console.log({ gm: gm, player: player, timeoptions: timeoptions, booked: booked })
+      })
+
+      return { gm: gm, player: player, timeoptions: timeoptions, booked: booked };
     }
     catch (err) {
-      return false;
-    }
-  },
-  CheckPlayer(id) {
-    try {
-      check(id, String);
-      let round = Rounds.findOne({ '_id': id }, { transform: null });
-      if (round) {
-        let check_player = round.round_player_id.filter(id => id == this.userId);
-        if (check_player.length > 0) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } catch (err) {
       return false;
     }
   }
