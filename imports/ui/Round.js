@@ -34,64 +34,24 @@ const roundComponent = props => {
 
     useEffect(() => {
         onCheck()
-        // Object.keys(bookedRef.current).forEach((value) => {
-        //     console.log('test');
-        //     if (bookedRef.current[value] != booked_tb[value]) {
-        //     }
-        // })
         return (() => {
-            // setOptions_time_block([]);
-            setGm([]);
-            setPlayer([]);
+            setGm({});
+            setPlayer({});
+            setBooked_tb({});
+            setTableOptions({});
         })
     }, [props.time_block, props.rounds_box, props.in_round])
 
-    // useEffect(() => {
-    //     if (bookedRef.current != booked_tb) {
-    //         bookedRef.current = booked_tb;
-    //     }
-    //     console.log(typeof (bookedRef.current))
-    //     Object.keys(bookedRef.current).forEach((value) => {
-    //         console.log(value);
-    //     })
-    //     if (booked_tb.length > 0) {
-    //         timeOptions(props.time_block);
-    //     }
-    //     // return (() => {
-    //     //     setOptions_time_block([])
-    //     // })
-    // })
-
+    /**
+     * calls Server to build arrays freom checks if user is gm in given round, if user still cann book something in a timeblock usw
+     */
     onCheck = () => {
         Meteor.call('Check', (err, res) => {
-            console.log(res);
             setGm(res.gm);
             setPlayer(res.player);
             setOptions_time_block(res.timeoptions)
             setBooked_tb(res.booked);
         })
-        // props.rounds_box.map((v) => {
-        //     Meteor.call('CheckGM', v._id, (err, res) => {
-        //         setGm((prev) => {
-        //             prev[v._id] = res;
-        //             return prev;
-        //         })
-        //     });
-        //     Meteor.call('CheckPlayer', v._id, (err, res) => {
-        //         setPlayer((prev) => {
-        //             prev[v._id] = res;
-        //             return prev;
-        //         })
-        //     });
-        // })
-        // props.time_block.map((v) => {
-        //     Meteor.call('CheckBooked', v._id, (err, res) => {
-        //         setBooked_tb((prev) => {
-        //             prev[v._id] = res;
-        //             return prev;
-        //         })
-        //     })
-        // })
     }
 
     onInput = (e) => {
@@ -204,19 +164,6 @@ const roundComponent = props => {
             })
         })
     }
-
-    // //checks if user is player in round
-    // onCheck = (data, time) => {
-    //     if (data.length !== 0) {
-    //         for (let i = 0; i < data.length; i++) {
-    //             if (data[i].user_id === Meteor.userId()) {
-    //                 props.onCallback({ key: time, value: false });
-    //                 return false;
-    //             }
-    //         }
-    //     }
-    //     return true;
-    // }
 
     //gets rounds player names to visiualize
     function onPlayers(data) {

@@ -282,44 +282,13 @@ Meteor.methods({
   EventUpdate(data) {
     event_settings.update({ _id: data._id }, data);
   },
-  // CheckGM(id) {
-  //   try {
-  //     check(id, String);
-  //     let round = Rounds.findOne({ '_id': id }, { transform: null });
-  //     if (round.round_gm_id === this.userId) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  //   catch (err) {
-  //     return false;
-  //   }
-  // },
-  // CheckPlayer(id) {
-  //   try {
-  //     check(id, String);
-  //     let round = Rounds.findOne({ '_id': id }, { transform: null });
-  //     if (round) {
-  //       if (round.round_player_id.includes(this.userId)) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (err) {
-  //     return false;
-  //   }
-  // },
   Check() {
+    let gm = {};
+    let player = {};
+    let timeoptions = [];
+    let booked = {}
     try {
       let blocks = timeblock.find({ 'block_pnp': true });
-      let gm = {};
-      let player = {};
-      let timeoptions = [];
-      let booked = {}
       blocks.map((tb) => {
         checkrounds = tb.block_table_id.map((value) => {
           let round = Rounds.findOne({ '_id': value }, { transform: null });
@@ -346,13 +315,11 @@ Meteor.methods({
             value: tb._id
           })
         }
-        console.log({ gm: gm, player: player, timeoptions: timeoptions, booked: booked })
       })
-
       return { gm: gm, player: player, timeoptions: timeoptions, booked: booked };
     }
     catch (err) {
-      return false;
+      return { gm: gm, player: player, timeoptions: timeoptions, booked: booked };
     }
   }
 });
