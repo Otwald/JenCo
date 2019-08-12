@@ -1,6 +1,7 @@
 /**
  * Takes a Timestamp or other Date and converts it into the Formate 'YYYY-MM-DD'
- * @param {String|Number} data a Timestamp or other form of Date 
+ * @param {String|Number} data a Timestamp or other form of Date
+ * @return {String} String in Format 'YYYY-MM-DD'
  */
 function useDate(data) {
     /**
