@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import useDate from './Helper';
 import AdminBlock from './AdminBlock';
 
 
@@ -253,7 +254,7 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event Start
                                     </span>
-                                    <input className='form-control' type='date' name='e_start' onChange={onInput} placeholder={Date(settings.e_start)} />
+                                    <input className='form-control' type='date' name='e_start' onChange={onInput} placeholder={useDate(settings.e_start)} />
                                 </div>
                             </div>
                             <div className='form-row'>
@@ -261,7 +262,7 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event End
                                     </span>
-                                    <input className='form-control' type='date' name='e_end' onChange={onInput} placeholder={Date(settings.e_end)} />
+                                    <input className='form-control' type='date' name='e_end' onChange={onInput} placeholder={useDate(settings.e_end)} />
                                 </div>
                             </div>
                             <div className='form-row'>

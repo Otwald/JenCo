@@ -22,8 +22,8 @@ const roundComponent = props => {
     })
     const [edit_options_time_block, setEdit_Options_time_block] = useState([]);
     const [options_time_block, setOptions_time_block] = useState([]);
-    const [in_round, setIn_round] = useState([]);
-    const [tableOptions, setTableOptions] = useState([]);
+    // const [in_round, setIn_round] = useState([]);
+    const [tableOptions, setTableOptions] = useState({});
     const [blockTab, setBlockTab] = useState(null);
     const [extendR, setExtendR] = useState('');
     const [addBlock, setAddBlock] = useState(false);
@@ -38,7 +38,7 @@ const roundComponent = props => {
             setGm({});
             setPlayer({});
             setBooked_tb({});
-            setTableOptions({});
+            setOptions_time_block({});
         })
     }, [props.time_block, props.rounds_box, props.in_round])
 
@@ -238,7 +238,6 @@ const roundComponent = props => {
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k._id, time)} >Austreten</button>
                                 </div>
                             } else {
-                                console.log(booked_tb);
                                 if (booked_tb[k.round_tb] == false) {
                                     if (k.round_curr_pl < k.round_max_pl) {
                                         out = <div className='row'>
@@ -381,6 +380,7 @@ const roundComponent = props => {
 
         }
     }
+    console.log(tableOptions)
     return (
         <React.Fragment>
             {tb}

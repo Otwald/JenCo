@@ -19,7 +19,6 @@ const roundCreate = props => {
 
     useEffect(() => {
         if (props.round_create) {
-            console.log(props.round_create);
             setName(props.round_create.round_name);
             setSetting(props.round_create.setting);
             setRuleset(props.round_create.ruleset);
@@ -110,40 +109,42 @@ const roundCreate = props => {
                         })}
                     </div>
                 </div>
-                <div className='form-group col-sm-3'>
-                    <label >Tisch Nummer</label>
-                    <button
-                        className='btn btn-outline-secondary dropdown-toggle'
-                        data-toggle="dropdown"
-                        onClick={() => setDp_table((prev) => {
-                            if (prev.length > 0) {
-                                return ''
-                            }
-                            return ' show'
-                        })}
-                        type='button'
-                    >{tableH}</button>
-                    <div className={'dropdown-menu' + dp_table}>
-                        {props.tableOptions.map((v) => {
-                            return <a
-                                className='dropdown-item'
-                                href='#'
-                                onClick={() => {
-                                    setDp_table('');
-                                    setTable(v.value)
-                                    setTableH(v.text)
-                                }}
-                                key={v.value}>{v.text}</a>
-                        })}
+                {props.tableOptions.length > 0 ?
+                    <div className='form-group col-sm-3'>
+                        <label >Tisch Nummer</label>
+                        <button
+                            className='btn btn-outline-secondary dropdown-toggle'
+                            data-toggle="dropdown"
+                            onClick={() => setDp_table((prev) => {
+                                if (prev.length > 0) {
+                                    return ''
+                                }
+                                return ' show'
+                            })}
+                            type='button'
+                        >{tableH}</button>
+                        <div className={'dropdown-menu' + dp_table}>
+                            {props.tableOptions.map((v) => {
+                                return <a
+                                    className='dropdown-item'
+                                    href='#'
+                                    onClick={() => {
+                                        setDp_table('');
+                                        setTable(v.value)
+                                        setTableH(v.text)
+                                    }}
+                                    key={v.value}>{v.text}</a>
+                            })}
+                        </div>
                     </div>
-                </div>
+                    : ''}
             </div>
             <div className='form-group row justify-content-center'>
                 <label className="col-sm-3 col-form-label">
                     Runden Name
                     </label>
                 <div className='col-sm-9'>
-                    <input required value={name} type='text' name='round_name' className='form-control' onChange={() => setName(event.target.value)} placeholder={props.round_create.round_name} />
+                    <input required value={name} minLength='2' maxLength='64' type='text' name='round_name' className='form-control' onChange={() => setName(event.target.value)} placeholder={props.round_create.round_name} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -151,7 +152,7 @@ const roundCreate = props => {
                     Setting
                 </label>
                 <div className='col-sm-9'>
-                    <input required value={setting} type='text' name='setting' className='form-control' onChange={() => setSetting(event.target.value)} placeholder={props.round_create.setting} />
+                    <input required value={setting} minLength='2' maxLength='64' type='text' name='setting' className='form-control' onChange={() => setSetting(event.target.value)} placeholder={props.round_create.setting} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -159,7 +160,7 @@ const roundCreate = props => {
                     Regelwerk
                     </label>
                 <div className='col-sm-9'>
-                    <input required value={ruleset} type='text' name='ruleset' className='form-control' onChange={() => setRuleset(event.target.value)} placeholder={props.round_create.ruleset} />
+                    <input required value={ruleset} minLength='2' maxLength='64' type='text' name='ruleset' className='form-control' onChange={() => setRuleset(event.target.value)} placeholder={props.round_create.ruleset} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -167,7 +168,7 @@ const roundCreate = props => {
                     Spielerplätze Maximal
                 </label>
                 <div className='col-sm-9'>
-                    <input required value={max_pl} type='number' name='round_max_pl' className='form-control' onChange={() => setMax_pl(Number(event.target.value))} placeholder={props.round_create.round_max_pl} />
+                    <input required value={max_pl} min='2' max='10' type='number' name='round_max_pl' className='form-control' onChange={() => setMax_pl(Number(event.target.value))} placeholder={props.round_create.round_max_pl} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -175,7 +176,7 @@ const roundCreate = props => {
                     Maximal Online Anmeldungsplätze
                 </label>
                 <div className='col-sm-9'>
-                    <input required value={max_online_pl} type='number' name='round_max_online_pl' className='form-control' onChange={() => setMax_online_pl(Number(event.target.value))} placeholder={props.round_create.round_max_online_pl} />
+                    <input required value={max_online_pl} min='0' max={max_pl} type='number' name='round_max_online_pl' className='form-control' onChange={() => setMax_online_pl(Number(event.target.value))} placeholder={props.round_create.round_max_online_pl} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
@@ -199,7 +200,7 @@ const roundCreate = props => {
                     Rundenbeschreibung
                 </label>
                 <div className='col-sm-9'>
-                    <textarea required value={desc} type='number' name='round_desc' className='form-control' onChange={() => setDesc(event.target.value)} placeholder={props.round_create.round_desc} />
+                    <textarea required value={desc} minLength='2' maxLength='500' type='number' name='round_desc' className='form-control' onChange={() => setDesc(event.target.value)} placeholder={props.round_create.round_desc} />
                 </div>
             </div>
             <div className='form-group row justify-content-center'>

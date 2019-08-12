@@ -1,33 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 
+import useDate from './Helper';
+
 const account = props => {
 
-    const [account, setAccount] = useState({
-        profil: "",
-        first: "",
-        last: "",
-        age: null,
-    });
+    const [profil, setProfil] = useState('');
+    const [first, setFirst] = useState('');
+    const [last, setLast] = useState('');
+    const [age, setAge] = useState();
     const [edit, setEdit] = useState(false);
 
     useEffect(() => {
         if (props.user) {
-            setAccount({
-                profil: props.user.profil,
-                first: props.user.first,
-                last: props.user.last,
-                age: props.user.age,
-            });
+            setProfil(props.user.profil);
+            setFirst(props.user.first);
+            setLast(props.user.last);
+            setAge(props.user.age)
         }
     }, [props.user])
-
-    onInput = (e) => {
-        let temp = account
-        let value = e.target.value
-        temp[e.target.name] = value
-        setAccount(temp)
-    }
 
     timeCount = (min, max) => {
         let out = [];
@@ -40,7 +31,12 @@ const account = props => {
     }
 
     onSave = () => {
-        const data = account
+        const data = {
+            profil: profil,
+            first: first,
+            last: last,
+            age: age,
+        }
         let check = true;
         if (data.profil.length === 0) {
             check = false;
@@ -71,30 +67,27 @@ const account = props => {
             <div className="row">
                 <div className="col-sm-12">
                     {edit ?
-                        <form>
+                        <form className='was-validated'>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
                                     <label>Profil Name</label>
-                                    <input type='text' className='form-control' name='profil' onChange={this.onInput} placeholder={account.profil} id='profil' />
+                                    <input required minLength='2' maxLength='32' type='text' className='form-control' name='profil' onChange={() => setProfil(event.target.value)} placeholder={profil} id='profil' value={profil} />
                                 </div>
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
                                     <label >Vorname</label>
-                                    <input type='text' className='form-control' name='first' onChange={this.onInput} placeholder={account.first} id='first' />
-
+                                    <input required minLength='2' maxLength='32' type='text' className='form-control' name='first' onChange={() => setFirst(event.target.value)} placeholder={first} id='first' value={first} />
                                 </div>
                                 <div className='form-group col-sm-3'>
                                     <label >Nachname</label>
-
-
-                                    <input type='text' className='form-control' name='last' onChange={this.onInput} placeholder={account.last} id='last' />
+                                    <input required minLength='2' maxLength='32' type='text' className='form-control' name='last' onChange={() => setLast(event.target.value)} placeholder={last} id='last' value={last} />
                                 </div>
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
                                     <label >Alter</label>
-                                    <input type='date' name='age' className='form-control' id='age' onChange={onInput} />
+                                    <input required type='date' name='age' className='form-control' id='age' onChange={() => setAge(event.target.value)} value={useDate(age)} />
                                 </div>
 
                             </div>
@@ -112,13 +105,13 @@ const account = props => {
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className='card-title'>Profil Name</h5>
-                                    <p className='text-muted'>{account.profil}</p>
+                                    <p className='text-muted'>{profil}</p>
                                     <h5 className='card-title'>Vorname</h5>
-                                    <p className='text-muted'>{account.first}</p>
+                                    <p className='text-muted'>{first}</p>
                                     <h5 className='card-title'>Nachname</h5>
-                                    <p className='text-muted'>{account.last} </p>
+                                    <p className='text-muted'>{last} </p>
                                     <h5 className='card-title'>Alter</h5>
-                                    <p className='text-muted'>{new Date(account.age).toDateString()}</p>
+                                    <p className='text-muted'>{new Date(age).toDateString()}</p>
                                     <h5 className='card-title'>{bill}</h5>
                                     <button className='btn btn-outline-dark' onClick={() => setEdit(true)} >Edit</button>
                                 </div>
