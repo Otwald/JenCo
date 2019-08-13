@@ -31,6 +31,7 @@ const account = props => {
     }
 
     onSave = () => {
+        event.preventDefault()
         const data = {
             profil: profil,
             first: first,
@@ -93,7 +94,7 @@ const account = props => {
                             </div>
                             <div className='form-row justify-content-center'>
                                 <div className='form-group col-sm-3'>
-                                    <button className='btn btn-outline-dark' onClick={() => setEdit(false)} >Cancel</button>
+                                    <button className='btn btn-outline-dark' onClick={() => { setEdit(false); event.preventDefault() }} >Cancel</button>
                                 </div>
                                 <div className='form-group col-sm-3'>
                                     <button className='btn btn-outline-dark' onClick={onSave} >Save</button>

@@ -8,13 +8,11 @@ const admin = props => {
     // capache abfragen für anmeldung
 
     // mail mit konto info beim account erstellen,
-    const [settings, setSettings] = useState({
-        e_end: null,
-        e_loc: null,
-        e_start: null,
-        t_price: 0,
-        e_price: 0
-    });
+    const [e_start, setStart] = useState('');
+    const [e_end, setEnd] = useState('');
+    const [e_loc, setLoc] = useState('');
+    const [t_price, setTicketPrice] = useState(0);
+    const [e_price, setEventPrice] = useState(0);
     const [activeUser, setActiveUser] = useState(null);
     const [eventTab, setEventTab] = useState(false);
     const [userTab, setUserTab] = useState(false);
@@ -27,7 +25,11 @@ const admin = props => {
 
     useEffect(() => {
         if (props.event) {
-            setSettings(props.event)
+            setStart(props.event.e_start);
+            setEnd(props.event.e_end);
+            setLoc(props.event.e_loc);
+            setTicketPrice(props.event.t_price);
+            setEventPrice(props.event.e_price);
         }
         if (props.users) {
             let money = 0
@@ -39,24 +41,24 @@ const admin = props => {
             })
         }
         return (() => {
-            setSettings()
+            setStart('');
+            setEnd('');
+            setLoc('');
+            setTicketPrice(0);
+            setEventPrice(0);
         })
     }, [props.event, props.users])
-    // useEffect(() => {
-    //     return (() => {
-    //         setActivTab(activeTab)
-    //     })
-    // }, [activeTab])
-
-    // for state update with event infos
-    onInput = (e) => {
-        let temp = settings
-        temp[e.target.name] = e.target.value
-        setSettings(temp)
-    }
 
     //saves state.setting to mongo
     onSave = () => {
+        event.preventDefault()
+        let settings = {
+            e_end: e_end,
+            e_loc: e_loc,
+            e_start: e_start,
+            t_price: t_price,
+            e_price: e_price
+        };
         if (props.event) {
             Meteor.call('EventUpdate', settings)
         } else {
@@ -248,13 +250,13 @@ const admin = props => {
                 <div className='col-sm-3' onClick={() => setEventTab(!eventTab)}>Eventdaten</div>
                 {eventTab ? <div className='col-sm-9'>
                     {eventEdit ?
-                        <form>
+                        <form className='was-validated'>
                             <div className='form-row'>
                                 <div className='input-group mb-3'>
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event Start
                                     </span>
-                                    <input className='form-control' type='date' name='e_start' onChange={onInput} placeholder={useDate(settings.e_start)} />
+                                    <input required className='form-control' type='date' name='e_start' onChange={() => setStart(event.target.value)} value={useDate(e_start)} />
                                 </div>
                             </div>
                             <div className='form-row'>
@@ -262,7 +264,7 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event End
                                     </span>
-                                    <input className='form-control' type='date' name='e_end' onChange={onInput} placeholder={useDate(settings.e_end)} />
+                                    <input required className='form-control' type='date' name='e_end' onChange={() => setEnd(event.target.value)} value={useDate(e_end)} />
                                 </div>
                             </div>
                             <div className='form-row'>
@@ -270,7 +272,7 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event Location
                                     </span>
-                                    <input className='form-control' type='text' name='e_loc' onChange={onInput} placeholder={settings.e_loc} />
+                                    <input required className='form-control' type='text' name='e_loc' onChange={() => setLoc(event.target.value)} value={e_loc} />
                                 </div>
                             </div>
                             <div className='form-row'>
@@ -278,7 +280,7 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Teilnahme Preis
                                     </span>
-                                    <input className='form-control' type='number' name='t_price' onChange={onInput} placeholder={settings.t_price} />
+                                    <input required min='0' className='form-control' type='number' name='t_price' onChange={() => setTicketPrice(event.target.value)} value={t_price} />
                                 </div>
                             </div>
                             <div className='form-row'>
@@ -286,11 +288,11 @@ const admin = props => {
                                     <span className='input-group-prepend input-group-text col-sm-3'>
                                         Event Kosten
                                     </span>
-                                    <input className='form-control' type='number' name='e_price' onChange={onInput} placeholder={settings.e_price} />
+                                    <input required min='0' className='form-control' type='number' name='e_price' onChange={() => setEventPrice(event.target.value)} value={e_price} />
                                 </div>
                             </div>
                             <div className='row justify-content-center'>
-                                <button className='btn btn-outline-dark col-sm-4' onClick={() => setEventEdit(false)} >Abbrechen</button>
+                                <button className='btn btn-outline-dark col-sm-4' onClick={() => { setEventEdit(false); event.preventDefault() }} >Abbrechen</button>
                                 <button className='btn btn-outline-dark col-sm-4' onClick={onSave} >Speichern</button>
                             </div>
                         </form> :
@@ -298,27 +300,27 @@ const admin = props => {
                         <div className='text-left'>
                             <div className='row'>
                                 <label className='col-sm-4'>Event Start</label>
-                                <div className='col-sm-8 text-muted'>{settings.e_start}</div>
+                                <div className='col-sm-8 text-muted'>{e_start}</div>
                             </div>
                             <div className='row'>
                                 <label className='col-sm-4'>Event End</label>
-                                <div className='text-muted col-sm-8'>{settings.e_end}</div>
+                                <div className='text-muted col-sm-8'>{e_end}</div>
                             </div>
                             <div className='row'>
                                 <label className='col-sm-4'>Event Location</label>
-                                <div className='text-muted col-sm-8'>{settings.e_loc}</div>
+                                <div className='text-muted col-sm-8'>{e_loc}</div>
                             </div>
                             <div className='row'>
                                 <label className='col-sm-4'>Teilnahme Preis</label>
-                                <div className='text-muted col-sm-8'>{settings.t_price}</div>
+                                <div className='text-muted col-sm-8'>{t_price}</div>
                             </div>
                             <div className='row'>
                                 <label className='col-sm-4'>Event Kosten</label>
-                                <div className='text-muted col-sm-8'>{settings.e_price} </div>
+                                <div className='text-muted col-sm-8'>{e_price} </div>
                             </div>
                             <div className='row'>
                                 <label className='col-sm-4'>Event Rechnung</label>
-                                <div className='text-muted col-sm-8'>{eventPay / settings.e_price * 100}% bezahlt</div>
+                                <div className='text-muted col-sm-8'>{eventPay / e_price * 100}% bezahlt</div>
                             </div>
                             <div className='row justify-content-center'>
                                 <button className='btn btn-outline-dark col-sm-5' onClick={() => setEventEdit(true)}>Edit</button>
@@ -333,7 +335,7 @@ const admin = props => {
                 {/* Reminder beim Intialiseren ein Default Datum oder Exception abgreifen */}
                 <div className='col-sm-3' onClick={() => setTbTab(!tbTab)}> ZeitBlock Einstellungen</div>
                 {tbTab ?
-                    <AdminBlock event={settings} timeblock={props.timeblock} />
+                    <AdminBlock event={props.event} timeblock={props.timeblock} />
                     : ''}
             </div>
         </React.Fragment >

@@ -18,7 +18,7 @@ const adminblockform = props => {
     const [clock_end, setClock_end] = useState('00:00');
     const [clock_start, setClock_start] = useState('00:00');
     const [name, setName] = useState('');
-    const [table_number, setTable_number] = useState('');
+    const [table_number, setTable_number] = useState(0);
     const [pnp, setPnp] = useState(false);
 
 
@@ -51,6 +51,7 @@ const adminblockform = props => {
             block_pnp: pnp,
             block_max_table: Number(table_number)
         }
+        event.preventDefault()
         if (temp.block_name.length < 1) {
             return
         }
@@ -62,10 +63,10 @@ const adminblockform = props => {
         if (temp.block_start > temp.block_end) {
             return
         }
-        if(props.block){
+        if (props.block) {
             temp._id = props.block._id
             Meteor.call('BlockUpdate', temp)
-        }else{
+        } else {
             Meteor.call('BlockCreate', temp)
         }
         props.onCancelButton();
@@ -106,11 +107,14 @@ const adminblockform = props => {
     }
     return (
         <div className='row justify-content-center'>
-            <form className='col-sm-7'>
+            <form className='col-sm-7 was-validated'>
                 <div className='form-row'>
                     <div className='input-group mb-3'>
                         <span className='input-group-prepend input-group-text col-sm-3'>Name</span>
                         <input
+                            required
+                            minLength='2'
+                            maxLength='32'
                             className='form-control'
                             type='text'
                             name='block_name'
@@ -153,6 +157,7 @@ const adminblockform = props => {
                             })}
                         </div>
                         <input
+                            required
                             className='form-control'
                             type='time'
                             name='start'
@@ -200,6 +205,8 @@ const adminblockform = props => {
                     <div className='input-group mb3'>
                         <span className='input-group-prepend input-group-text col-sm-3'>Tisch Anzahl</span>
                         <input
+                            required
+                            min='0'
                             className='form-control'
                             type='number'
                             name='block_max_table'

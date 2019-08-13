@@ -105,6 +105,7 @@ const roundComponent = props => {
      * resets States to cancel the input of a new round
      */
     onCancel = () => {
+        event.preventDefault()
         setRoundCreate({
             _id: null,
             round_tb: '',
@@ -380,7 +381,6 @@ const roundComponent = props => {
 
         }
     }
-    console.log(tableOptions)
     return (
         <React.Fragment>
             {tb}

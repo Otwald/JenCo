@@ -69,6 +69,7 @@ const adminBlock = props => {
      * resets the states to hide AdminBlockForm
      */
     onCancelButton = () => {
+        event.preventDefault()
         setEdit('');
     }
 

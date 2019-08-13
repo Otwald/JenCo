@@ -57,6 +57,7 @@ const roundCreate = props => {
             round_tb: tb,
             round_table: Number(table)
         }
+        event.preventDefault()
         let check = true;
         if (data.round_name.length === 0) {
             check = false;
