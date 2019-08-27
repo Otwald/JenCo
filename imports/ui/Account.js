@@ -13,10 +13,7 @@ const account = props => {
 
     useEffect(() => {
         if (props.user) {
-            setProfil(props.user.profil);
-            setFirst(props.user.first);
-            setLast(props.user.last);
-            setAge(props.user.age)
+            updateParams();
         }
     }, [props.user])
 
@@ -28,6 +25,19 @@ const account = props => {
             max--
         }
         return out
+    }
+
+    /**
+     * sets the States to the Database Values, for the Edit part
+     * @param {Object} props.user. already loaded user Props
+     */
+    function updateParams() {
+        if (props.user) {
+            setProfil(props.user.profil);
+            setFirst(props.user.first);
+            setLast(props.user.last);
+            setAge(props.user.age)
+        }
     }
 
     onSave = () => {
@@ -106,15 +116,15 @@ const account = props => {
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className='card-title'>Profil Name</h5>
-                                    <p className='text-muted'>{profil}</p>
+                                    <p className='text-muted'>{props.user.profil}</p>
                                     <h5 className='card-title'>Vorname</h5>
-                                    <p className='text-muted'>{first}</p>
+                                    <p className='text-muted'>{props.user.first}</p>
                                     <h5 className='card-title'>Nachname</h5>
-                                    <p className='text-muted'>{last} </p>
+                                    <p className='text-muted'>{props.user.last} </p>
                                     <h5 className='card-title'>Alter</h5>
-                                    <p className='text-muted'>{new Date(age).toDateString()}</p>
+                                    <p className='text-muted'>{new Date(props.user.age).toDateString()}</p>
                                     <h5 className='card-title'>{bill}</h5>
-                                    <button className='btn btn-outline-dark' onClick={() => setEdit(true)} >Edit</button>
+                                    <button className='btn btn-outline-dark' onClick={() => { setEdit(true); updateParams() }} >Edit</button>
                                 </div>
                             </div>
                         </div>
