@@ -6,7 +6,59 @@ body {
   font-family: sans-serif;
 }
 
+.bg{
+  background-image: url("/images/bgi.jpg");
+  // background-color: aquamarine;
+  /* Full height */
+  height: auto;
+  width:  auto;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container{
+  background-color: #e1e1e1;
+  height: 100vh;
+  background-size: contain;
+  padding: 8px;
+  border: 1px;
+
+//   background-color: #333;
+// height: 100vh;
+// background-size: contain;
+// padding: 0.2em;
+// border: 0.1em solide #ddd;
+// color: #FFF
+}
 
 .card{
   width: 18rem;
 }
+
+.button {
+  background-color: #555555; /* Black*/
+  border: 1px solid #DDD;
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  color: white;
+  padding: 0.2em 0.3em 0em 0.3em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.3em;
+  margin: 0.1em 0.2em;
+  cursor: pointer;
+}
+.button:hover{
+  color: #000000;
+}
+
+.nav-link{
+  background-color: #e1e1e1;
+  padding: 0.2em 0.3em 0em 0.3em;
+}
+// .nav-link.active{
+//   background-color: #e1e1e1;
+// }
