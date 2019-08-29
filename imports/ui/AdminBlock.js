@@ -88,15 +88,18 @@ const adminBlock = props => {
             return (
                 <React.Fragment key={k._id}>
                     {edit == k._id ?
-                        <li className='row list-group-item'>
-                            <Adminblockform
-                                event={props.event}
-                                block={k}
-                                getStringDate={getStringDate}
-                                getStringClock={getStringClock}
-                                onCancelButton={onCancelButton}
-                            />
-                        </li>
+                        (props.event ?
+                            <li className='row list-group-item'>
+                                <Adminblockform
+                                    event={props.event}
+                                    block={k}
+                                    getStringDate={getStringDate}
+                                    getStringClock={getStringClock}
+                                    onCancelButton={onCancelButton}
+                                />
+                            </li>
+                            : 'Keine Event Information vorhanden'
+                        )
                         :
                         <React.Fragment>
                             <li className={'row list-group-item' + (k._id == activeBlock ? ' active' : '')} key={k._id} onClick={() => this.timeblockClick(k)}>
@@ -132,9 +135,12 @@ const adminBlock = props => {
                     onCancelButton={onCancelButton}
                 />
                 :
-                <div className='row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setEdit('new')} >Neuer Block</button>
-                </div>
+                (props.event ?
+                    <div className='row justify-content-center'>
+                        <button className='btn btn-outline-dark col-sm-4' onClick={() => setEdit('new')} >Neuer Block</button>
+                    </div>
+                    : 'Keine Event Information vorhanden'
+                )
             }
         </div>
     )

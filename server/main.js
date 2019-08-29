@@ -54,11 +54,11 @@ timeblock_update = (new_data = {}, old_data = {}) => {
 
 /**
  * small handler to check if this User is an Admin
+ * @param {String} userId a string that holds the ID
  * @return {Boolean} admin true or false
  */
-function handlerAdmin() {
-  let admin = Admin.findOne({ '_id': this.userId });
-  if (admin) {
+function handlerAdmin(userId) {
+  if (Admin.findOne({ '_id': userId })) {
     return true;
   }
   return false;
@@ -116,7 +116,7 @@ Meteor.methods({
         block_end: Number,
         block_max_table: Number
       })
-      if (handlerAdmin() == true) {
+      if (handlerAdmin(this.userId) == true) {
         timeblock.update({ _id: data._id },
           {
             $set: {
@@ -136,7 +136,7 @@ Meteor.methods({
   BlockDelete(id) {
     try {
       check(id, String);
-      if (handlerAdmin() == true) {
+      if (handlerAdmin(this.userId) == true) {
         timeblock.remove({ _id: id });
       }
     }
@@ -280,7 +280,7 @@ Meteor.methods({
     });
   },
   AccountDelete() {
-    if (handlerAdmin() == true) {
+    if (handlerAdmin(this.userId) == true) {
       users_account.remove({ _id: this.userId });
     }
   },
@@ -288,7 +288,7 @@ Meteor.methods({
     users_archive.insert(data);
   },
   SwitchBill(data) {
-    if (handlerAdmin() == true) {
+    if (handlerAdmin(this.userId) == true) {
       let user = users_account.findOne({ _id: data });
       users_account.update({ _id: data }, {
         $set: {
@@ -298,10 +298,12 @@ Meteor.methods({
     }
   },
   EventCreate(data) {
-    event_settings.insert(data);
+    if (handlerAdmin(this.userId) == true) {
+      event_settings.insert(data);
+    }
   },
   EventUpdate(data) {
-    if (handlerAdmin() == true) {
+    if (handlerAdmin(this.userId) == true) {
       event_settings.update({ _id: data._id }, data);
     }
   },
@@ -347,7 +349,7 @@ Meteor.methods({
   },
   AdminCheck() {
     try {
-      return handlerAdmin();
+      return handlerAdmin(this.userId);
     } catch (err) {
       console.log(err);
     }
