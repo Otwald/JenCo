@@ -12,9 +12,9 @@ export const Rounds = new Mongo.Collection('rounds', {
         if (gm) {
             round.round_gm = gm.profil;
         }
-        round.round_player_id.map((value)=>{
-            let player = users_account.findOne({_id: value});
-            if(player){
+        round.round_player_id.map((value) => {
+            let player = users_account.findOne({ _id: value });
+            if (player) {
                 round.round_player.push(player.profil);
             }
         })
@@ -23,10 +23,9 @@ export const Rounds = new Mongo.Collection('rounds', {
         return round;
     }
 });
+export const Admin = new Mongo.Collection('admin');
 
 if (Meteor.isServer) {
-    export const Admin = new Mongo.Collection('admin');
-    let all_admin = Admin.find().fetch()
     Meteor.publish('rounds', function () {
         return Rounds.find({});
     });
@@ -42,16 +41,22 @@ if (Meteor.isServer) {
         return users_account.find({ _id: this.userId });
     })
     Meteor.publish('user_account_admin', function (id) {
-        if (!this.userId) {
-            return this.ready()
+        let admin = Admin.findOne({ '_id': this.userId });
+        if (this.userId) {
+            if (admin) {
+                return users_account.find({});
+            }
         }
-        return users_account.find({});
+        return this.ready();
     })
     Meteor.publish('event_settings_admin', function (id) {
-        if (!this.userId) {
-            return this.ready();
+        let admin = Admin.findOne({ '_id': this.userId });
+        if (this.userId) {
+            if (admin) {
+                return event_settings.find({});
+            }
         }
-        return event_settings.find({});
+        return this.ready();
     })
     users_archive.deny({
         insert() { return true; },

@@ -3,7 +3,7 @@ import { check } from 'meteor/check';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
-import { event_settings, timeblock, Rounds, users_archive, users_account } from './../imports/api/mongo_export';
+import { event_settings, timeblock, Rounds, users_archive, users_account, Admin } from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
   console.log('Restart');
@@ -52,6 +52,18 @@ timeblock_update = (new_data = {}, old_data = {}) => {
   }
 }
 
+/**
+ * small handler to check if this User is an Admin
+ * @return {Boolean} admin true or false
+ */
+function handlerAdmin() {
+  let admin = Admin.findOne({ '_id': this.userId });
+  if (admin) {
+    return true;
+  }
+  return false;
+}
+
 //todo: log send emails
 // Server: Define a method that the client can call.
 Meteor.methods({
@@ -66,7 +78,7 @@ Meteor.methods({
     // waiting for the email sending to complete.
     this.unblock();
 
-    if (Email.send({ to, from, subject, text })) {
+    if (Email.send({ to: to, from: from, subject: subject, text: text })) {
       console.log('true')
     } else {
       console.log('false')
@@ -85,7 +97,9 @@ Meteor.methods({
       })
       data.block_table = [];
       data.block_table_id = [];
-      timeblock.insert(data);
+      if (handlerAdmin) {
+        timeblock.insert(data);
+      }
     }
     catch (er) {
       console.log(er);
@@ -102,17 +116,18 @@ Meteor.methods({
         block_end: Number,
         block_max_table: Number
       })
-      //todo admincheck
-      timeblock.update({ _id: data._id },
-        {
-          $set: {
-            block_name: data.block_name,
-            block_pnp: data.block_pnp,
-            block_start: data.block_start,
-            block_end: data.block_end,
-            block_max_table: data.block_max_table
-          }
-        })
+      if (handlerAdmin() == true) {
+        timeblock.update({ _id: data._id },
+          {
+            $set: {
+              block_name: data.block_name,
+              block_pnp: data.block_pnp,
+              block_start: data.block_start,
+              block_end: data.block_end,
+              block_max_table: data.block_max_table
+            }
+          })
+      }
     }
     catch (err) {
       console.log(err)
@@ -121,7 +136,9 @@ Meteor.methods({
   BlockDelete(id) {
     try {
       check(id, String);
-      timeblock.remove({ _id: id });
+      if (handlerAdmin() == true) {
+        timeblock.remove({ _id: id });
+      }
     }
     catch (err) {
       console.log(err);
@@ -263,24 +280,30 @@ Meteor.methods({
     });
   },
   AccountDelete() {
-    users_account.remove({ _id: this.userId });
+    if (handlerAdmin() == true) {
+      users_account.remove({ _id: this.userId });
+    }
   },
   UserArchiveCreate(data) {
     users_archive.insert(data);
   },
   SwitchBill(data) {
-    let user = users_account.findOne({ _id: data });
-    users_account.update({ _id: data }, {
-      $set: {
-        "bill": !user.bill
-      }
-    });
+    if (handlerAdmin() == true) {
+      let user = users_account.findOne({ _id: data });
+      users_account.update({ _id: data }, {
+        $set: {
+          "bill": !user.bill
+        }
+      });
+    }
   },
   EventCreate(data) {
     event_settings.insert(data);
   },
   EventUpdate(data) {
-    event_settings.update({ _id: data._id }, data);
+    if (handlerAdmin() == true) {
+      event_settings.update({ _id: data._id }, data);
+    }
   },
   Check() {
     let gm = {};
@@ -320,6 +343,13 @@ Meteor.methods({
     }
     catch (err) {
       return { gm: gm, player: player, timeoptions: timeoptions, booked: booked };
+    }
+  },
+  AdminCheck() {
+    try {
+      return handlerAdmin();
+    } catch (err) {
+      console.log(err);
     }
   }
 });

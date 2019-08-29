@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import AccountsUI from './AccountsUI'
 
 const sidebar = props => {
+
+    const [admin, setAdmin] = useState(false);
+
+    useEffect(() => {
+        Meteor.call('AdminCheck', (err, resp) => {
+            setAdmin(resp);
+        })
+    }, [])
+
     onClickButton = (data) => {
         props.onTabChange(data)
     }
 
 
     let login = ''
-    let admin = ''
+    let adminInterface = ''
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
             <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
                 <button className='button' onClick={() => this.onClickButton('account')}>Account</button>
             </div>
         </li>
-        admin = <li className="nav-item py-0">
-            <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
-                <button className='button' onClick={() => this.onClickButton('admin')}>Admin</button>
-            </div>
-        </li>
+        if (admin) {
+            adminInterface = <li className="nav-item py-0">
+                <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
+                    <button className='button' onClick={() => this.onClickButton('admin')}>Admin</button>
+                </div>
+            </li>
+        }
     }
 
     return (
@@ -38,7 +49,7 @@ const sidebar = props => {
                 </div>
             </li>
             {login}
-            {admin}
+            {adminInterface}
             <li className="nav-item py-0">
                 <AccountsUI />
             </li>
