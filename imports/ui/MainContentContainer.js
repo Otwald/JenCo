@@ -5,7 +5,6 @@ import Account from './Account';
 import RoundContainer from './RoundContainer';
 import AdminContainer from './AdminContainer';
 
-import 'semantic-ui-css/semantic.min.css'
 const mainContentContainer = props => {
     // state = { in_round: [], }
 
