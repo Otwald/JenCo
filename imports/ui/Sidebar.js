@@ -13,23 +13,18 @@ const sidebar = props => {
         })
     }, [])
 
-    onClickButton = (data) => {
-        props.onTabChange(data)
-    }
-
-
     let login = ''
     let adminInterface = ''
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
             <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
-                <button className='button' onClick={() => this.onClickButton('account')}>Account</button>
+                <button className='button' onClick={() => props.onTabChange('account')}>Account</button>
             </div>
         </li>
         if (admin) {
             adminInterface = <li className="nav-item py-0">
                 <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => this.onClickButton('admin')}>Admin</button>
+                    <button className='button' onClick={() => props.onTabChange('admin')}>Admin</button>
                 </div>
             </li>
         }
@@ -39,20 +34,33 @@ const sidebar = props => {
         <ul className="nav nav-fill nav-tabs justify-content-center">
             <li className="nav-item py-0">
                 <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => this.onClickButton('welcome')} >Willkommen</button>
+                    <button className='button' onClick={() => props.onTabChange('welcome')} >Willkommen</button>
 
                 </div>
             </li>
             <li className="nav-item py-0">
                 <div className={props.tab === 'round' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => this.onClickButton('round')} >Spielerunde</button>
+                    <button className='button' onClick={() => props.onTabChange('round')} >Spielerunde</button>
                 </div>
             </li>
             {login}
             {adminInterface}
-            <li className="nav-item py-0">
+            {/* <li className="nav-item py-0">
                 <AccountsUI />
-            </li>
+            </li> */}
+            {Meteor.userId() != null ?
+                <li className="nav-item py-0">
+                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"}>
+                        <button className='button' onClick={() => { Meteor.logout(); props.onTabChange('welcome') }} >Abmeldung</button>
+                    </div>
+                </li>
+                :
+                <li className="nav-item py-0">
+                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"}>
+                        <button className='button' onClick={() => props.onTabChange('login')} >Anmeldung</button>
+                    </div>
+                </li>
+            }
         </ul>
     )
 }

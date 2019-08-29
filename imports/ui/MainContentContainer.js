@@ -4,8 +4,8 @@ import Welcome from './Welcome';
 import Account from './Account';
 import RoundContainer from './RoundContainer';
 import AdminContainer from './AdminContainer';
+import AccountsLogin from './AccountsLogin';
 
-import 'semantic-ui-css/semantic.min.css'
 const mainContentContainer = props => {
     // state = { in_round: [], }
 
@@ -25,6 +25,7 @@ const mainContentContainer = props => {
             {props.tab === 'round' ? <RoundContainer user={props.user} in_round={in_round} onCallback={this.onCallback} /> : ''}
             {props.tab === 'account' ? <Account user={props.user} /> : ''}
             {props.tab === 'admin' ? <AdminContainer /> : ''}
+            {props.tab === 'login' ? <AccountsLogin  onTabChange={props.onTabChange} /> : ''}
         </React.Fragment>
     )
  
