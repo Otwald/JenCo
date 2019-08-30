@@ -58,6 +58,27 @@ if (Meteor.isServer) {
         }
         return this.ready();
     })
+    event_settings.deny({
+        insert() { return true; },
+        update() { return true; },
+        remove() { return true; },
+    })
+    Meteor.publish('event_settings', function (id) {
+        let admin = Admin.findOne({ '_id': this.userId });
+        if (this.userId) {
+            return event_settings.find({});
+
+        }
+        return this.ready();
+    })
+    Meteor.publish('event_settings_round', function () {
+        return event_settings.find({}, {
+            fields: {
+                tb: 1,
+                table: 1,
+            }
+        })
+    })
     users_archive.deny({
         insert() { return true; },
         update() { return true; },
@@ -68,19 +89,6 @@ if (Meteor.isServer) {
             return this.ready()
         }
         return users_archive.find({});
-    })
-    event_settings.deny({
-        insert() { return true; },
-        update() { return true; },
-        remove() { return true; },
-    })
-    Meteor.publish('event_settings_round', function () {
-        return event_settings.find({}, {
-            fields: {
-                tb: 1,
-                table: 1,
-            }
-        })
     })
     timeblock.deny({
         insert() { return true; },

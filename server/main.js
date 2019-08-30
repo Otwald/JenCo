@@ -63,12 +63,16 @@ function handlerAdmin(userId) {
   }
   return false;
 }
+if (Meteor.settings.private) {
+  process.env.MAIL_URL = Meteor.settings.private.MAIL_URL;
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = Meteor.settings.private.NODE_TLS_REJECT_UNAUTHORIZED;
+}
 
 //todo: log send emails
 // Server: Define a method that the client can call.
 Meteor.methods({
   sendEmail(to) {
-    const from = 'no-reply@test.de'
+    const from = 'papierkrieger-jena@web.de'
     const subject = 'Hello from Meteor!'
     const text = 'This is a test of Email.send.'
     // Make sure that all arguments are strings.
