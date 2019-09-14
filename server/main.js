@@ -181,7 +181,7 @@ Meteor.methods({
       round_table: Number
     })
     data.round_gm_id = this.userId;
-    users_account.findOne({ '_id': this.userId });
+    // users_account.findOne({ '_id': this.userId });
     data.round_player_id = [];
     data.round_curr_pl = 0;
     Rounds.insert(data);
@@ -279,17 +279,21 @@ Meteor.methods({
       console.log(err);
     }
   },
-  AccountCreate(data) {
-    check(data, {
-      profil: String,
-      first: String,
-      last: String,
-      age: Number
-    })
-    data._id = this.userId
-    data.bill = false;
-    users_account.insert(data);
-  },
+  // AccountCreate(data) {
+  //   check(data, {
+  //     profil: String,
+  //     first: String,
+  //     last: String,
+  //     age: Number
+  //   })
+  //   data._id = this.userId
+  //   data.bill = false;
+  //   users_account.insert(data);
+  // },
+  /**
+   * is called from end-user updates the collection with new profile values
+   * @param {JSON} data holds user editable profile Values
+   */
   AccountUpdate(data) {
     check(data, {
       profil: String,
@@ -297,19 +301,43 @@ Meteor.methods({
       last: String,
       age: Number
     })
-    users_account.update({ _id: this.userId }, {
+    Meteor.users.update({ _id: this.userId }, {
       $set: {
-        "first": data.first, "last": data.last, "profil": data.profil, "age": data.age
+        "profile.first": data.first, "profile.last": data.last, "profile.profil": data.profil, "profile.age": data.age
       }
     });
   },
   AccountDelete() {
     if (handlerAdmin(this.userId) == true) {
-      users_account.remove({ _id: this.userId });
+      Meteor.users.remove({ _id: this.userId });
     }
   },
-  UserArchiveCreate(data) {
-    users_archive.insert(data);
+  /**
+   * Called from Admin Tab, removes the User with the given ID
+   * @param {String} id 
+   */
+  AccountDeleteAdmin(id) {
+    try {
+      check(id, String)
+      if (handlerAdmin(this.userId) == true) {
+        Meteor.users.remove({ _id: id });
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  /**
+   * When the Admin Removes a User, the Old user File gets saved in the Archive
+   * @param {String} id 
+   */
+  UserArchiveCreate(id) {
+    try {
+      check(id , String)
+      let user = Meteor.users.findOne({'_id' : id});
+      users_archive.insert(user);
+    }catch(err){
+      console.log(err)
+    }
   },
   /**
    * changes in the users collection the profile.bill boolean
@@ -318,11 +346,9 @@ Meteor.methods({
   SwitchBill(data) {
     if (handlerAdmin(this.userId) == true) {
       let user = Meteor.users.findOne({ _id: data });
-      let temp = user.profile
-      temp.bill = !user.profile.bill
       Meteor.users.update({ _id: data }, {
         $set: {
-          "profile": temp
+          "profile.bill": !user.profile.bill
         }
       });
     }

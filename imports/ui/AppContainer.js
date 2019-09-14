@@ -9,11 +9,11 @@ import App from './App';
 
 export default AppContainer = withTracker(() => {
 
-    Meteor.subscribe('users_account', Meteor.userId());
+    // Meteor.subscribe('Meteor.users', Meteor.userId());
     Meteor.subscribe('event_settings', Meteor.userId());
     return {
         event: event_settings.findOne({}),
-        user: users_account.findOne({ _id: Meteor.userId() })
+        user: Meteor.users.findOne({})
     }
 })(App)
 

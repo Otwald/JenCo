@@ -12,6 +12,7 @@ const account = props => {
     const [edit, setEdit] = useState(false);
 
     useEffect(() => {
+        console.log(props.user)
         if (props.user) {
             updateParams();
         }
@@ -34,10 +35,10 @@ const account = props => {
      */
     function updateParams() {
         if (props.user) {
-            setProfil(props.user.profil);
-            setFirst(props.user.first);
-            setLast(props.user.last);
-            setAge(props.user.age)
+            setProfil(props.user.profile.profil);
+            setFirst(props.user.profile.first);
+            setLast(props.user.profile.last);
+            setAge(props.user.profile.age)
         }
     }
 
@@ -72,7 +73,7 @@ const account = props => {
 
     let bill = 'Noch kein Zahlungseingang'
     if (props.user) {
-        bill = props.user.bill ? 'Zahlungseingang ist bestätigt' : 'Noch kein Zahlungseingang'
+        bill = props.user.profile.bill ? 'Zahlungseingang ist bestätigt' : 'Noch kein Zahlungseingang'
     }
     return (
         <div className="text-center">
@@ -119,13 +120,13 @@ const account = props => {
                                     {props.user ?
                                         <React.Fragment>
                                             <h5 className='card-title'>Profil Name</h5>
-                                            <p className='text-muted'>{props.user.profil}</p>
+                                            <p className='text-muted'>{props.user.profile.profil}</p>
                                             <h5 className='card-title'>Vorname</h5>
-                                            <p className='text-muted'>{props.user.first}</p>
+                                            <p className='text-muted'>{props.user.profile.first}</p>
                                             <h5 className='card-title'>Nachname</h5>
-                                            <p className='text-muted'>{props.user.last} </p>
+                                            <p className='text-muted'>{props.user.profile.last} </p>
                                             <h5 className='card-title'>Alter</h5>
-                                            <p className='text-muted'>{new Date(props.user.age).toDateString()}</p>
+                                            <p className='text-muted'>{new Date(props.user.profile.age).toDateString()}</p>
                                             <h5 className='card-title'>{bill}</h5>
                                         </React.Fragment>
                                         : ''}

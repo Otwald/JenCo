@@ -54,7 +54,7 @@ const admin = props => {
     /**
      * calls MeteorServer to updatew the users List State
      */
-    function onSwitch(){
+    function onSwitch() {
         Meteor.call('getUsers', ((err, resp) => {
             if (!err) {
                 setUsers(resp);
@@ -94,11 +94,15 @@ const admin = props => {
     onClickUserSwith = data => {
     }
 
-    //archives and destroys user accounts(!loginaccount)
-    onClickUserDestroy = (data) => {
-        Meteor.call('UserArchiveCreate', data)
-        Meteor.call('AccountUpdate', data);
-        Meteor.call('AccountDelete', data._id);
+    /**
+     * Makes 2 Calls to the Server
+     * Removes the User and Archives it into the users_archive collection
+     * @param {JSON} data holds the local user data
+     */
+    function onClickUserDestroy(data) {
+        Meteor.call('UserArchiveCreate', data._id)
+        Meteor.call('AccountDeleteAdmin', data._id);
+        onSwitch();
     }
 
     onClickUserConfirm = (data) => {
@@ -209,7 +213,7 @@ const admin = props => {
                                         <div className='col-sm-8 text-muted'>{value.profile.email}</div>
                                     </div>
                                     <div className='row justify-content-center'>
-                                        <button className='btn btn-outline-dark col-sm-4' onClick={(e) => {Meteor.call('SwitchBill', value._id); onSwitch()}} >Wechsel Bezahlstatus</button>
+                                        <button className='btn btn-outline-dark col-sm-4' onClick={(e) => { Meteor.call('SwitchBill', value._id); onSwitch() }} >Wechsel Bezahlstatus</button>
                                         <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserConfirm(value)} >BestätigungsEmail</button>
                                     </div>
                                     <div className='row justify-content-center'>
@@ -217,7 +221,7 @@ const admin = props => {
                                         {deleteUser == value._id ?
                                             <React.Fragment>
                                                 <button className='btn btn-outline-dark col-sm-4' onClick={() => setDeleteUser('')}>Abbruch</button>
-                                                <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserDestroy(value)}>Wirklich Löschen?</button>
+                                                <button className='btn btn-outline-dark col-sm-4' onClick={(e) => onClickUserDestroy(value)}>Wirklich Löschen?</button>
                                             </React.Fragment>
                                             :
                                             ''}
