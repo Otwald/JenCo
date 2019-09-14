@@ -23,12 +23,16 @@ export default class App extends React.Component {
 
     render() {
         const { tab } = this.state
-        const { user } = this.props
+        const { user, event } = this.props
         return (
             <div className="container">
                 {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
                 <Sidebar onTabChange={this.onTabChange} tab={tab} />
+<<<<<<< HEAD
                 <MainContentContainer  onTabChange={this.onTabChange} tab={tab} user={user} />
+=======
+                <MainContentContainer tab={tab} user={user} event={event} />
+>>>>>>> master
             </div>
         )
     }
