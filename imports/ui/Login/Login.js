@@ -3,7 +3,7 @@ import { Accounts } from 'meteor/accounts-base'
 import { Meteor } from 'meteor/meteor';
 
 
-const accountslogin = props => {
+const login = props => {
 
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
@@ -17,11 +17,11 @@ const accountslogin = props => {
      * @param {String} password is stat that holds the user input password in clear 
      */
     function onLogin() {
-        Meteor.loginWithPassword(user, password, (err, resp) => {
+        Meteor.loginWithPassword(user, password, (err) => {
             if (!err) {
                 setFail(false);
                 props.onTabChange('account')
-            }else{
+            } else {
                 setFail(true);
             }
         })
@@ -45,11 +45,16 @@ const accountslogin = props => {
                             </div>
                             <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Einloggen</button>
                             {fail ?
-                                 <div>
-                                     Login ist Fehlgeschlagen
+                                <div>
+                                    Login ist Fehlgeschlagen
                                  </div>
-                                 : ''}
+                                : ''}
                         </form>
+                        <hr />
+                        <div className='text-muted'>
+                            Noch kein Account?<br />
+                            <div onClick={()=>props.handlerRegi(true)}>Zur Regestrierung</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,4 +62,4 @@ const accountslogin = props => {
     )
 }
 
-export default accountslogin;
+export default login;
