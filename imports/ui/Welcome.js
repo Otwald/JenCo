@@ -10,11 +10,11 @@ const welcome = props => {
                 <br />
                 <b>Wann?</b> 12. bis 13. Oktober 2019, ab 12 Uhr am Samstag bis 14 Uhr am Sonntag<br />
                 <br />
-                <b>Wo?</b>{props.event.e_loc}<br />
+                <b>Wo?</b>Hugo Jena<br />
                 <br />
                 <b>Wie komme ich da hin?</b> https://www.jz-hugo.de/kontakt/<br />
                 <br />
-                <b>Was kostest der Spaß?</b> {props.event.t_price} Euro (Geld das nach der Bezahlung der Geländekosten übrig bleibt, verteilen wir unter den Spielleitern)<br />
+                <b>Was kostest der Spaß?</b> 10 Euro (Geld das nach der Bezahlung der Geländekosten übrig bleibt, verteilen wir unter den Spielleitern)<br />
                 <br />
                 <b>Wie viele Teilnehmer?</b> Maximal 35<br />
                 <br />
