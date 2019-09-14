@@ -47,10 +47,12 @@ const roundComponent = props => {
      */
     onCheck = () => {
         Meteor.call('Check', (err, res) => {
-            setGm(res.gm);
-            setPlayer(res.player);
-            setOptions_time_block(res.timeoptions)
-            setBooked_tb(res.booked);
+            if (!err) {
+                setGm(res.gm);
+                setPlayer(res.player);
+                setOptions_time_block(res.timeoptions)
+                setBooked_tb(res.booked);
+            }
         })
     }
 
@@ -227,7 +229,7 @@ const roundComponent = props => {
                 let out = '';
                 if (k.round_tb === time) {
                     if (Meteor.userId() && props.user) {
-                        if (props.user.bill) {
+                        if (props.user.profile.bill) {
                             if (gm[k._id] == true) {
                                 props.onCallback({ key: time, value: false });
                                 out = <div className='row'>

@@ -239,22 +239,30 @@ Meteor.methods({
       }
     }
   },
-  //Todo check if user realy has payed
+  /**
+   * checks if user has Payed, 
+   * then checks if Round exists
+   * finaly adding user to the Round and updateting Current Users in this Round
+   * @param {String} id holds the ID of the Round the User trys to Join
+   */
   RoundAddPlayer(id) {
     try {
       check(id, String);
-      let table = Rounds.findOne({ _id: id }, { transform: null });
-      if (table) {
-        let check_player = table.round_player_id.filter(id => id == this.userId);
-        if (check_player.length == 0) {
-          table.round_player_id.push(this.userId);
-          table.round_curr_pl++
-          Rounds.update({ _id: id }, {
-            $set: {
-              'round_player_id': table.round_player_id,
-              'round_curr_pl': table.round_curr_pl
-            }
-          })
+      let user = Meteor.users.findOne({ '_id': this.userId });
+      if (user.profile.bill === true) {
+        let table = Rounds.findOne({ _id: id }, { transform: null });
+        if (table) {
+          let check_player = table.round_player_id.filter(id => id == this.userId);
+          if (check_player.length == 0) {
+            table.round_player_id.push(this.userId);
+            table.round_curr_pl++
+            Rounds.update({ _id: id }, {
+              $set: {
+                'round_player_id': table.round_player_id,
+                'round_curr_pl': table.round_curr_pl
+              }
+            })
+          }
         }
       }
     }
@@ -333,10 +341,10 @@ Meteor.methods({
    */
   UserArchiveCreate(id) {
     try {
-      check(id , String)
-      let user = Meteor.users.findOne({'_id' : id});
+      check(id, String)
+      let user = Meteor.users.findOne({ '_id': id });
       users_archive.insert(user);
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
   },
