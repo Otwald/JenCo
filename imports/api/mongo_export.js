@@ -4,25 +4,7 @@ import { Meteor } from 'meteor/meteor';
 export const users_archive = new Mongo.Collection('users_archive');
 export const event_settings = new Mongo.Collection('event_settings');
 export const timeblock = new Mongo.Collection('timeblock');
-export const Rounds = new Mongo.Collection('rounds', {
-    transform: (round) => {
-        let gm = Meteor.users.findOne({ _id: round.round_gm_id });
-        console.log(gm)
-        round.round_player = [];
-        if (gm) {
-            round.round_gm = gm.profile.profil;
-        }
-        round.round_player_id.map((value) => {
-            let player = Meteor.users.findOne({ _id: value });
-            if (player) {
-                round.round_player.push(player.profile.profil);
-            }
-        })
-        delete round.round_player_id;
-        delete round.round_gm_id;
-        return round;
-    }
-});
+export const Rounds = new Mongo.Collection('rounds');
 export const Admin = new Mongo.Collection('admin');
 
 if (Meteor.isServer) {

@@ -22,7 +22,7 @@ const roundComponent = props => {
     })
     const [edit_options_time_block, setEdit_Options_time_block] = useState([]);
     const [options_time_block, setOptions_time_block] = useState([]);
-    // const [in_round, setIn_round] = useState([]);
+    const [rounds_box, setRounds_box] = useState([]);
     const [tableOptions, setTableOptions] = useState({});
     const [blockTab, setBlockTab] = useState(null);
     const [extendR, setExtendR] = useState('');
@@ -40,12 +40,17 @@ const roundComponent = props => {
             setBooked_tb({});
             setOptions_time_block({});
         })
-    }, [props.time_block, props.rounds_box, props.in_round])
+    }, [props.time_block, props.in_round])
 
     /**
      * calls Server to build arrays freom checks if user is gm in given round, if user still cann book something in a timeblock usw
      */
     onCheck = () => {
+        Meteor.call('GetRounds', ((err, resp) => {
+            if (!err) {
+                setRounds_box(resp);
+            }
+        }));
         Meteor.call('Check', (err, res) => {
             if (!err) {
                 setGm(res.gm);
@@ -222,7 +227,6 @@ const roundComponent = props => {
 
     //visualizes the rounds in a timeblock
     timeBlockCreate = (time) => {
-        const rounds_box = props.rounds_box
         let roundtemplate = ''
         if (rounds_box.length !== 0) {
             roundtemplate = rounds_box.map((k, v) => {
@@ -383,7 +387,7 @@ const roundComponent = props => {
 
         }
     }
-    console.log(props.rounds_box);
+    // console.log(props.rounds_box);
     return (
         <React.Fragment>
             {tb}

@@ -3,7 +3,7 @@ import { check } from 'meteor/check';
 import { Email } from 'meteor/email';
 
 import './../imports/api/mongo_export';
-import { event_settings, timeblock, Rounds, users_archive, users_account, Admin } from './../imports/api/mongo_export';
+import { event_settings, timeblock, Rounds, users_archive, Admin } from './../imports/api/mongo_export';
 
 Meteor.startup(() => {
   console.log('Restart');
@@ -422,6 +422,43 @@ Meteor.methods({
       return handlerAdmin(this.userId);
     } catch (err) {
       console.log(err);
+    }
+  },
+  Test(data) {
+    try {
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  /**
+   * pulls all rounds form the Collection and Transforms the Result
+   * to hand it over to the Client,
+   * since it needs Server Level Access to gather user profile datas
+   */
+  GetRounds() {
+    try {
+      let rounds = Rounds.find({});
+      let out = [];
+      rounds.map((round) => {
+        let gm = Meteor.users.findOne({ _id: round.round_gm_id });
+        round.round_player = [];
+        if (gm) {
+            round.round_gm = gm.profile.profil;
+        }
+        round.round_player_id.map((value) => {
+            let player = Meteor.users.findOne({ _id: value });
+            if (player) {
+                round.round_player.push(player.profile.profil);
+            }
+        })
+        delete round.round_player_id;
+        delete round.round_gm_id;
+        out.push(round);
+      })
+      return out;
+    }
+    catch (err) {
+      console.log(err)
     }
   }
 });
