@@ -71,6 +71,26 @@ if (Meteor.settings.private) {
 //todo: log send emails
 // Server: Define a method that the client can call.
 Meteor.methods({
+  /**
+   * fetches a cursoer of all users, and builds an array
+   * @return {Array}({'_id' : String , 'profile': {'profil' : String, 'first' : String, 'last' : String, 'age' : Number, 'email':String}}, {...} )
+   */
+  getUsers() {
+    try {
+      let out = []
+      if (handlerAdmin(this.userId) == true) {
+        const cursor = Meteor.users.find({});
+        cursor.forEach(element => {
+          element.profile.email = element.emails[0].address
+          out.push({ "_id": element._id, "profile": element.profile })
+        });
+      }
+      return out;
+    }
+    catch (err) {
+      console.log(err);
+    }
+  },
   sendEmail(to) {
     const from = 'papierkrieger-jena@web.de'
     const subject = 'Hello from Meteor!'
@@ -291,12 +311,18 @@ Meteor.methods({
   UserArchiveCreate(data) {
     users_archive.insert(data);
   },
+  /**
+   * changes in the users collection the profile.bill boolean
+   * @param {String} data holds a user id
+   */
   SwitchBill(data) {
     if (handlerAdmin(this.userId) == true) {
-      let user = users_account.findOne({ _id: data });
-      users_account.update({ _id: data }, {
+      let user = Meteor.users.findOne({ _id: data });
+      let temp = user.profile
+      temp.bill = !user.profile.bill
+      Meteor.users.update({ _id: data }, {
         $set: {
-          "bill": !user.bill
+          "profile": temp
         }
       });
     }

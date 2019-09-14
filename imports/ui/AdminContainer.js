@@ -13,8 +13,8 @@ export default AdminContainer = withTracker(() => {
     Meteor.subscribe('users_archive', Meteor.userId());
     Meteor.subscribe('timeblock');
     return {
-        users : users_account.find().fetch(),
-        event : event_settings.findOne(),
+        users: users_account.find().fetch(),
+        event: event_settings.findOne(),
         timeblock: timeblock.find().fetch(),
     }
 })(Admin);

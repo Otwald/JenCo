@@ -17,15 +17,16 @@ const account = props => {
         }
     }, [props.user])
 
-    timeCount = (min, max) => {
-        let out = [];
-        while (max >= min) {
-            let item = { key: max, text: max, value: max }
-            out.push(item)
-            max--
-        }
-        return out
-    }
+    // maybe useless
+    // timeCount = (min, max) => {
+    //     let out = [];
+    //     while (max >= min) {
+    //         let item = { key: max, text: max, value: max }
+    //         out.push(item)
+    //         max--
+    //     }
+    //     return out
+    // }
 
     /**
      * sets the States to the Database Values, for the Edit part
@@ -117,7 +118,6 @@ const account = props => {
                                 <div className="card-body">
                                     {props.user ?
                                         <React.Fragment>
-
                                             <h5 className='card-title'>Profil Name</h5>
                                             <p className='text-muted'>{props.user.profil}</p>
                                             <h5 className='card-title'>Vorname</h5>

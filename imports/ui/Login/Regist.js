@@ -23,15 +23,27 @@ const regist = props => {
     function onRegi() {
 
         if (confirmpassword === password) {
-            Accounts.createUser({ email: user, password: password }, (err) => {
-                if (!err) {
-                    setFail(false);
-                    props.onTabChange('account')
-                } else {
-                    setFail(true);
-                    setError('Nutzer schon vorhanden')
-                }
-            })
+            Accounts.createUser(
+                {
+                    email: user,
+                    password: password,
+                    profile: {
+                        profil: '',
+                        first: '',
+                        last: '',
+                        age: 0,
+                        bill: false
+                    }
+                },
+                (err) => {
+                    if (!err) {
+                        setFail(false);
+                        props.onTabChange('account')
+                    } else {
+                        setFail(true);
+                        setError('Nutzer schon vorhanden')
+                    }
+                })
         } else {
             setFail(true);
             setError('Passwörter sind nicht identisch')

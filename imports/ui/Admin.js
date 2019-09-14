@@ -9,6 +9,7 @@ const admin = props => {
 
     // mail mit konto info beim account erstellen,
     const [e_start, setStart] = useState('');
+    const [users, setUsers] = useState([]);
     const [e_end, setEnd] = useState('');
     const [e_loc, setLoc] = useState('');
     const [t_price, setTicketPrice] = useState(0);
@@ -24,6 +25,7 @@ const admin = props => {
     const [deleteUser, setDeleteUser] = useState('');
 
     useEffect(() => {
+        onSwitch();
         if (props.event) {
             setStart(props.event.e_start);
             setEnd(props.event.e_end);
@@ -48,6 +50,17 @@ const admin = props => {
             setEventPrice(0);
         })
     }, [props.event, props.users])
+
+    /**
+     * calls MeteorServer to updatew the users List State
+     */
+    function onSwitch(){
+        Meteor.call('getUsers', ((err, resp) => {
+            if (!err) {
+                setUsers(resp);
+            }
+        }))
+    }
 
     //saves state.setting to mongo
     onSave = () => {
@@ -140,7 +153,7 @@ const admin = props => {
     let userMan = '';
     if (props.users.length > 0) {
         props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
-        user_block = props.users.map((key, value) => {
+        user_block = users.map((key, value) => {
             let age = calcAge(key.age)
             if (agefilter === true) {
                 if (age > 16) {
@@ -158,63 +171,64 @@ const admin = props => {
                     setDeleteUser('')
                 }} key={'Table' + value}>
                     <th scope='row'>{value + 1}</th>
-                    <th>{key.last}</th>
-                    <th>{this.outPay(key.bill)}</th>
+                    <th>{key.profile.last}</th>
+                    <th>{this.outPay(key.profile.bill)}</th>
                     <th>{age}</th>
                 </tr>
             )
         })
-        userMan = props.users.map((value, index) => {
-            return (
-
-                <React.Fragment key={'User' + index}>
-                    {value._id == activeUser ?
-                        <div className="card col-sm-8">
-                            <div className='card-body'>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>Profil Name</strong></label>
-                                    <div className='col-sm-8 text-muted'>{value.profil}</div>
-                                </div>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>Vorname</strong></label>
-                                    <div className='col-sm-8 text-muted'>{value.first}</div>
-                                </div>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>Nachname</strong></label>
-                                    <div className='col-sm-8 text-muted'>{value.last}</div>
-                                </div>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>Alter</strong></label>
-                                    <div className='col-sm-8 text-muted'>{new Date(value.age).toDateString()}</div>
-                                </div>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>Status</strong></label>
-                                    <div className='col-sm-8 text-muted'>{value.bill ? 'Ja' : 'Nein'}</div>
-                                </div>
-                                <div className='row'>
-                                    <label className='col-sm-4'><strong>E-Mail</strong></label>
-                                    <div className='col-sm-8 text-muted'>{value.email}</div>
-                                </div>
-                                <div className='row justify-content-center'>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={(e) => Meteor.call('SwitchBill', value._id)} >Wechsel Bezahlstatus</button>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserConfirm(value)} >BestätigungsEmail</button>
-                                </div>
-                                <div className='row justify-content-center'>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setDeleteUser(value._id)} >Nutzer löschen</button>
-                                    {deleteUser == value._id ?
-                                        <React.Fragment>
-                                            <button className='btn btn-outline-dark col-sm-4' onClick={() => setDeleteUser('')}>Abbruch</button>
-                                            <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserDestroy(value)}>Wirklich Löschen?</button>
-                                        </React.Fragment>
-                                        :
-                                        ''}
+        if (users) {
+            userMan = users.map((value, index) => {
+                return (
+                    <React.Fragment key={'User' + index}>
+                        {value._id == activeUser ?
+                            <div className="card col-sm-8">
+                                <div className='card-body'>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>Profil Name</strong></label>
+                                        <div className='col-sm-8 text-muted'>{value.profile.profil}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>Vorname</strong></label>
+                                        <div className='col-sm-8 text-muted'>{value.profile.first}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>Nachname</strong></label>
+                                        <div className='col-sm-8 text-muted'>{value.profile.last}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>Alter</strong></label>
+                                        <div className='col-sm-8 text-muted'>{new Date(value.profile.age).toDateString()}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>Status</strong></label>
+                                        <div className='col-sm-8 text-muted'>{value.profile.bill ? 'Ja' : 'Nein'}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'><strong>E-Mail</strong></label>
+                                        <div className='col-sm-8 text-muted'>{value.profile.email}</div>
+                                    </div>
+                                    <div className='row justify-content-center'>
+                                        <button className='btn btn-outline-dark col-sm-4' onClick={(e) => {Meteor.call('SwitchBill', value._id); onSwitch()}} >Wechsel Bezahlstatus</button>
+                                        <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserConfirm(value)} >BestätigungsEmail</button>
+                                    </div>
+                                    <div className='row justify-content-center'>
+                                        <button className='btn btn-outline-dark col-sm-4' onClick={() => setDeleteUser(value._id)} >Nutzer löschen</button>
+                                        {deleteUser == value._id ?
+                                            <React.Fragment>
+                                                <button className='btn btn-outline-dark col-sm-4' onClick={() => setDeleteUser('')}>Abbruch</button>
+                                                <button className='btn btn-outline-dark col-sm-4' onClick={(e) => this.onClickUserDestroy(value)}>Wirklich Löschen?</button>
+                                            </React.Fragment>
+                                            :
+                                            ''}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        : ""}
-                </React.Fragment>
-            )
-        })
+                            : ""}
+                    </React.Fragment>
+                )
+            })
+        }
     }
     return (
         <React.Fragment >
