@@ -155,8 +155,8 @@ const admin = props => {
 
     let user_block = '';
     let userMan = '';
-    if (props.users.length > 0) {
-        props.users.sort((a, b) => (a.last > b.last) ? 1 : ((b.last > a.last) ? -1 : 0));
+    if (users.length > 0) {
+        users.sort((a, b) => (a.profile.last > b.profile.last) ? 1 : ((b.profile.last > a.profile.last) ? -1 : 0));
         user_block = users.map((key, value) => {
             let age = calcAge(key.age)
             if (agefilter === true) {

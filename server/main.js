@@ -239,6 +239,7 @@ Meteor.methods({
       }
     }
   },
+  //Todo check if user realy has payed
   RoundAddPlayer(id) {
     try {
       check(id, String);
@@ -363,6 +364,11 @@ Meteor.methods({
       event_settings.update({ _id: data._id }, data);
     }
   },
+  /**
+   * On Tab Rounds, it checks if you are a gm in a given timeblock
+   * checks if you are player in a given timeblock
+   * and if you can add a new round in a given timeblock
+   */
   Check() {
     let gm = {};
     let player = {};
