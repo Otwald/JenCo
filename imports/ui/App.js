@@ -16,9 +16,8 @@ export default class App extends React.Component {
             tab: 'login',
         }
     }
-
     onTabChange = (data) => {
-        this.setState({ tab: data })
+        this.setState({ tab: data });
     }
 
     render() {
@@ -28,11 +27,7 @@ export default class App extends React.Component {
             <div className="container">
                 {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
                 <Sidebar onTabChange={this.onTabChange} tab={tab} />
-<<<<<<< HEAD
-                <MainContentContainer  onTabChange={this.onTabChange} tab={tab} user={user} />
-=======
                 <MainContentContainer tab={tab} user={user} event={event} />
->>>>>>> master
             </div>
         )
     }

@@ -1,7 +1,6 @@
 import React from 'react';
 
 const welcome = props => {
-    console.log(props.event)
     return (
         <div>
             <p className="text-sm-left text-break">
