@@ -7,8 +7,7 @@ const accountslogin = props => {
 
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
-    console.log(Meteor.user())
-    console.log(Meteor.userId())
+    const [fail, setFail] = useState(false);
 
     /**
      * handler that holds the Meteor Call to loginWithPassword
@@ -19,10 +18,11 @@ const accountslogin = props => {
      */
     function onLogin() {
         Meteor.loginWithPassword(user, password, (err, resp) => {
-            console.log(err);
-            console.log(resp);
             if (!err) {
+                setFail(false);
                 props.onTabChange('account')
+            }else{
+                setFail(true);
             }
         })
     }
@@ -33,7 +33,7 @@ const accountslogin = props => {
                 <div className="card card-signin my-5">
                     <div className="card-body">
                         <h5 className="card-title text-center">Anmeldung</h5>
-                        <form className="form-signin" onSubmit={() => onLogin()}>
+                        <form className="form-signin" onSubmit={() => { onLogin(); event.preventDefault() }}>
                             <div className="form-label-group">
                                 <input type="email" onChange={() => setUser(event.target.value)} id="inputEmail" className="form-control" placeholder="Email address" required autoFocus />
                                 <label htmlFor="inputEmail">Email-Address</label>
@@ -44,6 +44,11 @@ const accountslogin = props => {
                                 <label htmlFor="inputPassword">Passwort</label>
                             </div>
                             <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Einloggen</button>
+                            {fail ?
+                                 <div>
+                                     Login ist Fehlgeschlagen
+                                 </div>
+                                 : ''}
                         </form>
                     </div>
                 </div>

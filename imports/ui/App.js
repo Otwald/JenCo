@@ -27,7 +27,7 @@ export default class App extends React.Component {
             <div className="container">
                 {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
                 <Sidebar onTabChange={this.onTabChange} tab={tab} />
-                <MainContentContainer tab={tab} user={user} event={event} />
+                <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
             </div>
         )
     }
