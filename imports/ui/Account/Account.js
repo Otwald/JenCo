@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 
-import useDate from './Helper';
+import useDate from '../Helper';
 
 const account = props => {
 

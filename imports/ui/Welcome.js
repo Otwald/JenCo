@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const welcome = props => {
+
+    const [loco, setLoco] = useState('');
+    const [ticket, setTicket] = useState(0);
+
+    useEffect(() => {
+        if(props.event){
+            setTicket(props.event.t_price);
+            setLoco(props.event.e_loc);
+        }
+    }, [props.event])
+
     return (
         <div>
             <p className="text-sm-left text-break">
@@ -10,11 +21,11 @@ const welcome = props => {
                 <br />
                 <b>Wann?</b> 12. bis 13. Oktober 2019, ab 12 Uhr am Samstag bis 14 Uhr am Sonntag<br />
                 <br />
-                <b>Wo?</b>Hugo Jena<br />
+                <b>Wo?</b>{loco}<br />
                 <br />
                 <b>Wie komme ich da hin?</b> https://www.jz-hugo.de/kontakt/<br />
                 <br />
-                <b>Was kostest der Spaß?</b> 10 Euro (Geld das nach der Bezahlung der Geländekosten übrig bleibt, verteilen wir unter den Spielleitern)<br />
+                <b>Was kostest der Spaß?</b> {ticket} Euro (Geld das nach der Bezahlung der Geländekosten übrig bleibt, verteilen wir unter den Spielleitern)<br />
                 <br />
                 <b>Wie viele Teilnehmer?</b> Maximal 35<br />
                 <br />

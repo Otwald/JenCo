@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Admin from './Admin';
-import { event_settings, timeblock } from '../api/mongo_export';
+import { event_settings, timeblock } from '../../api/mongo_export';
 
 
 export default AdminContainer = withTracker(() => {

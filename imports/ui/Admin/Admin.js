@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import useDate from './Helper';
+import useDate from '../Helper';
 import AdminBlock from './AdminBlock';
 
 
@@ -69,10 +69,11 @@ const admin = props => {
             e_end: e_end,
             e_loc: e_loc,
             e_start: e_start,
-            t_price: t_price,
-            e_price: e_price
+            t_price: Number(t_price),
+            e_price: Number(e_price)
         };
         if (props.event) {
+            settings._id = props.event._id
             Meteor.call('EventUpdate', settings)
         } else {
             Meteor.call('EventCreate', settings)

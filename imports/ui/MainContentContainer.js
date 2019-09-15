@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import Welcome from './Welcome';
-import Account from './Account';
+import Account from './Account/Account';
 import RoundContainer from './RoundContainer';
-import AdminContainer from './AdminContainer';
-import AccountsLogin from './Login/AccountsLogin';
+import AdminContainer from './Admin/AdminContainer';
+import AccountsLogin from './Account/AccountsLogin';
 
 const mainContentContainer = props => {
     // state = { in_round: [], }
@@ -25,7 +25,7 @@ const mainContentContainer = props => {
             {props.tab === 'round' ? <RoundContainer user={props.user} in_round={in_round} onCallback={this.onCallback} /> : ''}
             {props.tab === 'account' ? <Account user={props.user} /> : ''}
             {props.tab === 'admin' ? <AdminContainer /> : ''}
-            {props.tab === 'login' ? <AccountsLogin  onTabChange={props.onTabChange} /> : ''}
+            {props.tab === 'login' ? <AccountsLogin onTabChange={props.onTabChange} /> : ''}
         </React.Fragment>
     )
 

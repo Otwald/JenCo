@@ -367,9 +367,26 @@ Meteor.methods({
       event_settings.insert(data);
     }
   },
+  /**
+   * updates the Event Collection Entry
+   * @param {Object} data holds Event Data
+   */
   EventUpdate(data) {
-    if (handlerAdmin(this.userId) == true) {
-      event_settings.update({ _id: data._id }, data);
+    try {
+      check(data, {
+        "_id": String,
+        "e_start": String,
+        "e_end": String,
+        "e_loc": String,
+        "t_price": Number,
+        "e_price": Number
+      })
+      if (handlerAdmin(this.userId) == true) {
+        event_settings.update({ _id: data._id }, data);
+      }
+    }
+    catch (err) {
+      console.log(err)
     }
   },
   /**
@@ -443,13 +460,13 @@ Meteor.methods({
         let gm = Meteor.users.findOne({ _id: round.round_gm_id });
         round.round_player = [];
         if (gm) {
-            round.round_gm = gm.profile.profil;
+          round.round_gm = gm.profile.profil;
         }
         round.round_player_id.map((value) => {
-            let player = Meteor.users.findOne({ _id: value });
-            if (player) {
-                round.round_player.push(player.profile.profil);
-            }
+          let player = Meteor.users.findOne({ _id: value });
+          if (player) {
+            round.round_player.push(player.profile.profil);
+          }
         })
         delete round.round_player_id;
         delete round.round_gm_id;
