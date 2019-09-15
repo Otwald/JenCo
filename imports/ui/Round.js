@@ -387,7 +387,6 @@ const roundComponent = props => {
 
         }
     }
-    // console.log(props.rounds_box);
     return (
         <React.Fragment>
             {tb}

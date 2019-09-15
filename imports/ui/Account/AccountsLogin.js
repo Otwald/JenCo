@@ -17,7 +17,6 @@ const accountslogin = props => {
     function handlerRegi(data) {
         setRegi(data)
     }
-    console.log(regi)
     return (
         <React.Fragment>
             {regi ? <Regist onTabChange={props.onTabChange} handlerRegi={handlerRegi} /> : <Login onTabChange={props.onTabChange} handlerRegi={handlerRegi} />}

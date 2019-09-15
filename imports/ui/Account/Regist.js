@@ -68,7 +68,7 @@ const regist = props => {
                             </div>
                             <div className="form-label-group">
                                 <input type="password" onChange={() => setConPW(event.target.value)} minLength='6' id="inputPasswordconfirm" className="form-control" placeholder="Password" required />
-                                <label htmlFor="inputPasswordconfirm">Passwort Bestätigen</label>
+                                <label htmlFor="inputPasswordconfirm">Passwort wiederholen</label>
                             </div>
                             <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Registieren</button>
                             {fail ?
