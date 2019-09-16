@@ -166,7 +166,7 @@ const admin = props => {
                 }
             }
             if (payfilter === true) {
-                if (key.bill === true) {
+                if (key.profile.bill === true) {
                     return;
                 }
             }

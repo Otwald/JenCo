@@ -369,7 +369,7 @@ const roundComponent = props => {
     }
     let rc = '';
     if (props.user) {
-        if (props.user.bill && props.user.profil && (options_time_block.length > 0)) {
+        if (props.user.profile.bill && props.user.profile.profil && (options_time_block.length > 0)) {
             if (addBlock === true) {
                 rc = <RoundCreate
                     round_create={round_create}
