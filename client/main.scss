@@ -4,6 +4,12 @@
 body {
   padding: 10px;
   font-family: sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+html{
+  height: 100%;
+  width: 100%;
 }
 
 .bg{
@@ -12,10 +18,12 @@ body {
   /* Full height */
   height: auto;
   width:  auto;
+  // background-attachment:scroll;
   /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow:auto;
 }
 
 .container{
@@ -24,7 +32,8 @@ body {
   background-size: contain;
   padding: 8px;
   border: 1px;
-
+  // position : relative;
+  overflow: auto;
 //   background-color: #333;
 // height: 100vh;
 // background-size: contain;
@@ -66,4 +75,49 @@ body {
   color: #495057;
   background-color: #dee2e6;
   border-color: #dee2e6 #dee2e6 #fff;
+}
+
+footer {
+  background-color: #555;
+  padding: 1em 0 1em 0;
+  position: fixed;
+  // width: 100%;
+  color: #fff;
+  bottom: 0;
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+  a {
+    color: #707070;
+    text-decoration: none;
+  }
+  li {
+    list-style: none;
+  }
+  h3 {
+    margin-top: 0;
+  }
+  .content {
+    margin-top: 2em;
+  }
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  width: 200px;
+  img {
+    height: 130px;
+    width: auto;
+  }
+}
+
+.footer-row {
+  width: 200px;
+  margin-bottom: 15px;
 }

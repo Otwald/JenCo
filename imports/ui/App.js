@@ -7,6 +7,7 @@ import './../../client/main';
 import Titlebar from './Titlebar';
 import Sidebar from './Sidebar';
 import MainContentContainer from './MainContentContainer';
+import Footer from './Footer/Footer';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -20,15 +21,24 @@ export default class App extends React.Component {
         this.setState({ tab: data });
     }
 
+    //todo, spielrunde, zeitblöccke signalisieren das mans anklicken kann
+    //impressum
+    //noch ein wenig design arbeit
+
     render() {
         const { tab } = this.state
         const { user, event } = this.props
         return (
-            <div className="container">
-                {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
-                <Sidebar onTabChange={this.onTabChange} tab={tab} />
-                <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
-            </div>
+            <React.Fragment>
+                <div className="bg">
+                    <div className="container">
+                        {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
+                        <Sidebar onTabChange={this.onTabChange} tab={tab} />
+                        <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
+                        <Footer onTabChange={this.onTabChange} />
+                    </div>
+                </div>
+            </React.Fragment>
         )
     }
 }

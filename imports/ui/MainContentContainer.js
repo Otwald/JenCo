@@ -5,6 +5,8 @@ import Account from './Account/Account';
 import RoundContainer from './RoundContainer';
 import AdminContainer from './Admin/AdminContainer';
 import AccountsLogin from './Account/AccountsLogin';
+import Impressum from './Footer/Impressum';
+import Dataprivacy from './Footer/Dataprivacy';
 
 const mainContentContainer = props => {
     // state = { in_round: [], }
@@ -26,6 +28,8 @@ const mainContentContainer = props => {
             {props.tab === 'account' ? <Account user={props.user} /> : ''}
             {props.tab === 'admin' ? <AdminContainer /> : ''}
             {props.tab === 'login' ? <AccountsLogin onTabChange={props.onTabChange} /> : ''}
+            {props.tab === 'impressum' ? <Impressum /> : ''}
+            {props.tab === 'dataprivacy' ? <Dataprivacy /> : ''}
         </React.Fragment>
     )
 
