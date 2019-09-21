@@ -10,9 +10,9 @@ const footer = props => {
           <img src="brand" alt="logo"/>
                 </div> */}
                 <div className="footer-row">
-                    <h3>Project JenCo</h3>
+                    <h5>Project JenCo</h5>
                     <ul>
-                        <li><a onClick={() => props.onTabChange('dataprivacy')}>Datenschutz</a></li>
+                        <li><a onClick={() => props.onTabChange('dataprivacy')}>Datenschutz </a></li>
                         {/* <li><a href="/agb">AGB</a></li> */}
                         <li><a onClick={() => props.onTabChange('impressum')}>Impressum</a></li>
                     </ul>
@@ -25,11 +25,11 @@ const footer = props => {
                     </ul>
                 </div> */}
             </div>
-            <div className="footer-container">
+            {/* <div className="footer-container">
                 <div className="text-left">
                     <p><small>2019</small></p>
                 </div>
-            </div>
+            </div> */}
         </footer>
     );
 }
