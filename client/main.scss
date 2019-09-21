@@ -7,39 +7,26 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-html{
-  height: 100%;
-  width: 100%;
-}
 
 .bg{
   background-image: url("/images/bgi.jpg");
-  // background-color: aquamarine;
   /* Full height */
   height: auto;
   width:  auto;
-  // background-attachment:scroll;
   /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  overflow:auto;
 }
 
 .container{
   background-color: #e1e1e1;
-  height: 100vh;
+  height: 90vh;
   background-size: contain;
   padding: 8px;
   border: 1px;
-  // position : relative;
+  margin-bottom: 10vh;
   overflow: auto;
-//   background-color: #333;
-// height: 100vh;
-// background-size: contain;
-// padding: 0.2em;
-// border: 0.1em solide #ddd;
-// color: #FFF
 }
 
 .card{
@@ -60,12 +47,6 @@ html{
   margin: .1em .2em;
   cursor: pointer;
 }
-
-// .nav-link{
-//   background-color: #e1e1e1;
-//   padding: 0.2em 0.3em 0em 0.3em;
-// }
-
 .nav-tabs .nav-link {
   /* border: 1px solid transparent; */
   border-top-left-radius: .25rem;
@@ -77,13 +58,16 @@ html{
   border-color: #dee2e6 #dee2e6 #fff;
 }
 
+
+
 footer {
   background-color: #555;
   padding: 1em 0 1em 0;
   position: fixed;
-  // width: 100%;
+  width: 100%;
   color: #fff;
   bottom: 0;
+  height:10vh;
   ul {
     padding: 0;
     margin: 0;

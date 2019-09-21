@@ -30,14 +30,11 @@ export default class App extends React.Component {
         const { user, event } = this.props
         return (
             <React.Fragment>
-                <div className="bg">
-                    <div className="container">
-                        {/* <Titlebar label="Deathcon Slaughterhaus 666 oder Papierkrieger Titlebar" /> */}
-                        <Sidebar onTabChange={this.onTabChange} tab={tab} />
-                        <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
-                        <Footer onTabChange={this.onTabChange} />
-                    </div>
+                <div className='container'>
+                    <Sidebar onTabChange={this.onTabChange} tab={tab} />
+                    <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
                 </div>
+                <Footer onTabChange={this.onTabChange} />
             </React.Fragment>
         )
     }

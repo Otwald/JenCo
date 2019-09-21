@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 const footer = props => {
     return (
-        <footer className='footer col-sm'>
+        <footer>
             <div className="footer-container">
                 {/* <div className="footer-logo">
           <img src="brand" alt="logo"/>
