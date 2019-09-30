@@ -354,10 +354,10 @@ const roundComponent = props => {
             return (
                 <div className="row" key={k._id}>
                     <div className="col-sm">
-                        <div className="text-center row" onClick={() => blockTabControll(k._id)}>
+                        <div className="text-center row time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
                             <h4 className="col-sm-4">{k.block_name}</h4>
                             <div className='col-sm-3'>
-                                <label>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
+                                <label className='time_block'>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
                             </div>
 
                         </div>

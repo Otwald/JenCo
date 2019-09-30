@@ -55,7 +55,7 @@ const login = props => {
                             Noch kein Account?<br />
                             {/* Bis Datenschutz geklärt, keine Registrierungen
                             <div onClick={()=>props.handlerRegi(true)}>Zur Regestrierung</div> */}
-                            Zur Regestrierung
+                            Anmeldung Deaktiviert
                         </div>
                     </div>
                 </div>
