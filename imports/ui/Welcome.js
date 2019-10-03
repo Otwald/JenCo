@@ -19,7 +19,7 @@ const welcome = props => {
                     Hallo zusammen und willkommen auf unserer schönen Website!<br />
                     <br />
                     Diese vorläufige Version dient nur dazu, euch einen Überblick über die angemeldeten Runden zu geben – ignoriert den Anmelde-Button, der tut nichts.
-                    Ansonsten: hier noch einmal alle Eckdaten unserer Veranstaltung.
+                    Ansonsten: hier noch einmal alle Eckdaten unserer Veranstaltung.<br />
                     <br />
                     <b>Wann?</b> 12. bis 13. Oktober 2019, ab 12 Uhr am Samstag bis 14 Uhr am Sonntag (wir freuen uns über jeden der im Anschluss noch ein wenig beim Putzen der Räume hilft)<br />
                     <br />
