@@ -1,10 +1,18 @@
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
+html{
+  min-height: 100%;
+  background-image: url("/images/bgi.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 body {
-  padding: 10px;
+ background: transparent;
   font-family: sans-serif;
-  height: 100vh;
+  margin-bottom: 5rem;
   overflow: hidden;
 }
 
@@ -12,31 +20,19 @@ $button_BG : #555;
 $content_BG : #fff;
 $container_BG: #e1e1e1;
 
-.bg{
-  background-image: url("/images/bgi.jpg");
-  /* Full height */
-  height: auto;
-  width:  auto;
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 .container{
   background-color: $container_BG;
-  height: 90vh;
   background-size: contain;
-  padding: 0rem;
   border: 1px;
-  margin-bottom: 10vh;
+  height: 100vh;
+  padding-bottom: 5rem;
+  background-size: auto;
   overflow: auto;
 }
 
 .card{
   width: 18rem;
   background-color: $container_BG;
-  // border-top-width: 0rem;
   margin-top: 0.5rem;
 }
 
@@ -119,7 +115,7 @@ footer {
   width: 100%;
   color: $content_BG;
   bottom: 0;
-  height:10vh;
+  height:5rem;
   font-size: 0.7rem;
   overflow: hidden;
   ul {
