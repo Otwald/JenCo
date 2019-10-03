@@ -237,18 +237,18 @@ const roundComponent = props => {
                         if (props.user.profile.bill) {
                             if (gm[k._id] == true) {
                                 props.onCallback({ key: time, value: false });
-                                out = <div className='row'>
+                                out = <div className='row justify-content-center'>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(k, time)} >Löschen</button>
                                 </div>
                             } else if (player[k._id] === true) {
-                                out = <div className='row'>
+                                out = <div className='row justify-content-center'>
                                     <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k._id, time)} >Austreten</button>
                                 </div>
                             } else {
                                 if (booked_tb[k.round_tb] == false) {
                                     if (k.round_curr_pl < k.round_max_pl) {
-                                        out = <div className='row'>
+                                        out = <div className='row justify-content-center'>
                                             <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k._id)} >Beitreten</button>
                                         </div>
                                     }
@@ -258,7 +258,7 @@ const roundComponent = props => {
                     }
                     let expand = ''
                     let content =
-                        <div className='row ' onClick={() => onExtendRound(k, v)}>
+                        <div className='row' onClick={() => onExtendRound(k, v)}>
                             <div className="col-sm-2">
                                 {/* place for the Icon */}
                                 <div className="text-center">
@@ -266,7 +266,7 @@ const roundComponent = props => {
                                 </div>
                             </div>
                             <div className='col-sm-10'>
-                                <div className="text-left">
+                                <div className="text-left round text-break">
                                     <div className='row'>
                                         <label className="col-sm-4">Runden Name</label>
                                         <div className='col-sm-8 text-muted'>
@@ -354,7 +354,7 @@ const roundComponent = props => {
             round = this.timeBlockCreate(k._id)
             return (
                 <div className="row" key={k._id}>
-                    <div className="col-sm">
+                    <div className="col-sm time_block_container">
                         <div className="row list-group-item time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
                             <h4 className='text-center'><strong >{k.block_name}</strong></h4>
                             <p className='text-center'>

@@ -13,7 +13,7 @@ const welcome = props => {
     }, [props.event])
 
     return (
-        <div className='row'>
+        <div className='row welcome'>
             <div className='col-sm'>
                 <p className="text-sm-left text-break">
                     Hallo zusammen und willkommen auf unserer schönen Website!<br />

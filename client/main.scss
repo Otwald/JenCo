@@ -8,6 +8,10 @@ body {
   overflow: hidden;
 }
 
+$button_BG : #555;
+$content_BG : #fff;
+$container_BG: #e1e1e1;
+
 .bg{
   background-image: url("/images/bgi.jpg");
   /* Full height */
@@ -20,10 +24,10 @@ body {
 }
 
 .container{
-  background-color: #e1e1e1;
+  background-color: $container_BG;
   height: 90vh;
   background-size: contain;
-  padding: 8px;
+  padding: 0rem;
   border: 1px;
   margin-bottom: 10vh;
   overflow: auto;
@@ -34,7 +38,7 @@ body {
 }
 
 .button {
-  background-color: #555;
+  background-color: $button_BG;
   border: 1px solid #ddd;
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
@@ -47,10 +51,25 @@ body {
   margin: .1em .2em;
   cursor: pointer;
 }
+
+.button:hover{
+  background-color: rgba(85, 85, 85, 0.822);
+}
+
+.button:active{
+  background-color: #fff;
+  color: #555;
+}
+
+.nav-bar{
+  box-shadow: 0rem 0.2rem 0.8rem  #ccc;
+}
 .nav-tabs .nav-link {
   /* border: 1px solid transparent; */
+  padding: 1rem 1rem 0rem 1rem;
   border-top-left-radius: .25rem;
   border-top-right-radius: .25rem;
+  
 }
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
   color: #495057;
@@ -58,7 +77,33 @@ body {
   border-color: #dee2e6 #dee2e6 #fff;
 }
 
+.time_block_container{
+  border-bottom-width:0.04rem;
+  border-bottom-style: solid;
+  border-color:#ccc;
+}
+
 .time_block{
+  background-color: $container_BG;
+  border: 0rem;
+  cursor: pointer;
+}
+
+.btn-outline-dark:hover{
+  background-color: $button_BG;
+}
+
+.welcome{
+  // background-color: $content_BG;
+  margin: 0.25rem 0rem;
+  padding:1rem;
+}
+
+.round{
+  // background-color: $content_BG;
+  margin: 0.25rem;
+  padding: 0.5rem;
+  word-wrap: normal;
   cursor: pointer;
 }
 
@@ -69,7 +114,7 @@ footer {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  color: #fff;
+  color: $content_BG;
   bottom: 0;
   height:10vh;
   font-size: 0.7rem;
