@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+
 import Adminblockform from './AdminBlockForm';
+import { getStringTime } from '../Helper';
 
 const adminBlock = props => {
 
@@ -21,54 +23,9 @@ const adminBlock = props => {
     }
 
     /**
-     * calls getStringDate and getStringClock
-     * and builds one Date Format from it
-     */
-    getStringTime = (timestamp) => {
-        let out = getStringDate(timestamp);
-        let min = getStringClock(timestamp)
-        out += ' ' + min;
-        return out
-    }
-
-    /**
-     * takes timestamp and extracts the date as an string
-     * the form is Weekday 01.01
-     * @param Number timestamp 
-     * @return String
-     */
-    getStringDate = (timestamp) => {
-        let date = new Date(timestamp);
-        let out = '';
-        const week = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-        out += week[date.getDay()] + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.'
-        return out;
-    }
-
-    /**
-     * takes timestamp and extracts clocktime
-     * returns it as a string
-     * @param Number timestamp 
-     * @return String
-     */
-    getStringClock = (timestamp) => {
-        let date = new Date(timestamp);
-        let min = date.getMinutes();
-        let hour = date.getHours();
-        if (min < 10) {
-            min = '0' + min;
-        }
-        if (hour < 10) {
-            hour = '0' + hour;
-        }
-        out = hour + ':' + min;
-        return out
-    }
-
-    /**
      * resets the states to hide AdminBlockForm
      */
-    onCancelButton = () => {
+    function onCancelButton() {
         event.preventDefault()
         setEdit('');
     }
@@ -105,8 +62,8 @@ const adminBlock = props => {
                             <li className={'row list-group-item' + (k._id == activeBlock ? ' active' : '')} key={k._id} onClick={() => this.timeblockClick(k)}>
                                 <h4 className='text-center'><strong >{k.block_name}</strong></h4>
                                 <p className='text-center'>
-                                    <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start)}</span>
-                                    <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end)}</span>
+                                    <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start, 'admin')}</span>
+                                    <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end, 'admin')}</span>
                                     <span className='col-sm-3'><strong>Spielblock: </strong>{k.block_pnp ? 'Ja' : 'Nein'}</span>
                                     <span className='col-sm-3'><strong>Tisch:</strong>{k.block_table.length}/{k.block_max_table}</span>
                                 </p>

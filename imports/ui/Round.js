@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Meteor } from 'meteor/meteor';
 
+import { getStringTime } from './Helper';
 import RoundCreate from './RoundCreate';
 
 const roundComponent = props => {
@@ -354,12 +355,19 @@ const roundComponent = props => {
             return (
                 <div className="row" key={k._id}>
                     <div className="col-sm">
-                        <div className="text-center row time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
-                            <h4 className="col-sm-4">{k.block_name}</h4>
-                            <div className='col-sm-3'>
-                                <label className='time_block'>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
-                            </div>
-
+                        <div className="row list-group-item time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
+                            <h4 className='text-center'><strong >{k.block_name}</strong></h4>
+                            <p className='text-center'>
+                                <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start)}</span>
+                                <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end)}</span>
+                                <span className='col-sm-3'><strong>Tisch:</strong>{k.block_table.length}/{k.block_max_table}</span>
+                            </p>
+                            {/* <h4 className="col-sm-4">{k.block_name}</h4>
+                            <p>
+                                <div className='col-sm-3'>
+                                    <label className='time_block'>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
+                                </div>
+                            </p> */}
                         </div>
                         {blockTab === k._id ? <div className="row">{round}</div> : ''}
                     </div>
