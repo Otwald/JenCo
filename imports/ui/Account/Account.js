@@ -145,7 +145,7 @@ const account = props => {
                         :
                         <React.Fragment>
                             {edit ?
-                                <form className='was-validated'>
+                                <form className='was-validated card-account'>
                                     <div className='form-row justify-content-center'>
                                         <div className='form-group col-sm-3'>
                                             <label>Profil Name</label>

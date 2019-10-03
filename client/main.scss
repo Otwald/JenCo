@@ -35,6 +35,9 @@ $container_BG: #e1e1e1;
 
 .card{
   width: 18rem;
+  background-color: $container_BG;
+  // border-top-width: 0rem;
+  margin-top: 0.5rem;
 }
 
 .button {
