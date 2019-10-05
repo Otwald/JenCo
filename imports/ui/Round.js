@@ -273,7 +273,7 @@ const roundComponent = props => {
                                             {k.round_name}
                                         </div>
                                     </div>
-                                    {extendR !== k._id ? '' :
+                                    {false? '' :
                                         <React.Fragment>
                                             <div className='row text-left'>
                                                 <label className='col-sm-4'>Spielleiter</label>
@@ -293,7 +293,7 @@ const roundComponent = props => {
                                         <label className='col-sm-4'>Spieler Online Curr/Max</label>
                                         <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
                                     </div>
-                                    {extendR !== k._id ? '...' :
+                                    {false? '...' :
                                         <React.Fragment>
                                             <div className='row'>
                                                 <label className='col-sm-4'>Teilnehmer</label>
