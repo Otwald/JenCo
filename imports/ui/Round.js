@@ -289,10 +289,10 @@ const roundComponent = props => {
                                         <label className='col-sm-4'>Regelwerk</label>
                                         <div className='col-sm-8 text-muted'>{k.ruleset}</div>
                                     </div>
-                                    <div className='row'>
+                                    {/* <div className='row'>
                                         <label className='col-sm-4'>Spieler Online Curr/Max</label>
                                         <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
-                                    </div>
+                                    </div> */}
                                     {false? '...' :
                                         <React.Fragment>
                                             <div className='row'>
