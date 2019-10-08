@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import Adminblockform from './AdminBlockForm';
-import { getStringTime } from '../Helper';
+import { getStringTime, getStringDate, getStringClock } from '../Helper';
 
 const adminBlock = props => {
 
