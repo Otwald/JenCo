@@ -236,7 +236,7 @@ const admin = props => {
         }
     }
     return (
-        <React.Fragment >
+        <div className='welcome' >
             <div className="row">
                 <div className='col-sm-3' onClick={() => {
                     setUserTab(!userTab)
@@ -357,7 +357,7 @@ const admin = props => {
                     <AdminBlock event={props.event} timeblock={props.timeblock} />
                     : ''}
             </div>
-        </React.Fragment >
+        </div >
     )
 
 }
