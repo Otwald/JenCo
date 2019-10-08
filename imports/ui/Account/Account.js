@@ -115,7 +115,7 @@ const account = props => {
         bill = props.user.profile.bill ? 'Zahlungseingang ist bestätigt' : 'Noch kein Zahlungseingang'
     }
     return (
-        <div className="text-center">
+        <div className="text-center welcome">
             <div className="row">
                 <div className="col-sm-12">
                     {change_pw ?

@@ -398,7 +398,7 @@ const roundComponent = props => {
     return (
         <React.Fragment>
             {tb}
-            {rc}
+            <div className='welcome'>{rc}</div>
         </React.Fragment>
     )
 }

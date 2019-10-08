@@ -12,7 +12,6 @@ html{
 body {
  background: transparent;
   font-family: sans-serif;
-  margin-bottom: 5rem;
   overflow: hidden;
 }
 
@@ -25,7 +24,6 @@ $container_BG: #e1e1e1;
   background-size: contain;
   border: 1px;
   height: 100vh;
-  padding-bottom: 5rem;
   background-size: auto;
   overflow: auto;
 }
@@ -95,6 +93,7 @@ $container_BG: #e1e1e1;
 .welcome{
   // background-color: $content_BG;
   margin: 0.25rem 0rem;
+  margin-bottom: 5rem;
   padding:1rem;
 }
 
