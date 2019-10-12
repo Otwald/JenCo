@@ -24,7 +24,7 @@ payed the entrance fee
 Project is created with:
 *Meteor v1.8.1
 *MongoDb v1.6.2
-*React v16.8.3
+*React v16.10.1
 *Bootstrap4
 
 ## Setup
@@ -42,11 +42,11 @@ List of features ready and TODOs for future development
 * Basic Timeblock Handling + basic Round Handling
 
 To-do list:
-* User Imput Checks
+* see Issue List
 
 
 ## Status
-Project is: _in progress_
+Project is: _on hold_
 
 ## Contact
 Created by [@Otwald](https://github.com/Otwald/) - feel free to contact me!
