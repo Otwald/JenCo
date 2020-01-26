@@ -226,35 +226,50 @@ const roundComponent = props => {
         }
     }
 
-    //visualizes the rounds in a timeblock
+    /**
+     * takes a tableObj and returns the menu button's for it
+     * to be rendered
+     * @param {Object} tableObj
+     * @param {String} time is id of the timeblock
+     */
+    function getTableButton(tableObj, time) {
+        if (props.user.profile.bill) {
+            if (gm[tableObj._id] == true) {
+                tisch = '1'
+                props.onCallback({ key: time, value: false });
+                out = <div className='row justify-content-center'>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(tableObj, time)} >Ändern</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(tableObj, time)} >Löschen</button>
+                </div>
+            } else if (player[tableObj._id] === true) {
+                out = <div className='row justify-content-center'>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(tableObj._id, time)} >Austreten</button>
+                </div>
+            } else if (booked_tb[tableObj.round_tb] == false) {
+                if (k.round_curr_pl < k.round_max_pl) {
+                    out = <div className='row justify-content-center'>
+                        <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(tableObj._id)} >Beitreten</button>
+                    </div>
+                }
+            } else {
+                out = ''
+            }
+        }
+        return out;
+    }
+
+    /**
+     * visualizes the rounds in a timeblock
+     * @param {String} time id of the Timeblock
+     */
     timeBlockCreate = (time) => {
         let roundtemplate = ''
         if (rounds_box.length !== 0) {
             roundtemplate = rounds_box.map((k, v) => {
-                let out = '';
                 if (k.round_tb === time) {
+                    let out = '';
                     if (Meteor.userId() && props.user) {
-                        if (props.user.profile.bill) {
-                            if (gm[k._id] == true) {
-                                props.onCallback({ key: time, value: false });
-                                out = <div className='row justify-content-center'>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(k, time)} >Ändern</button>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(k, time)} >Löschen</button>
-                                </div>
-                            } else if (player[k._id] === true) {
-                                out = <div className='row justify-content-center'>
-                                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(k._id, time)} >Austreten</button>
-                                </div>
-                            } else {
-                                if (booked_tb[k.round_tb] == false) {
-                                    if (k.round_curr_pl < k.round_max_pl) {
-                                        out = <div className='row justify-content-center'>
-                                            <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(k._id)} >Beitreten</button>
-                                        </div>
-                                    }
-                                }
-                            }
-                        }
+                        out = getTableButton(k, time)
                     }
                     let expand = ''
                     let content =
@@ -273,7 +288,7 @@ const roundComponent = props => {
                                             {k.round_name}
                                         </div>
                                     </div>
-                                    {false? '' :
+                                    {false ? '' :
                                         <React.Fragment>
                                             <div className='row text-left'>
                                                 <label className='col-sm-4'>Spielleiter</label>
@@ -293,7 +308,7 @@ const roundComponent = props => {
                                         <label className='col-sm-4'>Spieler Online Curr/Max</label>
                                         <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
                                     </div> */}
-                                    {false? '...' :
+                                    {false ? '...' :
                                         <React.Fragment>
                                             <div className='row'>
                                                 <label className='col-sm-4'>Teilnehmer</label>
