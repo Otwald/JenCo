@@ -98,15 +98,15 @@ const roundComponent = props => {
     */
     onEdit = (round, time) => {
         setRoundCreate(round)
-        setEdit_Options_time_block(options_time_block);
         time = props.time_block.filter((v) => {
             return v._id === time
         })
-        edit_options_time_block.push({
+        let temp = [...options_time_block];
+        temp.push({
             text: time[0].block_name,
             value: time[0]._id
         })
-        setEdit_Options_time_block(edit_options_time_block)
+        setEdit_Options_time_block(temp)
     }
 
     /**
@@ -316,7 +316,7 @@ const roundComponent = props => {
                                     </div>
                                     <div className='row'>
                                         '...'
-                                </div>
+                                    </div>
                                 </React.Fragment>
                                 :
                                 <React.Fragment>
