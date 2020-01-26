@@ -245,16 +245,16 @@ const roundComponent = props => {
                             this.onEdit(tableObj, time);
                         }}
                     >Ändern</button>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => {this.onDestroy(tableObj, time); onExtendRound(tableObj)}} >Löschen</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onDestroy(tableObj, time); onExtendRound(tableObj) }} >Löschen</button>
                 </div >
             } else if (player[tableObj._id] === true) {
                 out = <div className='row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => {this.onLeave(tableObj._id, time); onExtendRound(tableObj)}} >Austreten</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onLeave(tableObj._id, time); onExtendRound(tableObj) }} >Austreten</button>
                 </div>
             } else if (booked_tb[tableObj.round_tb] == false) {
                 if (k.round_curr_pl < k.round_max_pl) {
                     out = <div className='row justify-content-center'>
-                        <button className='btn btn-outline-dark col-sm-4' onClick={() => {this.onJoin(tableObj._id); onExtendRound(tableObj)}} >Beitreten</button>
+                        <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onJoin(tableObj._id); onExtendRound(tableObj) }} >Beitreten</button>
                     </div>
                 }
             } else {
@@ -308,19 +308,29 @@ const roundComponent = props => {
                                 <label className='col-sm-4'>Regelwerk</label>
                                 <div className='col-sm-8 text-muted'>{k.ruleset}</div>
                             </div>
-                            {/* <div className='row'>
-                                        <label className='col-sm-4'>Spieler Online Curr/Max</label>
-                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
-                                    </div> */}
-                            {extendR != k._id ? '...' :
+                            {extendR != k._id ?
                                 <React.Fragment>
                                     <div className='row'>
-                                        <label className='col-sm-4'>Teilnehmer</label>
-                                        <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
+                                        <label className='col-sm-4'>Spieler</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
                                     </div>
+                                    <div className='row'>
+                                        '...'
+                                </div>
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
                                     <div className='row text-left'>
                                         <label className='col-sm-4'>maximale Spieler</label>
                                         <div className='col-sm-8 text-muted'>{k.round_max_pl}</div>
+                                    </div>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>maximale OnlineAnmeldung</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_max_online_pl}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Teilnehmer</label>
+                                        <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
                                     </div>
                                     <div className='row text-left'>
                                         <label className='col-sm-4'>Vorgefertigte Charaktere</label>
