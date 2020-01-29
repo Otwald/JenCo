@@ -18,7 +18,7 @@ const sidebar = props => {
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
             <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
-                <button className='button' onClick={() => props.onTabChange('account')}>Account</button>
+                <button className='button' onClick={() => props.onTabChange('account')}>Figur:Account</button>
             </div>
         </li>
         if (admin) {
@@ -34,13 +34,13 @@ const sidebar = props => {
         <ul className="nav nav-fill nav-tabs justify-content-center nav-bar">
             <li className="nav-item py-0">
                 <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => props.onTabChange('welcome')} >Willkommen</button>
+                    <button className='button' onClick={() => props.onTabChange('welcome')} >Häuschen:Willkommen</button>
 
                 </div>
             </li>
             <li className="nav-item py-0">
                 <div className={props.tab === 'round' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => props.onTabChange('round')} >Spielerunde</button>
+                    <button className='button' onClick={() => props.onTabChange('round')} >Würfel:Spielerunde</button>
                 </div>
             </li>
             {login}
