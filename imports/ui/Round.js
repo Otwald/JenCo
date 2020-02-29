@@ -76,6 +76,7 @@ const roundComponent = props => {
      * @return Array
      */
     createTableOptions = (id) => {
+        setTableOptions([]);
         const block = props.time_block.filter((v) => {
             return v._id === id
         })
@@ -338,7 +339,7 @@ const roundComponent = props => {
                                     </div>
                                     <div className='row text-left'>
                                         <label className='col-sm-4'>Rundenbeschreibung</label>
-                                        <div className='col-sm-8 text-muted'>{k.round_desc}</div>
+                                        <div className='col-sm-8 text-muted' dangerouslySetInnerHTML={{ __html: k.round_desc }}></div>
                                     </div>
                                     <div className='row justify-content-start'>
                                         <i className="minimize_icon"></i>

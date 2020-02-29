@@ -17,7 +17,7 @@ const sidebar = props => {
     let adminInterface = ''
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
-            <div className={props.tab === 'account' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('login')}>
+            <div className={props.tab === 'account' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('account')}>
                 <button className='button' onClick={() => props.onTabChange('account')}>
                     <i className='user_icon'></i><span className="d-none d-md-block">Account</span>
                 </button>
@@ -25,7 +25,7 @@ const sidebar = props => {
         </li>
         if (admin) {
             adminInterface = <li className="nav-item py-0">
-                <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('login')}>
+                <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('admin')}>
                     <button className='button' onClick={() => props.onTabChange('admin')}>Admin</button>
                 </div>
             </li>
