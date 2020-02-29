@@ -31,3 +31,15 @@ $icon_prefix : 'data:image/svg+xml;utf-8,';
     background-image: get-icon('home', '#fff');
     padding: 0.05rem 0.8rem;
 }
+.box_icon{
+    background-image: get-icon('box', '#fff');
+    padding: 0.05rem 0.8rem;
+}
+.user_icon{
+    background-image: get-icon('user', '#fff');
+    padding: 0.05rem 0.8rem;
+}
+.key_icon{
+    background-image: get-icon('key', '#fff');
+    padding: 0.05rem 0.8rem;
+}
