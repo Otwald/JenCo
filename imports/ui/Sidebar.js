@@ -34,7 +34,9 @@ const sidebar = props => {
         <ul className="nav nav-fill nav-tabs justify-content-center nav-bar">
             <li className="nav-item py-0">
                 <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => props.onTabChange('welcome')} >Willkommen</button>
+                    <button className='button' onClick={() => props.onTabChange('welcome')} >
+                        <span className='home_icon'></span>
+                        Willkommen</button>
 
                 </div>
             </li>

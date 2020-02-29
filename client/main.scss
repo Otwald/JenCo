@@ -17,18 +17,32 @@ html{
 body {
  background: transparent;
   font-family: sans-serif;
-  overflow: hidden;
+  // overflow: hidden;
 }
 
+.appLevel{
+  display: flex;
+  flex-direction: column;
+}
 
+$conH : 95vh;
+  
+  // @if $width == 768px{
+  //   $conH:85vh;
+  // }
+  // @if $width == 710px{
+  //   $conH: 70vh;
+  // }
+  // @media (max-width:992px)
+  // @media (min-width:993px) 
 
 .container{
   background-color: $container_BG;
   background-size: contain;
   border: 1px;
-  height: 100vh;
+  // height: $conH;
   background-size: auto;
-  overflow: auto;
+  // overflow: auto;
 }
 
 .card{
@@ -108,22 +122,18 @@ body {
 }
 
 footer {
-  background-color: #555;
+  // background-color: #555;
   padding: 1rem 0 1rem 0;
-  position: fixed;
+  border-top-width:0.04rem;
+  border-top-style: solid;
+  border-color:#555;
+  // position: fixed;
   margin-left: auto;
   margin-right: auto;
-  width: 100%;
-  color: $content_BG;
+  color: #555;
   bottom: 0;
-  @media only_screen and (min-width: 411px){
-    height:5vh;
-  }
-  @media only_screen and (max-device-width: 410px){
-    height:10vh;
-  }
   font-size: 0.7rem;
-  overflow: hidden;
+  // overflow: hidden;
   ul {
     padding: 0;
     margin: 0;
@@ -153,17 +163,4 @@ footer {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.footer-logo {
-  width: 200px;
-  img {
-    height: 130px;
-    width: auto;
-  }
-}
-
-.footer-row {
-  width: 30vw;
-  margin-bottom: 15px;
 }
