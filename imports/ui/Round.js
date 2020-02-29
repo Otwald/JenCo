@@ -314,8 +314,8 @@ const roundComponent = props => {
                                         <label className='col-sm-4'>Spieler</label>
                                         <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
                                     </div>
-                                    <div className='row'>
-                                        {/* Icon to show that it can be expand?   '...'  */}
+                                    <div className='row justify-content-center'>
+                                        <i className="maximize_icon"></i>
                                     </div>
                                 </React.Fragment>
                                 :
@@ -339,6 +339,9 @@ const roundComponent = props => {
                                     <div className='row text-left'>
                                         <label className='col-sm-4'>Rundenbeschreibung</label>
                                         <div className='col-sm-8 text-muted'>{k.round_desc}</div>
+                                    </div>
+                                    <div className='row justify-content-start'>
+                                        <i className="minimize_icon"></i>
                                     </div>
                                 </React.Fragment>
                             }

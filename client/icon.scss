@@ -47,3 +47,11 @@ $icon_prefix : 'data:image/svg+xml;utf-8,';
     background-image: get-icon('key', '#fff');
     padding: 0.05rem 0.8rem;
 }
+.maximize_icon{
+    background-image: get-icon('maximize', '#555');
+    padding: 0.8rem 0.8rem;
+}
+.minimize_icon{
+    background-image: get-icon('minimize', '#555');
+    padding: 0.8rem 0.8rem;
+}
