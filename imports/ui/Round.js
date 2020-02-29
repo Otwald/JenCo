@@ -419,8 +419,14 @@ const roundComponent = props => {
                             </p> */}
                             </div>
                             {blockTab === k._id ? <div className="row">{round}</div> : ''}
+                            <div className="row justify-content-center">
+                                {blockTab === k._id ?
+                                    < i className="arrow_up_circle"></i>
+                                    : < i className="arrow_down_circle"></i>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    </div >
                 )
             })
         }
