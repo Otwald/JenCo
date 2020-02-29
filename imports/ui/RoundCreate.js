@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import ReactQuill from 'react-quill'; 
+import 'react-quill/dist/quill.snow.css';
 
 
 const roundCreate = props => {
@@ -201,7 +203,7 @@ const roundCreate = props => {
                     Rundenbeschreibung
                 </label>
                 <div className='col-sm-9'>
-                    <textarea required value={desc} minLength='2' maxLength='500' type='number' name='round_desc' className='form-control' onChange={() => setDesc(event.target.value)} placeholder={props.round_create.round_desc} />
+                    <ReactQuill required value={desc} onChange={(value) => setDesc(value)} placeholder={props.round_create.round_desc}/>
                 </div>
             </div>
             <div className='form-group row justify-content-center'>
