@@ -240,77 +240,83 @@ const roundComponent = (props) => {
   /**
    * takes a tableObj and returns the menu button's for it
    * to be rendered
-   * @param {Object} tableObj
+   * @props props.user
+   * @state gm
+   * @param {Object} tableObj object that holds table properties
    * @param {String} time is id of the timeblock
    */
   function getTableButton(tableObj, time) {
-    if (props.user.profile.bill) {
-      if (gm[tableObj._id] == true) {
-        tisch = "1";
-        props.onCallback({ key: time, value: false });
+    if (!props.user.profile.bill) {
+      return "";
+    }
+    if (gm[tableObj._id] == true) {
+      tisch = "1";
+      props.onCallback({ key: time, value: false });
+      out = (
+        <div className="row justify-content-center">
+          <button
+            className="btn btn-outline-dark col-sm-4"
+            onClick={() => {
+              if (extendR != tableObj._id) {
+                onExtendRound(tableObj);
+              }
+              this.onEdit(tableObj, time);
+            }}
+          >
+            Ändern
+          </button>
+          <button
+            className="btn btn-outline-dark col-sm-4"
+            onClick={() => {
+              this.onDestroy(tableObj, time);
+              onExtendRound(tableObj);
+            }}
+          >
+            Löschen
+          </button>
+        </div>
+      );
+    } else if (player[tableObj._id] === true) {
+      out = (
+        <div className="row justify-content-center">
+          <button
+            className="btn btn-outline-dark col-sm-4"
+            onClick={() => {
+              this.onLeave(tableObj._id, time);
+              onExtendRound(tableObj);
+            }}
+          >
+            Austreten
+          </button>
+        </div>
+      );
+    } else if (booked_tb[tableObj.round_tb] == false) {
+      if (tableObj.round_curr_pl < tableObj.round_max_pl) {
         out = (
           <div className="row justify-content-center">
             <button
               className="btn btn-outline-dark col-sm-4"
               onClick={() => {
-                if (extendR != tableObj._id) {
-                  onExtendRound(tableObj);
-                }
-                this.onEdit(tableObj, time);
-              }}
-            >
-              Ändern
-            </button>
-            <button
-              className="btn btn-outline-dark col-sm-4"
-              onClick={() => {
-                this.onDestroy(tableObj, time);
+                this.onJoin(tableObj._id);
                 onExtendRound(tableObj);
               }}
             >
-              Löschen
+              Beitreten
             </button>
           </div>
         );
-      } else if (player[tableObj._id] === true) {
-        out = (
-          <div className="row justify-content-center">
-            <button
-              className="btn btn-outline-dark col-sm-4"
-              onClick={() => {
-                this.onLeave(tableObj._id, time);
-                onExtendRound(tableObj);
-              }}
-            >
-              Austreten
-            </button>
-          </div>
-        );
-      } else if (booked_tb[tableObj.round_tb] == false) {
-        if (tableObj.round_curr_pl < tableObj.round_max_pl) {
-          out = (
-            <div className="row justify-content-center">
-              <button
-                className="btn btn-outline-dark col-sm-4"
-                onClick={() => {
-                  this.onJoin(tableObj._id);
-                  onExtendRound(tableObj);
-                }}
-              >
-                Beitreten
-              </button>
-            </div>
-          );
-        }
-      } else {
-        out = "";
       }
+    } else {
+      out = "";
     }
     return out;
   }
 
   /**
    * serves the content of the tableObject to be rendered
+   * @state extendR if set holds id of a tableobject and extends its information
+   * @state round_create holds id when id same as tableobject id switches to edit
+   * @props props.user
    * @param {Object} k tableObject
    * @param {String} time is the id of the TImeblock
    * @returns {JSX.Element} content
@@ -320,11 +326,10 @@ const roundComponent = (props) => {
     if (Meteor.userId() && props.user) {
       out = getTableButton(k, time);
     }
-    let expand = "";
     let content = (
       <div className="row">
         <div className="col-sm-2">
-          {/* place for the Icon */}
+          {/*TODO place for the Icon */}
           <div className="text-center">
             <strong>{k.round_table}</strong>
           </div>
@@ -362,9 +367,6 @@ const roundComponent = (props) => {
                       {k.round_curr_pl}/{k.round_max_online_pl}
                     </div>
                   </div>
-                  <div className="row justify-content-center">
-                    <i className="maximize_icon"></i>
-                  </div>
                 </React.Fragment>
               ) : (
                 <React.Fragment>
@@ -397,13 +399,24 @@ const roundComponent = (props) => {
                       dangerouslySetInnerHTML={{ __html: k.round_desc }}
                     ></div>
                   </div>
-                  <div className="row justify-content-start">
-                    <i className="minimize_icon"></i>
-                  </div>
                 </React.Fragment>
               )}
             </div>
-            {out}
+            {extendR != k._id ? (
+              <React.Fragment>
+                <div className="row justify-content-center">
+                  <i className="maximize_icon"></i>
+                </div>
+                {out}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <div className="row justify-content-start">
+                  <i className="minimize_icon"></i>
+                </div>
+                {out}
+              </React.Fragment>
+            )}
           </div>
         </div>
       </div>
