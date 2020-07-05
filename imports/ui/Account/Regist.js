@@ -35,6 +35,7 @@ const regist = (props) => {
         (err) => {
           if (!err) {
             setFail(false);
+            Meteor.call("sendEmail", user);
             props.onTabChange("account");
           } else {
             setFail(true);

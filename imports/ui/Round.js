@@ -340,7 +340,7 @@ const roundComponent = (props) => {
         </div>
         <div className="col-sm-10">
           <div className="text-left round text-break">
-            <div onClick={() => onExtendRound(k)}>
+            <div className="roundZoom" onClick={() => onExtendRound(k)}>
               <div className="row">
                 <label className="col-sm-4">Runden Name</label>
                 <div className="col-sm-8 text-muted">{k.round_name}</div>

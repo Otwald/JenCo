@@ -77,6 +77,14 @@ $conH: 95vh;
   color: #555;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.roundZoom {
+  cursor: zoom-in;
+}
+
 .navContainer {
   grid-area: nav;
   position: sticky;

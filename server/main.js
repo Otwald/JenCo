@@ -118,16 +118,17 @@ Meteor.methods({
   },
   sendEmail(to) {
     const from = "papierkrieger-jena@web.de";
-    const subject = "Hello from Meteor!";
-    const text = "This is a test of Email.send.";
-    // Make sure that all arguments are strings.
-    // check([to, from, subject, text], [String]);
-
-    // Let other method calls from the same client start running, without
-    // waiting for the email sending to complete.
+    const subject = "Anmeldung bei Papierkrieger!";
+    const text =
+      "Hallo und Danke für deine Anmeldung, <br/> <br/>" +
+      " bitte überweise den Teilnehmerbeitrag von <b>10 Euro</b> zeitnah (idealerweise innerhalb von 7 Tagen) auf folgendes Konto.<br/><br/>" +
+      "[Kontodaten] <br/><br/>" +
+      "Sobald der Beitrag bei uns angekommen ist, melden wir uns so schnell wie möglich bei dir mit einer Bestätigung. Ab diesem Zeitpunkt schalten wir für dich außerdem die Möglichkeit frei, Spielrunden auf unserer Website einzutragen.<br>" +
+      "Bei Rückfragen wende dich gerne an: papierkrieger-jena@web.de <br/><br/>" +
+      "Freundliche Grüße <br/><br/>" +
+      "Anne, Daniel, Martin und Justus";
     this.unblock();
-
-    if (Email.send({ to: to, from: from, subject: subject, text: text })) {
+    if (Email.send({ to: to, from: from, subject: subject, html: text })) {
       console.log("true");
     } else {
       console.log("false");

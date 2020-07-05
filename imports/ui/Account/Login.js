@@ -72,7 +72,7 @@ const login = (props) => {
               {fail ? <div>Login ist Fehlgeschlagen</div> : ""}
             </form>
             <hr />
-            <div className="text-muted">
+            <div className="text-muted clickable">
               Noch kein Account?
               <br />
               <div onClick={() => props.handlerRegi(true)}>
