@@ -76,6 +76,7 @@ const roundComponent = props => {
      * @return Array
      */
     createTableOptions = (id) => {
+        setTableOptions([]);
         const block = props.time_block.filter((v) => {
             return v._id === id
         })
@@ -98,15 +99,15 @@ const roundComponent = props => {
     */
     onEdit = (round, time) => {
         setRoundCreate(round)
-        setEdit_Options_time_block(options_time_block);
         time = props.time_block.filter((v) => {
             return v._id === time
         })
-        edit_options_time_block.push({
+        let temp = [...options_time_block];
+        temp.push({
             text: time[0].block_name,
             value: time[0]._id
         })
-        setEdit_Options_time_block(edit_options_time_block)
+        setEdit_Options_time_block(temp)
     }
 
     /**
@@ -218,7 +219,7 @@ const roundComponent = props => {
         }
     }
 
-    onExtendRound = (k, v) => {
+    onExtendRound = (k) => {
         if (k._id == extendR) {
             setExtendR('');
         } else {
@@ -238,17 +239,23 @@ const roundComponent = props => {
                 tisch = '1'
                 props.onCallback({ key: time, value: false });
                 out = <div className='row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onEdit(tableObj, time)} >Ändern</button>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onDestroy(tableObj, time)} >Löschen</button>
-                </div>
+                    <button
+                        className='btn btn-outline-dark col-sm-4'
+                        onClick={() => {
+                            if (extendR != tableObj._id) { onExtendRound(tableObj); }
+                            this.onEdit(tableObj, time);
+                        }}
+                    >Ändern</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onDestroy(tableObj, time); onExtendRound(tableObj) }} >Löschen</button>
+                </div >
             } else if (player[tableObj._id] === true) {
                 out = <div className='row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onLeave(tableObj._id, time)} >Austreten</button>
+                    <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onLeave(tableObj._id, time); onExtendRound(tableObj) }} >Austreten</button>
                 </div>
             } else if (booked_tb[tableObj.round_tb] == false) {
                 if (k.round_curr_pl < k.round_max_pl) {
                     out = <div className='row justify-content-center'>
-                        <button className='btn btn-outline-dark col-sm-4' onClick={() => this.onJoin(tableObj._id)} >Beitreten</button>
+                        <button className='btn btn-outline-dark col-sm-4' onClick={() => { this.onJoin(tableObj._id); onExtendRound(tableObj) }} >Beitreten</button>
                     </div>
                 }
             } else {
@@ -256,6 +263,105 @@ const roundComponent = props => {
             }
         }
         return out;
+    }
+
+    /**
+     * serves the content of the tableObject to be rendered
+     * @param {Object} k tableObject
+     * @param {String} time is the id of the TImeblock
+     */
+    function getTableContent(k, time) {
+        let out = '';
+        if (Meteor.userId() && props.user) {
+            out = getTableButton(k, time)
+        }
+        let expand = ''
+        let content =
+            <div className='row'>
+                <div className="col-sm-2">
+                    {/* place for the Icon */}
+                    <div className="text-center">
+                        <strong>{k.round_table}</strong>
+                    </div>
+                </div>
+                <div className='col-sm-10'>
+                    <div className="text-left round text-break">
+                        <div onClick={() => onExtendRound(k)}>
+                            <div className='row'>
+                                <label className="col-sm-4">Runden Name</label>
+                                <div className='col-sm-8 text-muted'>
+                                    {k.round_name}
+                                </div>
+                            </div>
+                            {extendR != k._id ? '' :
+                                <React.Fragment>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>Spielleiter</label>
+                                        <div className='col-sm-8 text-muted' >{k.round_gm}</div>
+                                    </div>
+                                </React.Fragment>
+                            }
+                            <div className='row'>
+                                <label className='col-sm-4'>Setting</label>
+                                <div className='col-sm-8 text-muted'>{k.setting}</div>
+                            </div>
+                            <div className='row'>
+                                <label className='col-sm-4'>Regelwerk</label>
+                                <div className='col-sm-8 text-muted'>{k.ruleset}</div>
+                            </div>
+                            {extendR != k._id ?
+                                <React.Fragment>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Spieler</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
+                                    </div>
+                                    <div className='row justify-content-center'>
+                                        <i className="maximize_icon"></i>
+                                    </div>
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>maximale Spieler</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_max_pl}</div>
+                                    </div>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>maximale OnlineAnmeldung</label>
+                                        <div className='col-sm-8 text-muted'>{k.round_max_online_pl}</div>
+                                    </div>
+                                    <div className='row'>
+                                        <label className='col-sm-4'>Teilnehmer</label>
+                                        <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
+                                    </div>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>Vorgefertigte Charaktere</label>
+                                        <div className='col-sm-8 text-muted' >{JSON.parse(k.own_char) ? 'Ja' : 'Nein'}</div>
+                                    </div>
+                                    <div className='row text-left'>
+                                        <label className='col-sm-4'>Rundenbeschreibung</label>
+                                        <div className='col-sm-8 text-muted' dangerouslySetInnerHTML={{ __html: k.round_desc }}></div>
+                                    </div>
+                                    <div className='row justify-content-start'>
+                                        <i className="minimize_icon"></i>
+                                    </div>
+                                </React.Fragment>
+                            }
+                        </div>
+                        {out}
+                    </div>
+                </div >
+            </div>
+        if (round_create._id === k._id) {
+            content = <RoundCreate
+                round_create={round_create}
+                time_block={edit_options_time_block}
+                onInput={this.onInput}
+                createTableOptions={createTableOptions}
+                tableOptions={tableOptions}
+                onCancel={this.onCancel}
+            />
+        }
+        return content
     }
 
     /**
@@ -267,81 +373,7 @@ const roundComponent = props => {
         if (rounds_box.length !== 0) {
             roundtemplate = rounds_box.map((k, v) => {
                 if (k.round_tb === time) {
-                    let out = '';
-                    if (Meteor.userId() && props.user) {
-                        out = getTableButton(k, time)
-                    }
-                    let expand = ''
-                    let content =
-                        <div className='row' onClick={() => onExtendRound(k, v)}>
-                            <div className="col-sm-2">
-                                {/* place for the Icon */}
-                                <div className="text-center">
-                                    <strong>{k.round_table}</strong>
-                                </div>
-                            </div>
-                            <div className='col-sm-10'>
-                                <div className="text-left round text-break">
-                                    <div className='row'>
-                                        <label className="col-sm-4">Runden Name</label>
-                                        <div className='col-sm-8 text-muted'>
-                                            {k.round_name}
-                                        </div>
-                                    </div>
-                                    {false ? '' :
-                                        <React.Fragment>
-                                            <div className='row text-left'>
-                                                <label className='col-sm-4'>Spielleiter</label>
-                                                <div className='col-sm-8 text-muted' >{k.round_gm}</div>
-                                            </div>
-                                        </React.Fragment>
-                                    }
-                                    <div className='row'>
-                                        <label className='col-sm-4'>Setting</label>
-                                        <div className='col-sm-8 text-muted'>{k.setting}</div>
-                                    </div>
-                                    <div className='row'>
-                                        <label className='col-sm-4'>Regelwerk</label>
-                                        <div className='col-sm-8 text-muted'>{k.ruleset}</div>
-                                    </div>
-                                    {/* <div className='row'>
-                                        <label className='col-sm-4'>Spieler Online Curr/Max</label>
-                                        <div className='col-sm-8 text-muted'>{k.round_curr_pl}/{k.round_max_online_pl}</div>
-                                    </div> */}
-                                    {false ? '...' :
-                                        <React.Fragment>
-                                            <div className='row'>
-                                                <label className='col-sm-4'>Teilnehmer</label>
-                                                <div className='col-sm-8 text-muted'>{onPlayers(k.round_player)}</div>
-                                            </div>
-                                            <div className='row text-left'>
-                                                <label className='col-sm-4'>maximale Spieler</label>
-                                                <div className='col-sm-8 text-muted'>{k.round_max_pl}</div>
-                                            </div>
-                                            <div className='row text-left'>
-                                                <label className='col-sm-4'>Vorgefertigte Charaktere</label>
-                                                <div className='col-sm-8 text-muted' >{JSON.parse(k.own_char) ? 'Ja' : 'Nein'}</div>
-                                            </div>
-                                            <div className='row text-left'>
-                                                <label className='col-sm-4'>Rundenbeschreibung</label>
-                                                <div className='col-sm-8 text-muted'>{k.round_desc}</div>
-                                            </div>
-                                        </React.Fragment>
-                                    }
-                                    {out}
-                                </div>
-                            </div >
-                        </div>
-                    if (round_create._id === k._id) {
-                        content = <RoundCreate
-                            round_create={round_create}
-                            time_block={edit_options_time_block}
-                            onInput={this.onInput}
-                            createTableOptions={createTableOptions}
-                            tableOptions={tableOptions}
-                            onCancel={this.onCancel}
-                        />
-                    }
+                    content = getTableContent(k, time)
                     return (
                         <div className="col-sm-6" key={v}>
                             {content}
@@ -352,62 +384,83 @@ const roundComponent = props => {
         }
         return roundtemplate
     }
-    let tb = ''
-    if (props.time_block.length > 0) {
-        props.time_block.sort(function (a, b) {
-            if (a.block_start < b.block_start) {
-                return -1;
-            }
-            if (a.block_start > b.block_start) {
-                return +1;
-            }
-            return 0;
-        })
-        tb = props.time_block.map((k) => {
-            if (!k.block_table) { return }
-            let round = ''
-            round = this.timeBlockCreate(k._id)
-            return (
-                <div className="row" key={k._id}>
-                    <div className="col-sm time_block_container">
-                        <div className="row list-group-item time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
-                            <h4 className='text-center'><strong >{k.block_name}</strong></h4>
-                            <p className='text-center'>
-                                <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start)}</span>
-                                <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end)}</span>
-                                <span className='col-sm-3'><strong>Tisch:</strong>{k.block_table.length}/{k.block_max_table}</span>
-                            </p>
-                            {/* <h4 className="col-sm-4">{k.block_name}</h4>
+
+    /**
+     * creates Div for the Timeblock rendering
+     * and populates it with content
+     */
+    function getTimeBlockContent() {
+        let tb = ''
+        if (props.time_block.length > 0) {
+            props.time_block.sort(function (a, b) {
+                if (a.block_start < b.block_start) {
+                    return -1;
+                }
+                if (a.block_start > b.block_start) {
+                    return +1;
+                }
+                return 0;
+            })
+            tb = props.time_block.map((k) => {
+                if (!k.block_table) { return }
+                let round = ''
+                round = this.timeBlockCreate(k._id)
+                return (
+                    <div className="row" key={k._id}>
+                        <div className="col-sm time_block_container">
+                            <div className="row list-group-item time_block" onClick={() => blockTabControll(k._id)} id='time_block'>
+                                <h4 className='text-center'><strong >{k.block_name}</strong></h4>
+                                <p className='text-center'>
+                                    <span className='col-sm-3'><strong>Start:</strong>{getStringTime(k.block_start)}</span>
+                                    <span className='col-sm-3'><strong>Ende:</strong>{getStringTime(k.block_end)}</span>
+                                    <span className='col-sm-3'><strong>Tisch:</strong>{k.block_table.length}/{k.block_max_table}</span>
+                                </p>
+                                {/* <h4 className="col-sm-4">{k.block_name}</h4>
                             <p>
                                 <div className='col-sm-3'>
                                     <label className='time_block'>Tische</label> <a className='text-muted' >{k.block_table.length}/{k.block_max_table}</a>
                                 </div>
                             </p> */}
+                            </div>
+                            {blockTab === k._id ? <div className="row">{round}</div> : ''}
+                            <div className="row justify-content-center">
+                                {blockTab === k._id ?
+                                    < i className="arrow_up_circle"></i>
+                                    : < i className="arrow_down_circle"></i>
+                                }
+                            </div>
                         </div>
-                        {blockTab === k._id ? <div className="row">{round}</div> : ''}
-                    </div>
-                </div>
-            )
-        })
+                    </div >
+                )
+            })
+        }
+        return tb
     }
-    let rc = '';
-    if (props.user) {
-        if (props.user.profile.bill && props.user.profile.profil && (options_time_block.length > 0)) {
-            if (addBlock === true) {
-                rc = <RoundCreate
-                    round_create={round_create}
-                    time_block={options_time_block}
-                    onInput={this.onInput}
-                    createTableOptions={createTableOptions}
-                    tableOptions={tableOptions}
-                    onCancel={this.onCancel}
-                />
-            } else {
-                rc = <div className='row justify-content-center'>
-                    <button className='btn btn-outline-dark col-sm-4' onClick={() => setAddBlock(!addBlock)} >Neue Runde Hinzufügen</button>
-                </div>
-            }
 
+    let tb = '' // timbeblock
+    let rc = ''; //round create 
+    if (extendR) {
+        tableObj = rounds_box.filter(function (v) { return v._id == extendR })[0]
+        tb = getTableContent(tableObj, tableObj.round_tb)
+    } else {
+        tb = getTimeBlockContent()
+        if (props.user) {
+            if (props.user.profile.bill && props.user.profile.profil && (options_time_block.length > 0)) {
+                if (addBlock === true) {
+                    rc = <RoundCreate
+                        round_create={round_create}
+                        time_block={options_time_block}
+                        onInput={this.onInput}
+                        createTableOptions={createTableOptions}
+                        tableOptions={tableOptions}
+                        onCancel={this.onCancel}
+                    />
+                } else {
+                    rc = <div className='row justify-content-center'>
+                        <button className='btn btn-outline-dark col-sm-4' onClick={() => setAddBlock(!addBlock)} >Neue Runde Hinzufügen</button>
+                    </div>
+                }
+            }
         }
     }
     return (

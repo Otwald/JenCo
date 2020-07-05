@@ -29,13 +29,15 @@ export default class App extends React.Component {
         const { tab } = this.state
         const { user, event } = this.props
         return (
-            <React.Fragment>
-                <div className='container'>
+            <div className="appLevel">
+                <div>
                     <Sidebar onTabChange={this.onTabChange} tab={tab} />
-                    <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
                 </div>
-                <Footer onTabChange={this.onTabChange} />
-            </React.Fragment>
+                <div className='container'>
+                    <MainContentContainer onTabChange={this.onTabChange} tab={tab} user={user} event={event} />
+                    <Footer onTabChange={this.onTabChange} />
+                </div>
+            </div>
         )
     }
 }

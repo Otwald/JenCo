@@ -17,13 +17,15 @@ const sidebar = props => {
     let adminInterface = ''
     if (Meteor.userId()) {
         login = <li className="nav-item py-0">
-            <div className={props.tab === 'account' ? `nav-link active` : "nav-link"}>
-                <button className='button' onClick={() => props.onTabChange('account')}>Figur:Account</button>
+            <div className={props.tab === 'account' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('account')}>
+                <button className='button' onClick={() => props.onTabChange('account')}>
+                    <i className='user_icon'></i><span className="d-none d-md-block">Account</span>
+                </button>
             </div>
         </li>
         if (admin) {
             adminInterface = <li className="nav-item py-0">
-                <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"}>
+                <div className={props.tab === 'admin' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('admin')}>
                     <button className='button' onClick={() => props.onTabChange('admin')}>Admin</button>
                 </div>
             </li>
@@ -33,31 +35,36 @@ const sidebar = props => {
     return (
         <ul className="nav nav-fill nav-tabs justify-content-center nav-bar">
             <li className="nav-item py-0">
-                <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => props.onTabChange('welcome')} >Häuschen:Willkommen</button>
+                <div className={props.tab === 'welcome' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('welcome')}>
+                    <button className='button' >
+                        <i className='home_icon'></i><span className="d-none d-md-block">Willkommen</span>
+                    </button>
 
                 </div>
             </li>
             <li className="nav-item py-0">
-                <div className={props.tab === 'round' ? `nav-link active` : "nav-link"}>
-                    <button className='button' onClick={() => props.onTabChange('round')} >Würfel:Spielerunde</button>
+                <div className={props.tab === 'round' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('round')}>
+                    <button className='button'  >
+                        <i className='box_icon'></i><span className="d-none d-sm-block">Spielerunde</span>
+                    </button>
                 </div>
             </li>
             {login}
             {adminInterface}
-            {/* <li className="nav-item py-0">
-                <AccountsUI />
-            </li> */}
             {Meteor.userId() != null ?
                 <li className="nav-item py-0">
-                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"}>
-                        <button className='button' onClick={() => { Meteor.logout(); props.onTabChange('welcome') }} >Abmeldung</button>
+                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"} onClick={() => { Meteor.logout(); props.onTabChange('welcome') }}>
+                        <button className='button'>
+                            <i className='key_icon'></i><span className="d-none d-sm-block">Abmeldung</span>
+                        </button>
                     </div>
                 </li>
                 :
                 <li className="nav-item py-0">
-                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"}>
-                        <button className='button' onClick={() => props.onTabChange('login')} >Anmeldung</button>
+                    <div className={props.tab === 'login' ? `nav-link active` : "nav-link"} onClick={() => props.onTabChange('login')} >
+                        <button className='button' >
+                            <i className='key_icon'></i><span className="d-none d-sm-block">Anmeldung</span>
+                        </button>
                     </div>
                 </li>
             }
