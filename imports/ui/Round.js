@@ -253,7 +253,7 @@ const roundComponent = (props) => {
       tisch = "1";
       props.onCallback({ key: time, value: false });
       out = (
-        <div className="row justify-content-center">
+        <React.Fragment>
           <button
             className="btn btn-outline-dark col-sm-4"
             onClick={() => {
@@ -274,11 +274,11 @@ const roundComponent = (props) => {
           >
             Löschen
           </button>
-        </div>
+        </React.Fragment>
       );
     } else if (player[tableObj._id] === true) {
       out = (
-        <div className="row justify-content-center">
+        <React.Fragment>
           <button
             className="btn btn-outline-dark col-sm-4"
             onClick={() => {
@@ -288,12 +288,12 @@ const roundComponent = (props) => {
           >
             Austreten
           </button>
-        </div>
+        </React.Fragment>
       );
     } else if (booked_tb[tableObj.round_tb] == false) {
       if (tableObj.round_curr_pl < tableObj.round_max_pl) {
         out = (
-          <div className="row justify-content-center">
+          <React.Fragment>
             <button
               className="btn btn-outline-dark col-sm-4"
               onClick={() => {
@@ -303,7 +303,7 @@ const roundComponent = (props) => {
             >
               Beitreten
             </button>
-          </div>
+          </React.Fragment>
         );
       }
     } else {
@@ -406,15 +406,15 @@ const roundComponent = (props) => {
               <React.Fragment>
                 <div className="row justify-content-center">
                   <i className="maximize_icon"></i>
+                  {out}
                 </div>
-                {out}
               </React.Fragment>
             ) : (
               <React.Fragment>
                 <div className="row justify-content-start">
                   <i className="minimize_icon"></i>
+                  {out}
                 </div>
-                {out}
               </React.Fragment>
             )}
           </div>
