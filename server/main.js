@@ -432,6 +432,7 @@ Meteor.methods({
    * checks if you are player in a given timeblock
    * and if you can add a new round in a given timeblock
    */
+  //TODO add a way to detect if a player is in 2 rounds/tables per timeblock
   Check() {
     let gm = {};
     let player = {};
