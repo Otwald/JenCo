@@ -255,6 +255,7 @@ const roundComponent = (props) => {
       out = (
         <React.Fragment>
           <button
+            id="text"
             className="btn btn-outline-dark col-sm-4"
             onClick={() => {
               if (extendR != tableObj._id) {
@@ -266,6 +267,7 @@ const roundComponent = (props) => {
             Ändern
           </button>
           <button
+            id="text"
             className="btn btn-outline-dark col-sm-4"
             onClick={() => {
               this.onDestroy(tableObj, time);
@@ -280,6 +282,7 @@ const roundComponent = (props) => {
       out = (
         <React.Fragment>
           <button
+            id="text"
             className="btn btn-outline-dark col-sm-4"
             onClick={() => {
               this.onLeave(tableObj._id, time);
@@ -295,6 +298,7 @@ const roundComponent = (props) => {
         out = (
           <React.Fragment>
             <button
+              id="text"
               className="btn btn-outline-dark col-sm-4"
               onClick={() => {
                 this.onJoin(tableObj._id);
@@ -557,6 +561,7 @@ const roundComponent = (props) => {
           rc = (
             <div className="row justify-content-center">
               <button
+                id="text"
                 className="btn btn-outline-dark col-sm-4"
                 onClick={() => setAddBlock(!addBlock)}
               >

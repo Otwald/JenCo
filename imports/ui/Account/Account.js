@@ -165,6 +165,7 @@ const account = (props) => {
                       />
                     </p>
                     <button
+                      id="text"
                       className="btn btn-outline-dark"
                       onClick={() => {
                         setChange_PW(false);
@@ -174,6 +175,7 @@ const account = (props) => {
                       Abbruch
                     </button>
                     <button
+                      id="text"
                       className="btn btn-outline-dark"
                       onClick={() => {
                         event.preventDefault();
@@ -257,6 +259,7 @@ const account = (props) => {
                   <div className="form-row justify-content-center">
                     <div className="form-group col-sm-3">
                       <button
+                        id="text"
                         className="btn btn-outline-dark"
                         onClick={() => {
                           setEdit(false);
@@ -267,7 +270,11 @@ const account = (props) => {
                       </button>
                     </div>
                     <div className="form-group col-sm-3">
-                      <button className="btn btn-outline-dark" onClick={onSave}>
+                      <button
+                        id="text"
+                        className="btn btn-outline-dark"
+                        onClick={onSave}
+                      >
                         Save
                       </button>
                     </div>
@@ -301,6 +308,7 @@ const account = (props) => {
                         ""
                       )}
                       <button
+                        id="text"
                         className="btn btn-outline-dark"
                         onClick={() => {
                           setEdit(true);
@@ -310,6 +318,7 @@ const account = (props) => {
                         Ändern
                       </button>
                       <button
+                        id="text"
                         className="btn btn-outline-dark"
                         onClick={() => {
                           setChange_PW(true);
