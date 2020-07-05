@@ -20,8 +20,12 @@ body {
 }
 
 .appLevel {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 10vh, 90vh;
+  // flex-direction: column;
+  grid-template-areas:
+    "nav"
+    "container";
 }
 
 $conH: 95vh;
@@ -36,10 +40,10 @@ $conH: 95vh;
 // @media (min-width:993px)
 
 .container {
+  grid-area: container;
   background-color: $container_BG;
   background-size: contain;
   border: 1px;
-  // height: $conH;
   background-size: auto;
   // overflow: auto;
 }
@@ -72,6 +76,13 @@ $conH: 95vh;
 .button:active {
   // background-color: #fff;
   color: #555;
+}
+
+.navContainer {
+  grid-area: nav;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .nav-bar {

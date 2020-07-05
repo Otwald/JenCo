@@ -59,7 +59,7 @@ const sidebar = (props) => {
           className={props.tab === "welcome" ? `nav-link active` : "nav-link"}
           onClick={() => props.onTabChange("welcome")}
         >
-          <button id="text" className="button">
+          <button id="welcome" className="button">
             <i className="home_icon"></i>
             <span className="d-none d-md-block">Willkommen</span>
           </button>
