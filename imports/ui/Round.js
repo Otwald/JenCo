@@ -408,14 +408,20 @@ const roundComponent = (props) => {
             </div>
             {extendR != k._id ? (
               <React.Fragment>
-                <div className="row justify-content-center">
+                <div
+                  className="row justify-content-center"
+                  onClick={() => onExtendRound(k)}
+                >
                   <i className="maximize_icon"></i>
                   {out}
                 </div>
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <div className="row justify-content-start">
+                <div
+                  className="row justify-content-start"
+                  onClick={() => onExtendRound(k)}
+                >
                   <i className="minimize_icon"></i>
                   {out}
                 </div>

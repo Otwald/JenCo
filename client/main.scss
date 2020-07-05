@@ -22,7 +22,6 @@ body {
 .appLevel {
   display: grid;
   grid-template-rows: 10vh, 90vh;
-  // flex-direction: column;
   grid-template-areas:
     "nav"
     "container";
