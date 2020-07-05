@@ -176,16 +176,20 @@ const roundComponent = (props) => {
     });
   };
 
-  //gets rounds player names to visiualize
+  /**
+   * gets rounds player names to visiualize
+   * @param {Array} data holds PlayerNameStrings
+   * @returns {String} connected player names delimiter ","
+   */
   function onPlayers(data) {
-    let out = "";
-    if (data) {
-      out = out.concat(
-        Object.keys(data).map((k) => {
-          return data + ", ";
-        })
-      );
+    if (data.length === 0) {
+      return "";
     }
+    let out = "";
+    data.forEach((element) => {
+      out += element + ", ";
+    });
+    out = out.slice(0, -2);
     return out;
   }
 
@@ -283,7 +287,7 @@ const roundComponent = (props) => {
           </div>
         );
       } else if (booked_tb[tableObj.round_tb] == false) {
-        if (k.round_curr_pl < k.round_max_pl) {
+        if (tableObj.round_curr_pl < tableObj.round_max_pl) {
           out = (
             <div className="row justify-content-center">
               <button
