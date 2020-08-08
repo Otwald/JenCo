@@ -116,16 +116,36 @@ Meteor.methods({
       console.log(err);
     }
   },
+  //TODO remove emails from code
   sendEmail(to) {
     const from = "papierkrieger-jena@web.de";
     const subject = "Anmeldung bei Papierkrieger!";
     const text =
       "Hallo und Danke für deine Anmeldung, <br/> <br/>" +
       " bitte überweise den Teilnehmerbeitrag von <b>10 Euro</b> zeitnah (idealerweise innerhalb von 7 Tagen) auf folgendes Konto.<br/><br/>" +
-      "[Kontodaten] <br/><br/>" +
+      "Kontoinhaber: Daniel Naumann<br/>" +
+      "IBAN: DE40 8205 2020 1410 0294 13<br/>" +
+      "Verwendungszweck: P&P Jena + Vor- und Nachnamen<br/><br/>" +
       "Sobald der Beitrag bei uns angekommen ist, melden wir uns so schnell wie möglich bei dir mit einer Bestätigung. Ab diesem Zeitpunkt schalten wir für dich außerdem die Möglichkeit frei, Spielrunden auf unserer Website einzutragen.<br>" +
       "Bei Rückfragen wende dich gerne an: papierkrieger-jena@web.de <br/><br/>" +
       "Freundliche Grüße <br/><br/>" +
+      "Anne, Daniel, Martin und Justus";
+    this.unblock();
+    if (Email.send({ to: to, from: from, subject: subject, html: text })) {
+      console.log("true");
+    } else {
+      console.log("false");
+    }
+  },
+  sendConfirm(to) {
+    const from = "papierkrieger-jena@web.de";
+    const subject = "Papierkrieger Zahlungsbestätigung";
+    const text =
+      "Hallo,<br/>" +
+      "dein Geld ist bei uns angekommen. Damit bist du offiziell für unsere Con angemeldet.<br/>" +
+      "Über deinen Account auf unserer Website kannst du ab sofort die Spielrunden, die du leiten möchtest,<br/>" +
+      "eintragen sowie dich für die Runden anderer Spielleiter anmelden.<br/><br/>" +
+      "Mit freundlichen Grüßen<br/>" +
       "Anne, Daniel, Martin und Justus";
     this.unblock();
     if (Email.send({ to: to, from: from, subject: subject, html: text })) {

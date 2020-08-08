@@ -15,19 +15,27 @@ const welcome = (props) => {
     <div className="row welcome">
       <div className="col-sm">
         <p className="text-sm-left text-break">
-          Hallo zusammen und willkommen auf unserer schönen Website!
+          Hallo,
           <br />
           <br />
-          auch dieses Jahr wollen wir – Anne, Daniel, Martin und Justus – wieder
-          eine ganztägige Pen&Paper-Rollenspiel-Veranstaltung in Jena
-          organisieren.
-          <br /> Um gleich zum schwierigsten Thema zu kommen: natürlich wissen
-          auch wir nicht wie sich die gegenwärtige Lage weiter entwickeln wird.
-          Im Anbetracht der aktuellen Lockerungen sind wir jedoch
-          zuversichtlich, dass unser kleines Event wie geplant stattfinden kann.
-          Sollte sich die Lage bis zum Oktober jedoch wieder verschärfen,
-          verschiebt sich unsere Con ins nächste Jahr. <br />
-          Und damit zu den Eckdaten unserer Veranstaltung: <br />
+          und herzlich willkommen auf unserer Website. Hier findest du alle
+          wichtigen Informationen zur diesjährigen Auflage der
+          Papierkrieger-PnP-Con in Jena sowie eine Liste aller bisher
+          angekündigten Spielrunden. Darüber hinaus kann man sich hier – oder
+          alternativ per E-Mail – für die Veranstaltung anmelden. Ihr erhaltet
+          dann eine Nachricht mit unseren Kontodaten. Sobald das Geld angekommen
+          ist, wird euer Account auf dieser Seite freigeschaltet und ihr könnt
+          neue Spielrunden eintragen bzw. euch für bereits registrierte Runden
+          anmelden. <br />
+          <br />
+          Und damit zu den Eckdaten unserer Veranstaltung:
+          <br />
+          Wichtige Vorbemerkung: natürlich wissen auch wir nicht wie sich die
+          gegenwärtige Lage weiter entwickeln wird. Im Anbetracht der aktuellen
+          Lockerungen sind wir jedoch zuversichtlich, dass unser kleines Event
+          wie geplant stattfinden kann. Sollte sich die Lage bis zum Oktober
+          jedoch wieder verschärfen, verschiebt sich unsere Con ins nächste
+          Jahr. <br />
           <br />
           <b>Wann?</b> 3. Oktober 2020 (Tag der Deutschen Einheit), Einlass ab 8
           Uhr bis Open End
@@ -62,11 +70,6 @@ const welcome = (props) => {
           Pizzabestellung am Abend geben. Wer möchte kann auch gerne auf dem
           Gelände übernachten – erwähnt das in diesem Fall kurz in eurer
           Anmeldung und bringt euch Feldbett, Schlafsack etc. mit.
-          <br />
-          Wenn ihr also teilnehmen wollt, schickt uns einfach eine kurze
-          Nachricht – eventuell auch schon mit Informationen über Spielrunden
-          die ihr gerne anbieten wollt – und wir lassen euch dann die Kontodaten
-          zukommen
           <br />
           Ansonsten: wenn ihr noch Leute kennt, die Interesse an einer PnP-Con
           hätten, dann wäre es klasse wenn ihr diese Nachricht weiterleiten
