@@ -105,7 +105,7 @@ const admin = (props) => {
 
   onClickUserConfirm = (data) => {
     // Client: Asynchronously send an email.
-    Meteor.call("sendConfirm", data.email, (err, res) => {
+    Meteor.call("sendConfirm", data.profile.email, (err, res) => {
       console.log(res);
     });
   };
