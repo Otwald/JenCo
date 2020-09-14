@@ -8,13 +8,10 @@ const lostpw = (props) => {
   const [error, setError] = useState("");
 
   /**
-   * sendes an Request to the Server to add a new User
-   * Password will be Encrypted from the Accounts package,
-   * user will be added to the users Collection
+   * uses the Accounts package to handle sending the Email and Reseting Password
+   * a Templete must be set in server/main.js
    *
    * @param {String} user is the users state and should be filled with a string in the email format
-   * @param {String} password is state should hold the password with at least 6 character
-   * @param {String} confirmpassword is a state that holds the password with at least 6 charakter is used to confirm the password
    */
   function onRecover() {
     Accounts.forgotPassword(
@@ -22,21 +19,9 @@ const lostpw = (props) => {
         email: user,
       },
       (err) => {
-        if (!err) {
-          setFail(true);
-          console.log(err);
-          // setFail(false);
-          // Meteor.call("sendEmail", user);
-          // props.onTabChange("account");
-        } else {
-          setFail(true);
-          console.log(err);
-          //     setFail(true);
-          //     setError("Nutzer schon vorhanden");
-        }
+        setFail(true);
       }
     );
-    // Meteor.call("sendRecovermail" , user);
   }
 
   return (

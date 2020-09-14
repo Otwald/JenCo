@@ -22,6 +22,7 @@ const admin = (props) => {
   const [agefilter, setAgefilter] = useState(false);
   const [payfilter, setPayfilter] = useState(false);
   const [deleteUser, setDeleteUser] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     onSwitch();
@@ -104,9 +105,10 @@ const admin = (props) => {
   }
 
   onClickUserConfirm = (data) => {
+    console.log(data);
     // Client: Asynchronously send an email.
     Meteor.call("sendConfirm", data.profile.email, (err, res) => {
-      console.log(res);
+      setEmail("send");
     });
   };
 
@@ -120,6 +122,7 @@ const admin = (props) => {
       setActiveUser(data._id);
     } else {
       setActiveUser(null);
+      setEmail("");
     }
   };
 
@@ -250,13 +253,40 @@ const admin = (props) => {
                     >
                       Wechsel Bezahlstatus
                     </button>
-                    <button
-                      id="text"
-                      className="btn btn-outline-dark col-sm-4"
-                      onClick={(e) => this.onClickUserConfirm(value)}
-                    >
-                      BestätigungsEmail
-                    </button>
+                    {email == "" ? (
+                      <button
+                        id="text"
+                        className="btn btn-outline-dark col-sm-4"
+                        onClick={(e) => {
+                          this.onClickUserConfirm(value);
+                          setEmail("sending");
+                        }}
+                      >
+                        BestätigungsEmail
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                    {email == "sending" ? (
+                      <button
+                        id="text"
+                        className="btn btn-outline-dark col-sm-4"
+                      >
+                        Sende Email ...
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                    {email == "send" ? (
+                      <button
+                        id="text"
+                        className="btn btn-outline-dark col-sm-4"
+                      >
+                        Email gesendet!
+                      </button>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div className="row justify-content-center">
                     <button

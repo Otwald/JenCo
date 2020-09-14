@@ -40,19 +40,19 @@ const from_email = "papierkrieger-jena@web.de";
 Accounts.emailTemplates.from = from_email;
 Accounts.emailTemplates.resetPassword = {
   subject(user) {
-    return "Reset Password Link.";
+    return "Reset Passwort Link.";
   },
   text(user, url) {
-    return `Hello! 
+    return `aello! 
 
-    Click the link below to reset your password.
+    Klicke diesen Link um das Passwort neu zu setzen.
 
     ${url}
 
-    If you didn't request this email, please ignore it.
+    Wurde kein Passwort reset angefordert, Email ignorieren.
 
-Thanks,
-APP Team.
+Vielen Dank,
+Papierkrieger Orga.
 `;
   },
   html(user, url) {
@@ -174,13 +174,8 @@ Meteor.methods({
       "Mit freundlichen Grüßen<br/>" +
       "Anne, Daniel, Martin und Justus";
     this.unblock();
-    if (
-      Email.send({ to: to, from: from_email, subject: subject, html: text })
-    ) {
-      console.log("true");
-    } else {
-      console.log("false");
-    }
+    Email.send({ to: to, from: from_email, subject: subject, html: text });
+    return true;
   },
   sendRecovermail(to) {
     Accounts.forgotPassword(
