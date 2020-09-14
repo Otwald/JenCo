@@ -60,7 +60,12 @@ const login = (props) => {
                   placeholder="Password"
                   required
                 />
-                <label htmlFor="inputPassword">Passwort</label>
+                <label
+                  onClick={() => props.handlerRegi("lostpw")}
+                  htmlFor="inputPassword"
+                >
+                  Passwort <u>vergessen?</u>
+                </label>
               </div>
               <button
                 id="text"
@@ -75,8 +80,8 @@ const login = (props) => {
             <div className="text-muted clickable">
               Noch kein Account?
               <br />
-              <div onClick={() => props.handlerRegi(true)}>
-                Zur Regestrierung
+              <div onClick={() => props.handlerRegi("regi")}>
+                <u>Zur Regestrierung</u>
               </div>
             </div>
           </div>

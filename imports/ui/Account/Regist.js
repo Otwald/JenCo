@@ -114,7 +114,9 @@ const regist = (props) => {
             <div className="text-muted">
               Account vorhanden?
               <br />
-              <div onClick={() => props.handlerRegi(false)}>Zur Anmeldung</div>
+              <div onClick={() => props.handlerRegi("login")}>
+                <u>Zur Anmeldung</u>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import { check } from "meteor/check";
 import { Email } from "meteor/email";
+import { Accounts } from "meteor/accounts-base";
 
 import "./../imports/api/mongo_export";
 import {
@@ -33,6 +34,31 @@ MethodWrapper = (func) => {
   } catch (err) {
     console.log(err);
   }
+};
+const from_email = "papierkrieger-jena@web.de";
+
+Accounts.emailTemplates.from = from_email;
+Accounts.emailTemplates.resetPassword = {
+  subject(user) {
+    return "Reset Password Link.";
+  },
+  text(user, url) {
+    return `Hello! 
+
+    Click the link below to reset your password.
+
+    ${url}
+
+    If you didn't request this email, please ignore it.
+
+Thanks,
+APP Team.
+`;
+  },
+  html(user, url) {
+    // This is where HTML email content would go.
+    // See the section about html emails below.
+  },
 };
 
 /**
@@ -118,7 +144,6 @@ Meteor.methods({
   },
   //TODO remove emails from code
   sendEmail(to) {
-    const from = "papierkrieger-jena@web.de";
     const subject = "Anmeldung bei Papierkrieger!";
     const text =
       "Hallo und Danke für deine Anmeldung, <br/> <br/>" +
@@ -131,14 +156,15 @@ Meteor.methods({
       "Freundliche Grüße <br/><br/>" +
       "Anne, Daniel, Martin und Justus";
     this.unblock();
-    if (Email.send({ to: to, from: from, subject: subject, html: text })) {
+    if (
+      Email.send({ to: to, from: from_email, subject: subject, html: text })
+    ) {
       console.log("true");
     } else {
       console.log("false");
     }
   },
   sendConfirm(to) {
-    const from = "papierkrieger-jena@web.de";
     const subject = "Papierkrieger Zahlungsbestätigung";
     const text =
       "Hallo,<br/>" +
@@ -148,11 +174,32 @@ Meteor.methods({
       "Mit freundlichen Grüßen<br/>" +
       "Anne, Daniel, Martin und Justus";
     this.unblock();
-    if (Email.send({ to: to, from: from, subject: subject, html: text })) {
+    if (
+      Email.send({ to: to, from: from_email, subject: subject, html: text })
+    ) {
       console.log("true");
     } else {
       console.log("false");
     }
+  },
+  sendRecovermail(to) {
+    Accounts.forgotPassword(
+      {
+        email: to,
+      },
+      (err) => {
+        if (!err) {
+          console.log(err);
+          // setFail(false);
+          // Meteor.call("sendEmail", user);
+          // props.onTabChange("account");
+        } else {
+          console.log(err);
+          //     setFail(true);
+          //     setError("Nutzer schon vorhanden");
+        }
+      }
+    );
   },
 
   //TODO: getting decorators to work
