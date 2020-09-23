@@ -15,73 +15,58 @@ const welcome = (props) => {
     <div className="row welcome">
       <div className="col-sm">
         <p className="text-sm-left text-break">
-          Hallo,
+          Hallo zusammen, <br />
+          <br />
+          nach einer gründlichen, orgainternen Diskussion und Rücksprache mit
+          dem Jugendclub Hugo haben wir uns entschieden, unsere Con dieses Jahr
+          online stattfinden zu lassen. Dieser Schritt ist uns nicht leicht
+          gefallen und wir entschuldigen uns in aller Form für die
+          Kurzfristigkeit des Ganzen und eventuellen Umstände die euch daraus
+          entstehen – aber in Anbetracht der gegenwärtig wieder rapide
+          steigenden Fallzahlen, ist dies die einzige verantwortungsbewusste
+          Vorgehensweise für uns. Wir bitten dafür um Verständnis, es ist leider
+          ein eigenartiges Jahr für alle. <br />
+          <br />
+          Gut, so viel dazu, wie geht es jetzt weiter?
           <br />
           <br />
-          und herzlich willkommen auf unserer Website. Hier findest du alle
-          wichtigen Informationen zur diesjährigen Auflage der
-          Papierkrieger-PnP-Con in Jena sowie eine Liste aller bisher
-          angekündigten Spielrunden. Darüber hinaus kann man sich hier – oder
-          alternativ per E-Mail – für die Veranstaltung anmelden. Ihr erhaltet
-          dann eine Nachricht mit unseren Kontodaten. Sobald das Geld angekommen
-          ist, wird euer Account auf dieser Seite freigeschaltet und ihr könnt
-          neue Spielrunden eintragen bzw. euch für bereits registrierte Runden
-          anmelden. <br />
+          <strong>1. Teilnahmegebühren</strong> <br />
+          <br /> Da die Geländemiete entfällt, ist das diesjährige Online-Event
+          kostenlos. Bereits bezahlte Beiträge werden wir bis Ende der kommenden
+          Woche zurück überweisen. Wer das Geld bar übergeben hat, kann uns
+          entweder seine Kontodaten schicken oder bei Gelegenheit Bargeld zurück
+          erhalten.
           <br />
-          Und damit zu den Eckdaten unserer Veranstaltung:
+          <br /> <strong> 2. Unsere Con auf Discord</strong> <br />
+          <br /> Wir haben für unser Event einen Discordserver eingerichtet.
+          Dieser Onlinedienst erfordert von euch eine Anmeldung, bietet dafür
+          aber eine Menge Möglichkeiten. Über den untenstehenden Link kommt ihr
+          direkt zu unserem Server – sobald ihr dort registriert seit, habt ihr
+          euch für die Veranstaltung angemeldet. Nehmt Kontakt mit uns auf (per
+          Mail oder bei Otwald auf Discord) wenn ihr eine Runde leiten wollt und
+          wir schalten euch als Spielleiter mit dazugehörigen Rechten frei. Wenn
+          ihr möchtet, könnt ihr gerne auf weitere Onlinespielhilfen – wie etwa
+          Roll20 – zurückgreifen. Wir machen euch da keine Vorgaben, ihr müsst
+          es nur entsprechend ankündigen (unter „Runden-Vorstellungen“) und
+          selbst verwalten. <br />
           <br />
-          Wichtige Vorbemerkung: natürlich wissen auch wir nicht wie sich die
-          gegenwärtige Lage weiter entwickeln wird. Im Anbetracht der aktuellen
-          Lockerungen sind wir jedoch zuversichtlich, dass unser kleines Event
-          wie geplant stattfinden kann. Sollte sich die Lage bis zum Oktober
-          jedoch wieder verschärfen, verschiebt sich unsere Con ins nächste
-          Jahr. <br />
-          <br />
-          <b>Wann?</b> 3. Oktober 2020 (Tag der Deutschen Einheit), Einlass ab 8
-          Uhr bis Open End
-          <br />
-          <b>Wo?</b> Jugendclub Hugo in Jena-Winzerla
-          <br />
-          <br />
-          <b>Wie komme ich da hin?</b> https://www.jz-hugo.de/kontakt/
-          <br />
-          <br />
-          <b>Was kostest der Spaß?</b> 10 Euro (Geld das nach der Bezahlung der
-          Geländekosten übrig bleibt, verteilen wir gleichmäßig unter den
-          Spielleitern)
-          <br />
-          <br />
-          <b>Wie viele Teilnehmer?</b> Maximal 30
-          <br />
-          <br />
-          <b>Geplant sind von unserer Seite die folgenden Zeitblöcke:</b>
-          <br />
-          Einlass → ab 8 Uhr
-          <br /> Erster Spielrunden-Block (Samstag Vormittag) → 9 bis 13 Uhr
-          <br /> Zweiter Spielrunden-Block (Samstag Nachmittag) → 14-18 Uhr
-          <br /> Dritter Spielrunden-Block (Samstag Abend) → 19-23 Uhr Vierter
-          <br /> Spielrunden-Block (Samstag Nacht) → ab 0 Uhr (Open End)
-          <br />
-          <br />
-          Für Essen und Trinken ist jeder selbst verantwortlich – bitte bedenkt,
-          dass es sich bei dem 3. Oktober um einen Feiertag handelt – ihr
-          müsstet im Zweifelsfall also teuer in der nahen Tankstelle einkaufen.
-          Ansonsten wird es aber mit ziemlicher Sicherheit eine gemeinsame
-          Pizzabestellung am Abend geben. Wer möchte kann auch gerne auf dem
-          Gelände übernachten – erwähnt das in diesem Fall kurz in eurer
-          Anmeldung und bringt euch Feldbett, Schlafsack etc. mit.
-          <br />
-          Ansonsten: wenn ihr noch Leute kennt, die Interesse an einer PnP-Con
-          hätten, dann wäre es klasse wenn ihr diese Nachricht weiterleiten
-          würdet.
-          <br />
-          <br />
+          <a href="https://discord.gg/zb4cgtC">
+            https://discord.gg/zb4cgtC
+          </a>  <br /> <br /> An den Eckdaten der Veranstaltung ändert sich
+          generell wenig. Wir beginnen voraussichtlich um 9 Uhr am Samstag dem
+          3.10. und spielen bis keiner mehr Lust hat. Ob bereits angemeldete
+          Runden weiterhin stattfinden, hängt natürlich an den jeweiligen
+          Spielleitern. Entsprechende Infos findet ihr auf Discord – unter
+          „Runden-Vorstellungen“ – und auf dieser Website.
+          <br /> <br /> <strong> 3. Weitere Aussichten</strong> <br /> <br />
+          Wir hoffen natürlich sehr, dass sich die Lage bald wieder entspannt.
+          Mit dem Hugo stehen wir weiterhin in Kontakt und dementsprechend
+          werden wir uns im kommenden Jahr erneut bemühen, eine klassische
+          PnP-Con auszurichten. Wir halten euch auf dem Laufenden!
+          <br /> <br />
           So viel erst mal von uns
-          <br />
-          Mit freundlichen Grüßen
-          <br />
-          Anne, Daniel, Martin und Justus
-          <br />
+          <br /> Mit freundlichen Grüßen
+          <br /> Anne, Daniel, Martin und Justus
         </p>
       </div>
     </div>
