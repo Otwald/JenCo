@@ -37,7 +37,7 @@ const admin = (props) => {
       </div>
       <div className="row">
         <div className="col-sm-3" onClick={() => setEventTab(!eventTab)}>
-          Eventdaten
+          Eventsettings
         </div>
         {eventTab ? <Settings event={props.event} users={props.users} /> : ""}
       </div>
