@@ -17,6 +17,7 @@ const settings = (props) => {
   const [welcome_email, setWelcomeEmail] = useState("");
   const [confirm_email, setConfirmEmail] = useState("");
   const [tab, setTab] = useState("");
+  const [tpl_tab, setTemplateTab] = useState("");
 
   useEffect(() => {
     if (props.event) {
@@ -83,6 +84,29 @@ const settings = (props) => {
       Meteor.call("EventCreate", settings);
     }
     setEventEdit(false);
+    setTemplateTab(""); 
+  }
+
+  /**
+   * Uses a Switch sort back the tpl to the correct Templatestate
+   * and makes a call to Backend to save
+   */
+  function onSubmitTpl() {
+    switch (tpl_tab) {
+      case "lp": {
+        setLandPage(tpl);
+        break;
+      }
+      case "we": {
+        setWelcomeEmail(tpl);
+        break;
+      }
+      case "ce": {
+        setConfirmEmail(tpl);
+        break;
+      }
+    }
+    onSave();
   }
 
   return (
@@ -243,15 +267,45 @@ const settings = (props) => {
       </h4>
       {tab == "tpl" ? (
         <React.Fragment>
-          LandingPage WelcomeEmail ConfirmationEmail
-          <div className="col-sm-9">
-            <ReactQuill
-              required
-              value={tpl}
-              onChange={(value) => setTemplate(value)}
-              // placeholder={props.round_create.round_desc}
-            />
-          </div>
+          <button
+            onClick={() => {
+              setTemplate(land_page);
+              setTemplateTab("lp");
+            }}
+          >
+            LandingPage
+          </button>{" "}
+          <button
+            onClick={() => {
+              setTemplate(welcome_email);
+              setTemplateTab("we");
+            }}
+          >
+            WelcomeEmail
+          </button>{" "}
+          <button
+            onClick={() => {
+              setTemplate(confirm_email);
+              setTemplateTab("ce");
+            }}
+          >
+            ConfirmationEmail
+          </button>
+          {tpl_tab == "" ? (
+            ""
+          ) : (
+            <>
+              <div className="col-sm-9">
+                <ReactQuill
+                  required
+                  value={tpl}
+                  onChange={(value) => setTemplate(value)}
+                  // placeholder={props.round_create.round_desc}
+                />
+              </div>
+              <button onClick={() => onSubmitTpl()}>Submit</button>
+            </>
+          )}
         </React.Fragment>
       ) : (
         ""
