@@ -7,12 +7,11 @@ const welcome = (props) => {
 
   useEffect(() => {
     if (props.event) {
-      if (props.event.land_page !== "") {
+      if (props.event.land_page) {
         setLandPage(props.event.land_page);
       }
     }
   }, [props.event]);
-
   return (
     <div className="row welcome">
       <div className="col-sm">
