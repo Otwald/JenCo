@@ -3,7 +3,7 @@ import Parser from "html-react-parser";
 import ReactQuill from "react-quill";
 
 const welcome = (props) => {
-  const [land_page, setLandPage] = useState("");
+  const [land_page, setLandPage] = useState("<p>Loading...</p>");
 
   useEffect(() => {
     if (props.event) {
@@ -20,7 +20,6 @@ const welcome = (props) => {
           ? Parser(land_page, { trim: true })
           : // <ReactQuill value={land_page} readOnly={true} theme={"bubble"} />
             "Loading..."}
-        Ein Fisch
       </div>
     </div>
   );
