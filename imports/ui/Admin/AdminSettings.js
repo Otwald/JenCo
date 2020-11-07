@@ -26,14 +26,17 @@ const settings = (props) => {
       setLoc(props.event.e_loc);
       setTicketPrice(props.event.t_price);
       setEventPrice(props.event.e_price);
-      if (props.event.land_page) {
-        setLandPage(land_page);
+      if (props.event.land_page !== "") {
+        console.log("Testeroi1");
+        setLandPage(props.event.land_page);
       }
-      if (props.event.welcome_email) {
-        setWelcomeEmail(welcome_email);
+      if (props.event.welcome_email !== "") {
+        console.log("Testeroi2");
+        setWelcomeEmail(props.event.welcome_email);
       }
-      if (props.event.confirm_email) {
-        setConfirmEmail(confirm_email);
+      if (props.event.confirm_email !== "") {
+        console.log("Testeroi3");
+        setConfirmEmail(props.event.confirm_email);
       }
     }
     if (props.users) {
@@ -53,6 +56,13 @@ const settings = (props) => {
       setEventPrice(0);
     };
   }, [props.event, props.users]);
+
+  useEffect(() => {
+    if (tpl_tab) {
+      onSave();
+      setTemplateTab("");
+    }
+  }, [land_page, welcome_email, confirm_email]);
 
   function onTabChange(target) {
     if (target.id == tab) {
@@ -84,7 +94,7 @@ const settings = (props) => {
       Meteor.call("EventCreate", settings);
     }
     setEventEdit(false);
-    setTemplateTab(""); 
+    setTemplateTab("");
   }
 
   /**
@@ -106,7 +116,6 @@ const settings = (props) => {
         break;
       }
     }
-    onSave();
   }
 
   return (

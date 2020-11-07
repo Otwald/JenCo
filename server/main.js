@@ -482,6 +482,9 @@ Meteor.methods({
         e_loc: String,
         t_price: Number,
         e_price: Number,
+        welcome_email: String,
+        confirm_email: String,
+        land_page: String,
       });
       if (handlerAdmin(this.userId) == true) {
         event_settings.update({ _id: data._id }, data);
