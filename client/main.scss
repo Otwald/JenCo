@@ -27,6 +27,11 @@ body {
     "container";
 }
 
+p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 $conH: 95vh;
 
 // @if $width == 768px{

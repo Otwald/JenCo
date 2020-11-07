@@ -27,15 +27,12 @@ const settings = (props) => {
       setTicketPrice(props.event.t_price);
       setEventPrice(props.event.e_price);
       if (props.event.land_page !== "") {
-        console.log("Testeroi1");
         setLandPage(props.event.land_page);
       }
       if (props.event.welcome_email !== "") {
-        console.log("Testeroi2");
         setWelcomeEmail(props.event.welcome_email);
       }
       if (props.event.confirm_email !== "") {
-        console.log("Testeroi3");
         setConfirmEmail(props.event.confirm_email);
       }
     }
