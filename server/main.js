@@ -122,6 +122,11 @@ if (Meteor.settings.private) {
     Meteor.settings.private.NODE_TLS_REJECT_UNAUTHORIZED;
 }
 
+/**
+ * takes Discord Webhook and makes a PostRequest
+ * builds an content string for RequestBody
+ * @param {JSON} data
+ */
 function useWebHook(data) {
   try {
     let settings = event_settings.findOne();
