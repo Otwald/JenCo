@@ -135,7 +135,7 @@ const account = (props) => {
                         minLength="6"
                         type="password"
                         className="form-control"
-                        onChange={() => setOld_PW(event.target.value)}
+                        onChange={(event) => setOld_PW(event.target.value)}
                         placeholder="Altes Passwort"
                         autoComplete="off"
                       />
@@ -147,7 +147,7 @@ const account = (props) => {
                         minLength="6"
                         type="password"
                         className="form-control"
-                        onChange={() => setNew_PW(event.target.value)}
+                        onChange={(event) => setNew_PW(event.target.value)}
                         placeholder="Neues Passwort"
                         autoComplete="off"
                       />
@@ -159,7 +159,7 @@ const account = (props) => {
                         minLength="6"
                         type="password"
                         className="form-control"
-                        onChange={() => setCon_PW(event.target.value)}
+                        onChange={(event) => setCon_PW(event.target.value)}
                         placeholder="Passwort wiederholen"
                         autoComplete="off"
                       />
@@ -167,7 +167,7 @@ const account = (props) => {
                     <button
                       id="text"
                       className="btn btn-outline-dark"
-                      onClick={() => {
+                      onClick={(event) => {
                         setChange_PW(false);
                         event.preventDefault();
                       }}
@@ -177,7 +177,7 @@ const account = (props) => {
                     <button
                       id="text"
                       className="btn btn-outline-dark"
-                      onClick={() => {
+                      onClick={(event) => {
                         event.preventDefault();
                         onPasswordChange();
                       }}
@@ -203,7 +203,7 @@ const account = (props) => {
                         type="text"
                         className="form-control"
                         name="profil"
-                        onChange={() => setProfil(event.target.value)}
+                        onChange={(event) => setProfil(event.target.value)}
                         placeholder={profil}
                         id="profil"
                         value={profil}
@@ -220,7 +220,7 @@ const account = (props) => {
                         type="text"
                         className="form-control"
                         name="first"
-                        onChange={() => setFirst(event.target.value)}
+                        onChange={(event) => setFirst(event.target.value)}
                         placeholder={first}
                         id="first"
                         value={first}
@@ -235,7 +235,7 @@ const account = (props) => {
                         type="text"
                         className="form-control"
                         name="last"
-                        onChange={() => setLast(event.target.value)}
+                        onChange={(event) => setLast(event.target.value)}
                         placeholder={last}
                         id="last"
                         value={last}
@@ -251,7 +251,7 @@ const account = (props) => {
                         name="age"
                         className="form-control"
                         id="age"
-                        onChange={() => setAge(event.target.value)}
+                        onChange={(event) => setAge(event.target.value)}
                         value={useDate(age)}
                       />
                     </div>
@@ -261,7 +261,7 @@ const account = (props) => {
                       <button
                         id="text"
                         className="btn btn-outline-dark"
-                        onClick={() => {
+                        onClick={(event) => {
                           setEdit(false);
                           event.preventDefault();
                         }}

@@ -49,7 +49,7 @@ const lostpw = (props) => {
                 </h5>
                 <form
                   className="form-signin"
-                  onSubmit={() => {
+                  onSubmit={(event) => {
                     onRecover();
                     event.preventDefault();
                   }}
@@ -57,7 +57,7 @@ const lostpw = (props) => {
                   <div className="form-label-group">
                     <input
                       type="email"
-                      onChange={() => setUser(event.target.value)}
+                      onChange={(event) => setUser(event.target.value)}
                       id="inputEmail"
                       className="form-control"
                       placeholder="Email address"

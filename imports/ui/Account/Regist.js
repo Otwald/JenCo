@@ -57,7 +57,7 @@ const regist = (props) => {
             <h5 className="card-title text-center">Regestrierung</h5>
             <form
               className="form-signin"
-              onSubmit={() => {
+              onSubmit={(event) => {
                 onRegi();
                 event.preventDefault();
               }}
@@ -65,7 +65,7 @@ const regist = (props) => {
               <div className="form-label-group">
                 <input
                   type="email"
-                  onChange={() => setUser(event.target.value)}
+                  onChange={(event) => setUser(event.target.value)}
                   id="inputEmail"
                   className="form-control"
                   placeholder="Email address"
@@ -78,7 +78,7 @@ const regist = (props) => {
               <div className="form-label-group">
                 <input
                   type="password"
-                  onChange={() => setPassword(event.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
                   minLength="6"
                   id="inputPassword"
                   className="form-control"
@@ -90,7 +90,7 @@ const regist = (props) => {
               <div className="form-label-group">
                 <input
                   type="password"
-                  onChange={() => setConPW(event.target.value)}
+                  onChange={(event) => setConPW(event.target.value)}
                   minLength="6"
                   id="inputPasswordconfirm"
                   className="form-control"

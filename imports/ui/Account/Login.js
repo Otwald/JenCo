@@ -33,7 +33,7 @@ const login = (props) => {
             <h5 className="card-title text-center">Anmeldung</h5>
             <form
               className="form-signin"
-              onSubmit={() => {
+              onSubmit={(event) => {
                 onLogin();
                 event.preventDefault();
               }}
@@ -41,7 +41,7 @@ const login = (props) => {
               <div className="form-label-group">
                 <input
                   type="email"
-                  onChange={() => setUser(event.target.value)}
+                  onChange={(event) => setUser(event.target.value)}
                   id="inputEmail"
                   className="form-control"
                   placeholder="Email address"
@@ -54,7 +54,7 @@ const login = (props) => {
               <div className="form-label-group">
                 <input
                   type="password"
-                  onChange={() => setPassword(event.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
                   id="inputPassword"
                   className="form-control"
                   placeholder="Password"

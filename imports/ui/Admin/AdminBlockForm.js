@@ -48,7 +48,7 @@ const adminblockform = (props) => {
    * and add the new timeblock to the db
    * checks if name empty and a times exist
    */
-  onBlockSave = () => {
+  onBlockSave = (event) => {
     let temp = {
       block_name: name,
       block_pnp: pnp,
