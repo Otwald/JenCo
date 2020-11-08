@@ -1,7 +1,9 @@
 import { Meteor } from "meteor/meteor";
+import { HTTP } from "meteor/http";
 import { check } from "meteor/check";
 import { Email } from "meteor/email";
 import { Accounts } from "meteor/accounts-base";
+import TurndownService from "turndown";
 
 import "./../imports/api/mongo_export";
 import {
@@ -118,6 +120,36 @@ if (Meteor.settings.private) {
   process.env.MAIL_URL = Meteor.settings.private.MAIL_URL;
   process.env.NODE_TLS_REJECT_UNAUTHORIZED =
     Meteor.settings.private.NODE_TLS_REJECT_UNAUTHORIZED;
+}
+
+function useWebHook(data) {
+  try {
+    let settings = event_settings.findOne();
+    let url = settings.d_hook;
+    let t_block = timeblock.findOne({ _id: data.round_tb });
+    let user_gm = Meteor.users.findOne({ _id: data.round_gm_id });
+    if (url) {
+      var turndownService = new TurndownService();
+      data.round_desc = data.round_desc
+        .replace(new RegExp("<p>", "g"), "<br>")
+        .replace(new RegExp("</p>", "g"), "");
+      console.log(data.round_desc);
+      let content =
+        `**Titel**: ${data.round_name}\n` +
+        `**Setting**: ${data.setting}\n` +
+        `**Regelwerk**: ${data.ruleset}\n` +
+        `**Zeitblock**: ${t_block.block_name}\n` +
+        `**Spielleiter**: ${user_gm.profile.profil}\n` +
+        `**Gewünschte Spielerzahl**? ${data.round_max_pl}\n` +
+        `**Vorbereitete Charaktere**? ${data.own_char ? "Ja" : "Nein"}\n` +
+        `**Beschreibung**: ${turndownService.turndown(data.round_desc)}`;
+      HTTP.call("POST", url, {
+        data: { content: content, username: "PapierBot" },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 //TODO: log send emails
@@ -261,6 +293,7 @@ Meteor.methods({
     Rounds.insert(data);
     let table = Rounds.findOne(data, { transform: null });
     timeblock_update((new_tb = table));
+    useWebHook(data);
   },
   RoundUpdate(data) {
     check(data, {
@@ -470,6 +503,7 @@ Meteor.methods({
         e_loc: String,
         t_price: Number,
         e_price: Number,
+        d_hook: String,
         welcome_email: String,
         confirm_email: String,
         land_page: String,

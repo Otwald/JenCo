@@ -12,6 +12,7 @@ const settings = (props) => {
   const [e_loc, setLoc] = useState("");
   const [t_price, setTicketPrice] = useState(0);
   const [e_price, setEventPrice] = useState(0);
+  const [d_hook, setDiscordHook] = useState("");
   const [tpl, setTemplate] = useState("");
   const [land_page, setLandPage] = useState("");
   const [welcome_email, setWelcomeEmail] = useState("");
@@ -34,6 +35,9 @@ const settings = (props) => {
       }
       if (props.event.confirm_email !== "") {
         setConfirmEmail(props.event.confirm_email);
+      }
+      if (props.event.d_hook !== "") {
+        setDiscordHook(props.event.d_hook);
       }
     }
     if (props.users) {
@@ -80,6 +84,7 @@ const settings = (props) => {
       e_start: e_start,
       t_price: Number(t_price),
       e_price: Number(e_price),
+      d_hook: d_hook,
       welcome_email: welcome_email,
       confirm_email: confirm_email,
       land_page: land_page,
@@ -202,6 +207,22 @@ const settings = (props) => {
                     name="e_price"
                     onChange={(event) => setEventPrice(event.target.value)}
                     value={e_price}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="input-group mb-3">
+                  <span className="input-group-prepend input-group-text col-sm-3">
+                    Discord Webhook
+                  </span>
+                  <input
+                    required
+                    min="0"
+                    className="form-control"
+                    type="text"
+                    name="d_hook"
+                    onChange={(event) => setDiscordHook(event.target.value)}
+                    value={d_hook}
                   />
                 </div>
               </div>
