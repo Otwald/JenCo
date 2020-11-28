@@ -39,33 +39,45 @@ MethodWrapper = (func) => {
 };
 
 WebApp.connectHandlers.use("/hello", (req, res, next) => {
-  var body = "";
-  req.on(
-    "data",
-    Meteor.bindEnvironment(function (data) {
-      body += data;
-    })
-  );
-
-  req.on(
-    "end",
-    Meteor.bindEnvironment(function () {
-      console.log(body);
-      let payload = JSON.parse(body);
-      check(payload, {
-        round_tb: String,
-        round_name: String,
-        setting: String,
-        ruleset: String,
-        own_char: Boolean,
-        round_gm: String,
-        round_max_pl: Number,
-        round_desc: String,
-      });
-      res.writeHead(200);
-      res.end("Hello world from: " + Meteor.release);
-    })
-  );
+  console.log(req.headers.auth);
+  let auth = Meteor.users.findOne({ token: req.headers.auth });
+  if (!auth || !req.headers.auth) {
+    res.writeHead(401);
+    res.end("Acces denied");
+  } else {
+    console.log(auth);
+    var body = "";
+    req.on(
+      "data",
+      Meteor.bindEnvironment(function (data) {
+        body += data;
+      })
+    );
+    req.on(
+      "end",
+      Meteor.bindEnvironment(function () {
+        console.log(body);
+        let payload = JSON.parse(body);
+        try {
+          check(payload, {
+            round_tb: String,
+            round_name: String,
+            setting: String,
+            ruleset: String,
+            own_char: Boolean,
+            round_gm: String,
+            round_max_pl: Number,
+            round_desc: String,
+          });
+          res.writeHead(200);
+          res.end("Dateset inserted into DB");
+        } catch (error) {
+          res.writeHead(400);
+          res.end(error.message);
+        }
+      })
+    );
+  }
 });
 
 const from_email = "papierkrieger-jena@web.de";
