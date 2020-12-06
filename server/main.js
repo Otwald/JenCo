@@ -13,6 +13,7 @@ import {
   users_archive,
   Admin,
 } from "./../imports/api/mongo_export";
+import { readyException } from "jquery";
 
 Meteor.startup(() => {
   console.log("Restart");
@@ -38,14 +39,12 @@ MethodWrapper = (func) => {
   }
 };
 
-WebApp.connectHandlers.use("/hello", (req, res, next) => {
-  console.log(req.headers.auth);
+WebApp.connectHandlers.use("/api/round", (req, res, next) => {
   let auth = Meteor.users.findOne({ token: req.headers.auth });
   if (!auth || !req.headers.auth) {
     res.writeHead(401);
     res.end("Acces denied");
   } else {
-    console.log(auth);
     var body = "";
     req.on(
       "data",
@@ -56,7 +55,6 @@ WebApp.connectHandlers.use("/hello", (req, res, next) => {
     req.on(
       "end",
       Meteor.bindEnvironment(function () {
-        console.log(body);
         let payload = JSON.parse(body);
         try {
           check(payload, {
@@ -69,6 +67,7 @@ WebApp.connectHandlers.use("/hello", (req, res, next) => {
             round_max_pl: Number,
             round_desc: String,
           });
+          inputNewRound(payload, auth);
           res.writeHead(200);
           res.end("Dateset inserted into DB");
         } catch (error) {
@@ -79,6 +78,32 @@ WebApp.connectHandlers.use("/hello", (req, res, next) => {
     );
   }
 });
+
+/**
+ * consume payload from post api/round and trys to add a new entry into the db
+ * @param {object} data
+ * @param {object} user
+ */
+function inputNewRound(data, user) {
+  data.round_max_online_pl = data.round_max_pl;
+  data.round_gm_id = user._id;
+  data.round_player_id = [];
+  data.round_curr_pl = 0;
+  let block = timeblock.find();
+  block.forEach((element) => {
+    if (element.block_name.toLowerCase() != data.round_tb.toLowerCase()) {
+      return;
+    }
+    data.round_table = element.block_table_id.length + 1;
+    data.round_tb = element._id;
+  });
+  if (!data.round_table) {
+    throw "No TimeBlock found";
+  }
+  Rounds.insert(data);
+  let table = Rounds.findOne(data, { transform: null });
+  timeblock_update((new_tb = table));
+}
 
 const from_email = "papierkrieger-jena@web.de";
 
