@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "bootstrap": "^4.5.3",
     "html-react-parser": "^0.14.2",
     "jquery": "^3.5.1",
